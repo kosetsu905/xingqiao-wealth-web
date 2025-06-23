@@ -1,7 +1,7 @@
 <template>
-  <div class="font-inter bg-light text-dark antialiased">
+  <div  class="min-h-screen w-screen overflow-x-hidden">
   <!-- 导航栏 -->
-  <header id="navbar" class="fixed w-full top-0 z-50 transition-all duration-300">
+  <header id="navbar" :class="navbarClasses" class="fixed w-full top-0 z-50 transition-all duration-300">
     <nav class="bg-white/95 backdrop-blur-sm shadow-sm">
       <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="flex justify-between h-16">
@@ -24,16 +24,20 @@
             <button id="register-btn" class="bg-white hover:bg-gray-50 text-primary border border-primary px-4 py-2 rounded-md text-sm font-medium transition-colors">
               注册
             </button>
-            <button   ref="mobileMenuButton" @click="toggleMobileMenu" 
-            class="ml-4 block sm:hidden text-gray-500 hover:text-primary focus:outline-none">
-              <i class="fa fa-bars text-xl"></i>
-            </button>
+            <button class="ml-4 block sm:hidden text-gray-500 
+            hover:text-primary focus:outline-none" onclick="toggleMobileMenu()" >
+            <FontAwesomeIcon
+                  :icon="['fas', 'bars']"
+                  class="text-xl text-gray-500 hover:text-gray-700"
+                  @click="toggleMobileMenu"
+                />
+            </button> 
           </div>
         </div>
       </div>
       
       <!-- 移动端菜单 -->
-      <div id="mobile-menu" ref="mobileMenu" :class="{ 'hidden': !isMobileMenuOpen }" class="sm:hidden bg-white border-t">
+      <div id="mobile-menu"  :class="{ 'hidden': !isMobileMenuOpen }" class="sm:hidden bg-white border-t">
         <div class="px-2 pt-2 pb-3 space-y-1">
           <a href="#features" class="block px-3 py-2 text-base font-medium text-dark hover:bg-gray-50 hover:text-primary rounded-md">产品特点</a>
           <a href="#products" class="block px-3 py-2 text-base font-medium text-dark hover:bg-gray-50 hover:text-primary rounded-md">金融产品</a>
@@ -45,7 +49,7 @@
   </header>
 
   <!-- 主内容区 -->
-  <main>
+  <main class="w-full">
     <!-- 英雄区域 -->
     <section class="pt-24 pb-16 md:pt-32 md:pb-24 bg-gradient-to-br from-primary/5 to-white">
       <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -697,174 +701,39 @@ export default {
   data() {
     return {
       username: '',
-      submitted: false
+      submitted: false,
+      isScrolled: false,
+      isMobileMenuOpen: false
     };
   },
-  setup() {
-    console.log("页面已加载，执行初始化操作");
-    fetchData(); 
+  computed: {
+    navbarClasses() {
+      return {
+        'bg-white shadow': this.isScrolled,
+        'bg-transparent': !this.isScrolled
+      }
+    }
+  },
+  mounted() {
+    window.addEventListener('scroll', this.handleScroll)
+  },
+  beforeUnmount() {
+    window.removeEventListener('scroll', this.handleScroll)
+  },
+  created() {
+    console.log("页面已加载，执行初始化操作")
   },
   methods: {
-    submitForm() {
-      if (this.username) {
-        this.submitted = true;
-      } else {
-        alert('请输入用户名');
-      }
+    handleScroll() {
+      this.isScrolled = window.scrollY > 50
+    },
+    toggleMobileMenu() {
+      this.isMobileMenuOpen = !this.isMobileMenuOpen
     }
   }
 };
 
-function fetchData() {
-  // 导航栏滚动效果
-  const navbar = document.getElementById('navbar');
-    window.addEventListener('scroll', () => {
-      if (window.scrollY > 50) {
-        navbar.classList.add('bg-white', 'shadow');
-        navbar.classList.remove('bg-transparent');
-      } else {
-        navbar.classList.remove('bg-white', 'shadow');
-        navbar.classList.add('bg-transparent');
-      }
-    });
-    // 移动端菜单
-    const mobileMenuButton = document.getElementById('mobile-menu-button');
-    const mobileMenu = document.getElementById('mobile-menu');
-    
-    mobileMenuButton.addEventListener('click', () => {
-      mobileMenu.classList.toggle('hidden');
-    });
-    // 模态框
-    const loginModal = document.getElementById('login-modal');
-    const registerModal = document.getElementById('register-modal');
-    const modalContent = document.getElementById('modal-content');
-    const registerModalContent = document.getElementById('register-modal-content');
-    
-    // 打开登录模态框
-    document.getElementById('login-btn').addEventListener('click', openLoginModal);
-    document.getElementById('hero-login-btn').addEventListener('click', openLoginModal);
-    document.getElementById('cta-login-btn').addEventListener('click', openLoginModal);
-    
-    // 打开注册模态框
-    document.getElementById('register-btn').addEventListener('click', openRegisterModal);
-    document.getElementById('hero-register-btn').addEventListener('click', openRegisterModal);
-    document.getElementById('cta-register-btn').addEventListener('click', openRegisterModal);
-    document.getElementById('register-link').addEventListener('click', openRegisterModal);
-    
-    // 关闭模态框
-    document.getElementById('close-login-modal').addEventListener('click', closeLoginModal);
-    document.getElementById('close-register-modal').addEventListener('click', closeRegisterModal);
-    document.getElementById('login-link').addEventListener('click', closeRegisterModal);
-    
-    // 点击模态框外部关闭
-    loginModal.addEventListener('click', (e) => {
-      if (e.target === loginModal) {
-        closeLoginModal();
-      }
-    });
-    
-    registerModal.addEventListener('click', (e) => {
-      if (e.target === registerModal) {
-        closeRegisterModal();
-      }
-    });
 
-     // 表单提交
-     document.getElementById('login-form').addEventListener('submit', (e) => {
-      e.preventDefault();
-      alert('登录功能将在您完成注册后启用');
-    });
-    
-    document.getElementById('register-form').addEventListener('submit', (e) => {
-      e.preventDefault();
-      alert('注册成功！请登录以访问全部金融产品');
-      closeRegisterModal();
-    });
-    
-    // 资产配置图表
-    const ctx = document.getElementById('assetAllocationChart').getContext('2d');
-    const assetAllocationChart = new Chart(ctx, {
-      type: 'doughnut',
-      data: {
-        labels: ['股票', '债券', '房地产', '现金', '其他'],
-        datasets: [{
-          data: [35, 25, 20, 15, 5],
-          backgroundColor: [
-            '#165DFF',
-            '#36D399',
-            '#FF9F43',
-            '#FF5252',
-            '#9C27B0'
-          ],
-          borderWidth: 0
-        }]
-      },
-      options: {
-        responsive: true,
-        maintainAspectRatio: false,
-        plugins: {
-          legend: {
-            position: 'right',
-          },
-          tooltip: {
-            callbacks: {
-              label: function(context) {
-                return context.label + ': ' + context.raw + '%';
-              }
-            }
-          }
-        },
-        cutout: '65%'
-      }
-    });
-    
-    // 查看更多产品按钮
-    document.getElementById('view-more-btn').addEventListener('click', () => {
-      alert('登录后可查看更多金融产品');
-      openLoginModal();
-    });
-    
-    // 免费获取分析报告按钮
-    document.getElementById('analysis-btn').addEventListener('click', () => {
-      alert('登录后可获取详细的资产配置分析报告');
-      openLoginModal();
-    });
-    
-};
-
-
-// 模态框动画
-function openLoginModal() {
-      loginModal.classList.remove('hidden');
-      setTimeout(() => {
-        modalContent.classList.remove('scale-95', 'opacity-0');
-        modalContent.classList.add('scale-100', 'opacity-100');
-      }, 10);
-    }
-    
-    function closeLoginModal() {
-      modalContent.classList.remove('scale-100', 'opacity-100');
-      modalContent.classList.add('scale-95', 'opacity-0');
-      setTimeout(() => {
-        loginModal.classList.add('hidden');
-      }, 300);
-    }
-    
-    function openRegisterModal() {
-      registerModal.classList.remove('hidden');
-      setTimeout(() => {
-        registerModalContent.classList.remove('scale-95', 'opacity-0');
-        registerModalContent.classList.add('scale-100', 'opacity-100');
-      }, 10);
-    }
-    
-    function closeRegisterModal() {
-      registerModalContent.classList.remove('scale-100', 'opacity-100');
-      registerModalContent.classList.add('scale-95', 'opacity-0');
-      setTimeout(() => {
-        registerModal.classList.add('hidden');
-      }, 300);
-    }
     
 </script>
 

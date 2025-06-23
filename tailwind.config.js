@@ -15,6 +15,10 @@ export default {
       fontFamily: {
         inter: ['Inter', 'system-ui', 'sans-serif'],
       },
+      screens: {
+        sm: '640px',
+        md: '768px'
+      }
     },
   },
   plugins: [],
