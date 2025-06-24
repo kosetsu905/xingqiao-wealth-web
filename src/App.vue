@@ -26,11 +26,7 @@
             </button>
             <button class="ml-4 block sm:hidden text-gray-500 
             hover:text-primary focus:outline-none" onclick="toggleMobileMenu()" >
-            <font-awesome-icon
-                  :icon="['fas', 'bars']"
-                  class="text-xl text-gray-500 hover:text-gray-700"
-                  @click="toggleMobileMenu"
-                />         
+              <i class="fa fa-bars text-xl"></i>
             </button> 
           </div>
         </div>
@@ -732,8 +728,6 @@ export default {
     }
   }
 };
-
-
     
 </script>
 
