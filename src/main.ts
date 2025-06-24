@@ -16,6 +16,6 @@ const app = createApp(App);
 app.config.globalProperties.$Chart = Chart;
 
 // 注册图标组件
-app.component('FontAwesomeIcon', FontAwesomeIcon); 
+app.component('font-awesome-icon', FontAwesomeIcon); 
 // 挂载Vue3实例到 #app 容器
 app.mount('#app');
