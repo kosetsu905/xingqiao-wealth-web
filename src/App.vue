@@ -1,163 +1,18 @@
 <template>
   <div  class="min-h-screen w-screen overflow-x-hidden">
   <!-- 导航栏 -->
-  <header id="navbar" :class="navbarClasses" class="fixed w-full top-0 z-50 transition-all duration-300">
-    <nav class="bg-white/95 backdrop-blur-sm shadow-sm">
-      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div class="flex justify-between h-16">
-          <div class="flex items-center">
-            <a href="#" class="flex-shrink-0 flex items-center">
-              <i class="fa fa-globe text-primary text-2xl mr-2"></i>
-              <span class="text-xl font-bold text-primary">环球金融</span>
-            </a>
-            <div class="hidden sm:ml-8 sm:flex space-x-8">
-              <a href="#features" class="text-dark hover:text-primary px-3 py-2 text-sm font-medium transition-colors">产品特点</a>
-              <a href="#products" class="text-dark hover:text-primary px-3 py-2 text-sm font-medium transition-colors">金融产品</a>
-              <a href="#process" class="text-dark hover:text-primary px-3 py-2 text-sm font-medium transition-colors">服务流程</a>
-              <a href="#about" class="text-dark hover:text-primary px-3 py-2 text-sm font-medium transition-colors">关于我们</a>
-            </div>
-          </div>
-          <div class="flex items-center">
-            <button id="login-btn" class="bg-primary hover:bg-primary/90 text-white px-4 py-2 rounded-md text-sm font-medium transition-colors mr-2">
-              登录
-            </button>
-            <button id="register-btn" class="bg-white hover:bg-gray-50 text-primary border border-primary px-4 py-2 rounded-md text-sm font-medium transition-colors">
-              注册
-            </button>
-            <button class="ml-4 block sm:hidden text-gray-500 
-            hover:text-primary focus:outline-none" onclick="toggleMobileMenu()" >
-              <i class="fa fa-bars text-xl"></i>
-            </button> 
-          </div>
-        </div>
-      </div>
-      
-      <!-- 移动端菜单 -->
-      <div id="mobile-menu"  :class="{ 'hidden': !isMobileMenuOpen }" class="sm:hidden bg-white border-t">
-        <div class="px-2 pt-2 pb-3 space-y-1">
-          <a href="#features" class="block px-3 py-2 text-base font-medium text-dark hover:bg-gray-50 hover:text-primary rounded-md">产品特点</a>
-          <a href="#products" class="block px-3 py-2 text-base font-medium text-dark hover:bg-gray-50 hover:text-primary rounded-md">金融产品</a>
-          <a href="#process" class="block px-3 py-2 text-base font-medium text-dark hover:bg-gray-50 hover:text-primary rounded-md">服务流程</a>
-          <a href="#about" class="block px-3 py-2 text-base font-medium text-dark hover:bg-gray-50 hover:text-primary rounded-md">关于我们</a>
-        </div>
-      </div>
-    </nav>
-  </header>
+    <Navbar
+     @login-clicked="handleLogin"
+      @register-clicked="handleRegister"
+    />
 
   <!-- 主内容区 -->
   <main class="w-full">
     <!-- 英雄区域 -->
-    <section class="pt-24 pb-16 md:pt-32 md:pb-24 bg-gradient-to-br from-primary/5 to-white">
-      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div class="flex flex-col md:flex-row items-center">
-          <div class="md:w-1/2 md:pr-12">
-            <h1 class="text-[clamp(2rem,5vw,3.5rem)] font-bold leading-tight text-dark mb-4">
-              智能跨境金融<br><span class="text-primary">全球资产配置</span>
-            </h1>
-            <p class="text-lg text-gray-600 mb-8">
-              环球金融提供一站式跨境金融服务，助您安全、高效地管理全球资产，把握国际投资机遇。
-            </p>
-            <div class="flex flex-col sm:flex-row space-y-4 sm:space-y-0 sm:space-x-4">
-              <button id="hero-login-btn" class="bg-primary hover:bg-primary/90 text-white px-6 py-3 rounded-md text-base font-medium transition-all shadow-lg hover:shadow-xl transform hover:-translate-y-1">
-                立即登录
-              </button>
-              <button id="hero-register-btn" class="bg-white hover:bg-gray-50 text-primary border border-primary px-6 py-3 rounded-md text-base font-medium transition-all shadow-md hover:shadow-lg">
-                免费注册
-              </button>
-            </div>
-            <div class="mt-8 flex items-center space-x-4">
-              <div class="flex -space-x-2">
-                <img class="w-10 h-10 rounded-full border-2 border-white" src="https://picsum.photos/id/1005/200/200" alt="用户头像" />
-                <img class="w-10 h-10 rounded-full border-2 border-white" src="https://picsum.photos/id/1012/200/200" alt="用户头像" />
-                <img class="w-10 h-10 rounded-full border-2 border-white" src="https://picsum.photos/id/1027/200/200" alt="用户头像" />
-              </div>
-              <p class="text-sm text-gray-600">
-                <span class="font-semibold">10,000+</span> 投资者已选择我们的服务
-              </p>
-            </div>
-          </div>
-          <div class="mt-12 md:mt-0 md:w-1/2 relative">
-            <div class="relative z-10 bg-white rounded-xl shadow-2xl overflow-hidden transform transition-all duration-500 hover:scale-[1.02]">
-              <img src="https://picsum.photos/id/180/800/500" alt="跨境金融服务" class="w-full h-auto" />
-              <div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent flex items-end">
-                <div class="p-6">
-                  <h3 class="text-white text-xl font-semibold mb-2">全球资产配置方案</h3>
-                  <p class="text-white/80">多元化投资组合，降低风险，提升回报</p>
-                </div>
-              </div>
-            </div>
-            <div class="absolute top-1/4 -right-4 w-32 h-32 bg-secondary/20 rounded-full blur-3xl -z-10"></div>
-            <div class="absolute bottom-1/4 -left-4 w-40 h-40 bg-primary/20 rounded-full blur-3xl -z-10"></div>
-          </div>
-        </div>
-      </div>
-    </section>
+    <HeroSection />
 
     <!-- 产品特点 -->
-    <section id="features" class="py-16 md:py-24 bg-white">
-      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div class="text-center mb-16">
-          <h2 class="text-[clamp(1.5rem,3vw,2.5rem)] font-bold text-dark mb-4">为什么选择我们的跨境金融服务</h2>
-          <p class="text-lg text-gray-600 max-w-3xl mx-auto">我们提供全方位的跨境金融解决方案，满足您的多元化需求</p>
-        </div>
-        
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-          <!-- 特点卡片 1 -->
-          <div class="bg-white rounded-xl shadow-lg p-6 card-hover border border-gray-100">
-            <div class="w-12 h-12 bg-primary/10 rounded-full flex items-center justify-center mb-4">
-              <i class="fa fa-shield text-primary text-xl"></i>
-            </div>
-            <h3 class="text-xl font-semibold mb-3">安全可靠</h3>
-            <p class="text-gray-600">采用银行级安全技术，多重加密保障您的资金和信息安全，让您的跨境交易无忧。</p>
-          </div>
-          
-          <!-- 特点卡片 2 -->
-          <div class="bg-white rounded-xl shadow-lg p-6 card-hover border border-gray-100">
-            <div class="w-12 h-12 bg-primary/10 rounded-full flex items-center justify-center mb-4">
-              <i class="fa fa-globe text-primary text-xl"></i>
-            </div>
-            <h3 class="text-xl font-semibold mb-3">全球覆盖</h3>
-            <p class="text-gray-600">覆盖全球主要金融市场，支持多币种交易，为您提供全球化的投资机会和资金管理。</p>
-          </div>
-          
-          <!-- 特点卡片 3 -->
-          <div class="bg-white rounded-xl shadow-lg p-6 card-hover border border-gray-100">
-            <div class="w-12 h-12 bg-primary/10 rounded-full flex items-center justify-center mb-4">
-              <i class="fa fa-line-chart text-primary text-xl"></i>
-            </div>
-            <h3 class="text-xl font-semibold mb-3">智能风控</h3>
-            <p class="text-gray-600">AI驱动的智能风控系统，实时监控市场变化，为您提供风险预警和资产配置建议。</p>
-          </div>
-          
-          <!-- 特点卡片 4 -->
-          <div class="bg-white rounded-xl shadow-lg p-6 card-hover border border-gray-100">
-            <div class="w-12 h-12 bg-primary/10 rounded-full flex items-center justify-center mb-4">
-              <i class="fa fa-clock-o text-primary text-xl"></i>
-            </div>
-            <h3 class="text-xl font-semibold mb-3">实时交易</h3>
-            <p class="text-gray-600">7×24小时全球市场监控，实时交易执行，助您把握最佳投资时机，实现资产快速配置。</p>
-          </div>
-          
-          <!-- 特点卡片 5 -->
-          <div class="bg-white rounded-xl shadow-lg p-6 card-hover border border-gray-100">
-            <div class="w-12 h-12 bg-primary/10 rounded-full flex items-center justify-center mb-4">
-              <i class="fa fa-users text-primary text-xl"></i>
-            </div>
-            <h3 class="text-xl font-semibold mb-3">专业团队</h3>
-            <p class="text-gray-600">由资深金融专家和技术精英组成的专业团队，为您提供一对一的跨境金融咨询服务。</p>
-          </div>
-          
-          <!-- 特点卡片 6 -->
-          <div class="bg-white rounded-xl shadow-lg p-6 card-hover border border-gray-100">
-            <div class="w-12 h-12 bg-primary/10 rounded-full flex items-center justify-center mb-4">
-              <i class="fa fa-calculator text-primary text-xl"></i>
-            </div>
-            <h3 class="text-xl font-semibold mb-3">低费率</h3>
-            <p class="text-gray-600">透明的费用结构，行业领先的低费率，降低您的跨境金融服务成本，提高投资回报。</p>
-          </div>
-        </div>
-      </div>
-    </section>
+    <FeaturesSection />
 
     <!-- 数据统计 -->
     <section class="py-16 bg-gradient-to-r from-primary to-primary/80 text-white">
@@ -190,7 +45,7 @@
           <h2 class="text-[clamp(1.5rem,3vw,2.5rem)] font-bold text-dark mb-4">跨境金融产品</h2>
           <p class="text-lg text-gray-600 max-w-3xl mx-auto">登录后即可访问全部金融产品，开始您的全球资产配置之旅</p>
         </div>
-        
+
         <div id="products-container" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
           <!-- 产品卡片 1 -->
           <div class="bg-white rounded-xl shadow-lg overflow-hidden card-hover">
@@ -210,7 +65,7 @@
               </button>
             </div>
           </div>
-          
+
           <!-- 产品卡片 2 -->
           <div class="bg-white rounded-xl shadow-lg overflow-hidden card-hover">
             <div class="relative">
@@ -228,7 +83,7 @@
               </button>
             </div>
           </div>
-          
+
           <!-- 产品卡片 3 -->
           <div class="bg-white rounded-xl shadow-lg overflow-hidden card-hover">
             <div class="relative">
@@ -247,7 +102,7 @@
               </button>
             </div>
           </div>
-          
+
           <!-- 产品卡片 4 -->
           <div class="bg-white rounded-xl shadow-lg overflow-hidden card-hover">
             <div class="relative">
@@ -265,7 +120,7 @@
               </button>
             </div>
           </div>
-          
+
           <!-- 产品卡片 5 -->
           <div class="bg-white rounded-xl shadow-lg overflow-hidden card-hover">
             <div class="relative">
@@ -283,7 +138,7 @@
               </button>
             </div>
           </div>
-          
+
           <!-- 产品卡片 6 -->
           <div class="bg-white rounded-xl shadow-lg overflow-hidden card-hover">
             <div class="relative">
@@ -302,7 +157,7 @@
             </div>
           </div>
         </div>
-        
+
         <div class="text-center mt-12">
           <button id="view-more-btn" class="bg-white hover:bg-gray-50 text-primary border border-primary px-6 py-3 rounded-md text-base font-medium transition-colors shadow-md hover:shadow-lg">
             查看更多产品
@@ -318,11 +173,11 @@
           <h2 class="text-[clamp(1.5rem,3vw,2.5rem)] font-bold text-dark mb-4">简单四步，开启全球投资之旅</h2>
           <p class="text-lg text-gray-600 max-w-3xl mx-auto">我们简化了跨境金融服务流程，让您轻松实现全球资产配置</p>
         </div>
-        
+
         <div class="relative">
           <!-- 连接线 -->
           <div class="hidden md:block absolute top-1/4 left-0 w-full h-0.5 bg-gray-200 -z-10"></div>
-          
+
           <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
             <!-- 步骤 1 -->
             <div class="text-center">
@@ -330,21 +185,21 @@
               <h3 class="text-xl font-semibold mb-3">注册账户</h3>
               <p class="text-gray-600">填写基本信息，完成实名认证，轻松创建您的环球金融账户。</p>
             </div>
-            
+
             <!-- 步骤 2 -->
             <div class="text-center">
               <div class="w-16 h-16 bg-primary text-white rounded-full flex items-center justify-center mx-auto mb-4 text-xl font-bold">2</div>
               <h3 class="text-xl font-semibold mb-3">风险评估</h3>
               <p class="text-gray-600">完成风险承受能力评估，我们将根据您的情况提供个性化的投资建议。</p>
             </div>
-            
+
             <!-- 步骤 3 -->
             <div class="text-center">
               <div class="w-16 h-16 bg-primary text-white rounded-full flex items-center justify-center mx-auto mb-4 text-xl font-bold">3</div>
               <h3 class="text-xl font-semibold mb-3">资金存入</h3>
               <p class="text-gray-600">通过多种安全渠道存入资金，支持多种货币，实时到账。</p>
             </div>
-            
+
             <!-- 步骤 4 -->
             <div class="text-center">
               <div class="w-16 h-16 bg-primary text-white rounded-full flex items-center justify-center mx-auto mb-4 text-xl font-bold">4</div>
@@ -353,7 +208,7 @@
             </div>
           </div>
         </div>
-        
+
         <div class="mt-16 bg-gray-50 rounded-xl p-8">
           <div class="flex flex-col md:flex-row items-center">
             <div class="md:w-1/2 mb-8 md:mb-0 md:pr-8">
@@ -378,7 +233,7 @@
           <h2 class="text-[clamp(1.5rem,3vw,2.5rem)] font-bold text-dark mb-4">用户的真实评价</h2>
           <p class="text-lg text-gray-600 max-w-3xl mx-auto">听听我们的客户如何评价环球金融的跨境金融服务</p>
         </div>
-        
+
         <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
           <!-- 评价卡片 1 -->
           <div class="bg-white rounded-xl shadow-lg p-6 card-hover">
@@ -398,7 +253,7 @@
             </div>
             <p class="text-gray-600">"环球金融的跨境支付解决方案帮助我们公司节省了大量的时间和成本，国际转账变得如此简单。他们的客户服务也非常专业，总是能及时解答我的问题。"</p>
           </div>
-          
+
           <!-- 评价卡片 2 -->
           <div class="bg-white rounded-xl shadow-lg p-6 card-hover">
             <div class="flex items-center mb-4">
@@ -417,7 +272,7 @@
             </div>
             <p class="text-gray-600">"作为一名投资顾问，我推荐我的客户使用环球金融的服务。他们的国际基金组合非常多样化，风险控制也很到位。平台界面简洁易用，数据分析工具对我的工作帮助很大。"</p>
           </div>
-          
+
           <!-- 评价卡片 3 -->
           <div class="bg-white rounded-xl shadow-lg p-6 card-hover">
             <div class="flex items-center mb-4">
@@ -557,7 +412,7 @@
             </a>
           </div>
         </div>
-        
+
         <div>
           <h3 class="text-lg font-semibold mb-4">产品服务</h3>
           <ul class="space-y-2">
@@ -569,7 +424,7 @@
             <li><a href="#" class="text-gray-400 hover:text-white transition-colors">离岸账户服务</a></li>
           </ul>
         </div>
-        
+
         <div>
           <h3 class="text-lg font-semibold mb-4">关于我们</h3>
           <ul class="space-y-2">
@@ -580,7 +435,7 @@
             <li><a href="#" class="text-gray-400 hover:text-white transition-colors">联系我们</a></li>
           </ul>
         </div>
-        
+
         <div>
           <h3 class="text-lg font-semibold mb-4">客户支持</h3>
           <ul class="space-y-2">
@@ -592,7 +447,7 @@
           </ul>
         </div>
       </div>
-      
+
       <div class="border-t border-gray-800 pt-8">
         <div class="flex flex-col md:flex-row justify-between items-center">
           <p class="text-gray-400 text-sm mb-4 md:mb-0">
@@ -693,42 +548,36 @@
 </template>
 
 <script>
-export default {
+  import Navbar from './components/Navbar.vue'
+  import HeroSection from './components/HeroSection.vue'
+  import FeaturesSection from './components/FeaturesSection.vue'
+  export default {
+    components: {
+      Navbar,
+      HeroSection,
+      FeaturesSection
+    },
   data() {
     return {
       username: '',
       submitted: false,
-      isScrolled: false,
-      isMobileMenuOpen: false
     };
-  },
-  computed: {
-    navbarClasses() {
-      return {
-        'bg-white shadow': this.isScrolled,
-        'bg-transparent': !this.isScrolled
-      }
-    }
-  },
-  mounted() {
-    window.addEventListener('scroll', this.handleScroll)
-  },
-  beforeUnmount() {
-    window.removeEventListener('scroll', this.handleScroll)
   },
   created() {
     console.log("页面已加载，执行初始化操作")
   },
   methods: {
-    handleScroll() {
-      this.isScrolled = window.scrollY > 50
+    handleLogin() {
+      // 处理登录逻辑
+      alert('登录成功！');
     },
-    toggleMobileMenu() {
-      this.isMobileMenuOpen = !this.isMobileMenuOpen
+    handleRegister() {
+      // 处理注册逻辑
+      alert('注册成功！');
     }
   }
 };
-    
+
 </script>
 
 <style scoped>
