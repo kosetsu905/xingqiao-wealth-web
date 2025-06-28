@@ -14,7 +14,7 @@
       @register="handleRegister"
       title-part2="定制化资产配置"
       user-count="50,000+"
-      main-image="/custom-image.jpg"
+      main-image="https://picsum.photos/id/180/800/500"
     />
 
     <!-- 产品特点 -->

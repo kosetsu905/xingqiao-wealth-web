@@ -45,12 +45,11 @@
             <img :src="mainImage" alt="跨境金融服务" class="w-full h-auto" />
             <div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent flex items-end">
               <div class="p-6">
-                <h3 class="text-white text-xl font-semibold mb-2">{{ imageTitle }}</h3>
-                <p class="text-white/80">{{ imageDescription }}</p>
+                <h3 class="text-white text-xl font-semibold mb-2">{{imageTitle}}}</h3>
+                <p class="text-white/80">{{imageDescription}}}</p>
               </div>
             </div>
           </div>
-          <!-- 背景特效 -->
           <div class="absolute top-1/4 -right-4 w-32 h-32 bg-secondary/20 rounded-full blur-3xl -z-10"></div>
           <div class="absolute bottom-1/4 -left-4 w-40 h-40 bg-primary/20 rounded-full blur-3xl -z-10"></div>
         </div>
