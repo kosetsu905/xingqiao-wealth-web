@@ -52,18 +52,23 @@
 
   <!-- 登录模态框 -->
     <LoginModal
-        v-model="showLoginModal"
-        @login="handleLogin"
+        :show="showLoginModal"
+        :title="'用户登录'"
+        :buttonText="'登录'"
+        @close="showLoginModal = false"
+        @login="handleActualLogin"
         @toggle-auth="switchToRegister"
     />
 
   <!-- 注册模态框 -->
     <RegisterModal
-        v-model="showRegisterModal"
+        :show="showRegisterModal"
+        :title="'用户注册'"
+        :buttonText="'立即注册'"
+        @close="showRegisterModal = false"
         @register="handleRegister"
         @toggle-auth="switchToLogin"
     />
-
 </div>
 </template>
 
@@ -289,13 +294,18 @@
   },
   created() {
     console.log("页面已加载，执行初始化操作")
-    this.showLoginModal = true
+
   },
   methods: {
     handleLogin() {
       // 处理登录逻辑
       console.log('登录成功！');
       this.showLoginModal = true
+    },
+    handleActualLogin() {
+      // 添加实际登录逻辑
+      console.log('执行登录操作')
+      this.showLoginModal = false
     },
     handleRegister() {
       // 处理注册逻辑

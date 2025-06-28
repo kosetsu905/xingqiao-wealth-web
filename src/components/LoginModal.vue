@@ -42,6 +42,7 @@
 </template>
 
 <script setup>
+import { ref } from 'vue'  // 添加响应式引用
 defineProps({
   show: Boolean,
   title: {
@@ -53,6 +54,11 @@ defineProps({
     default: '登录'
   }
 })
+
+// 添加响应式表单数据
+const email = ref('')
+const password = ref('')
+const rememberMe = ref(false)
 
 defineEmits(['close', 'login', 'toggle-auth'])
 </script>
