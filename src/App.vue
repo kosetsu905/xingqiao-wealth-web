@@ -9,10 +9,20 @@
   <!-- 主内容区 -->
   <main class="w-full">
     <!-- 英雄区域 -->
-    <HeroSection />
+    <HeroSection
+      @login="handleLogin"
+      @register="handleRegister"
+      title-part2="定制化资产配置"
+      user-count="50,000+"
+      main-image="/custom-image.jpg"
+    />
 
     <!-- 产品特点 -->
-    <FeaturesSection />
+    <FeaturesSection
+      title="我们的核心优势"
+      subtitle="专业可靠的跨境金融解决方案"
+      :features="customFeatures"
+    />
 
     <!-- 数据统计 -->
     <StatsSection />
@@ -289,6 +299,38 @@
         { text: "隐私政策", url: "#" },
         { text: "服务条款", url: "#" },
         { text: "法律声明", url: "#" }
+      ],
+      customFeatures:[
+        {
+          icon: 'fa-shield',
+          title: '安全可靠',
+          description: '采用银行级安全技术，多重加密保障您的资金和信息安全，让您的跨境交易无忧。'
+        },
+        {
+          icon: 'fa-globe',
+          title: '全球覆盖',
+          description: '覆盖全球主要金融市场，支持多币种交易，为您提供全球化的投资机会和资金管理。'
+        },
+        {
+          icon: 'fa-line-chart',
+          title: '智能风控',
+          description: 'AI驱动的智能风控系统，实时监控市场变化，为您提供风险预警和资产配置建议。'
+        },
+        {
+          icon: 'fa-clock-o',
+          title: '实时交易',
+          description: '7×24小时全球市场监控，实时交易执行，助您把握最佳投资时机，实现资产快速配置。'
+        },
+        {
+          icon: 'fa-users',
+          title: '专业团队',
+          description: '由资深金融专家和技术精英组成的专业团队，为您提供一对一的跨境金融咨询服务。'
+        },
+        {
+          icon: 'fa-calculator',
+          title: '低费率',
+          description: '透明的费用结构，行业领先的低费率，降低您的跨境金融服务成本，提高投资回报。'
+        }
       ]
     };
   },
