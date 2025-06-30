@@ -4,7 +4,7 @@ import App from './App.vue'
 import { Chart, registerables } from 'chart.js';
 Chart.register(...registerables);
 
-import 'font-awesome/css/font-awesome.min.css';
+import '@fortawesome/fontawesome-free/css/all.min.css';
 
 
 // 在Vue实例中全局挂载

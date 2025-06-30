@@ -7,17 +7,27 @@ export default {
   theme: {
     extend: {
       colors: {
-        primary: '#165DFF',
-        secondary: '#36D399',
-        dark: '#1E293B',
-        light: '#F8FAFC'
+        primary: {
+          light: "#E6F7FF",
+          DEFAULT: "#1890FF",
+          dark: "#0050B3"
+        },
+        secondary: {
+          light: "#FFF7E6",
+          DEFAULT: "#FAAD14",
+          dark: "#AD6800"
+        },
+        wealth: {
+          light: "#F6FFED",
+          DEFAULT: "#52C41A",
+          dark: "#135200"
+        }
       },
       fontFamily: {
-        inter: ['Inter', 'system-ui', 'sans-serif'],
-      },
-      screens: {
-        sm: '640px',
-        md: '768px'
+        sans: [
+          "Inter",
+          "sans-serif"
+        ]
       }
     },
   },
