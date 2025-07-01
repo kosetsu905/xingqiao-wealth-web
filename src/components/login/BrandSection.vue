@@ -1,15 +1,13 @@
 <template>
-  <div id="login-branding" class="w-full md:w-5/12 bg-gradient-to-br from-primary-dark to-primary p-8 text-white flex flex-col justify-between">
-    <div id="brand-logo" class="mb-8">
-      <div class="flex items-center">
-        <div class="w-12 h-12 bg-white rounded-lg flex items-center justify-center">
-          <i class="fa-solid fa-chart-line text-primary text-2xl"></i>
-        </div>
-        <h1 class="ml-3 text-2xl font-bold">财富管理</h1>
+  <div id="login-branding" class="login-branding">
+    <div id="brand-logo" class="brand-logo">
+      <div class="brand-logo-image">
+        <i class="fa-solid fa-chart-line text-primary text-2xl"></i>
       </div>
+      <h1 class="ml-3 text-2xl font-bold">财富管理</h1>
     </div>
 
-    <div id="brand-image" class="flex-grow flex items-center justify-center py-8">
+    <div id="brand-image" class="brand-image">
       <img class="w-full h-auto rounded-lg" src="/images/1e58e4c6eb-272e2ec5c6e717c81391.png"
            alt="financial wealth management illustration">
     </div>
@@ -20,3 +18,23 @@
     </div>
   </div>
 </template>
+
+<script setup lang="ts">
+</script>
+
+<style scoped>
+
+  .login-branding {
+    @apply w-full md:w-5/12 bg-gradient-to-br from-primary-dark to-primary p-8 text-white flex flex-col justify-between;
+  }
+  .brand-logo{
+    @apply mb-8 flex items-center;
+  }
+  .brand-logo-image{
+    @apply w-12 h-12 bg-white rounded-lg flex items-center justify-center;
+  }
+  .brand-image{
+    @apply flex-grow flex items-center justify-center py-8;
+  }
+
+</style>

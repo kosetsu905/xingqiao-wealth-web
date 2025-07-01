@@ -1,12 +1,10 @@
 <template>
-  <div id="login-page" class="flex min-h-[800px] items-center justify-center p-4">
-    <div id="login-container" class="w-full max-w-4xl bg-white rounded-xl shadow-lg overflow-hidden">
-      <div class="flex flex-col md:flex-row">
-         <!-- 左侧栏-->
-        <BrandSection />
-         <!-- 右侧栏-->
-        <LoginFormSection />
-      </div>
+  <div id="login-page" class="login-page">
+    <div id="login-container" class="login-container">
+      <!-- 左侧栏-->
+      <BrandSection />
+      <!-- 右侧栏-->
+      <LoginFormSection />
     </div>
   </div>
 </template>
@@ -22,3 +20,13 @@ export default {
   }
 }
 </script>
+
+
+<style scoped>
+  .login-container {
+    @apply w-full max-w-4xl bg-white rounded-xl shadow-lg overflow-hidden flex flex-col md:flex-row;
+  }
+  .login-page{
+    @apply flex min-h-[800px] items-center justify-center p-4;
+  }
+</style>

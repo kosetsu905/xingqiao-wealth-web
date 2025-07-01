@@ -1,33 +1,9 @@
 <template>
-
-<!--登录页-->
-  <LoginPage />
+  <router-view></router-view>
 </template>
 
 <script>
-import LoginPage from './components/LoginPage.vue'
-
-
-  export default {
-    components: {
-      LoginPage
-    },
-  data() {
-    return {
-
-    };
-  },
-  created() {
-    console.log("页面已加载，执行初始化操作")
-
-  },
-  methods: {
-
-  }
-};
-
+export default {
+  name: 'App'
+}
 </script>
-
-<style scoped>
-
-</style>
