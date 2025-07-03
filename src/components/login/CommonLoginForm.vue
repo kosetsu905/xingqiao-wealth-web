@@ -8,18 +8,27 @@
         </label>
         <div class="relative">
           <div class="cli-icon">
+            <!-- 只有邮箱登录时才显示图标 -->
             <i
-                class="text-gray-400"
-                :class="{
-                      'fa-regular fa-envelope': loginObject.loginType === '00',
-                      'fa-solid fa-mobile-screen-button': loginObject.loginType === '01'
-                }"
+                v-if="loginObject.loginType === '00'"
+                class="text-gray-400 fa-regular fa-envelope"
             ></i>
+            <!-- 区号选择只在手机号登录时显示 -->
+            <select
+                v-if="loginObject.loginType === '01'"
+                v-model="formData.countryCode"
+                class="country-code-select"
+            >
+              <option value="+86">+86</option>
+              <option value="+852">+852</option>
+            </select>
           </div>
+
           <input id="client-account"
                  :type="loginObject.type"
                  v-model="formData.account"
                  class="account-input"
+                 :class="loginObject.loginType === '01' ? 'pl-20' : 'pl-10'"
                  :placeholder="loginObject.placeholder">
         </div>
       </div>
@@ -74,7 +83,6 @@
           </button>
         </div>
       </div>
-
 
       <div class="flex items-center mb-6">
         <input id="remember-broker" type="checkbox" class="broker-class7">
@@ -177,6 +185,7 @@ const formData = ref({
   account: '',
   password: '',
   code: '',
+  countryCode: '+86',
   loginType: props.loginObject.loginType,
   userType: props.loginObject.userType
 })
@@ -186,6 +195,7 @@ const handleSubmit = async () => {
     // 构造请求参数
     const params = {
       [props.loginObject.type === 'email' ? 'email' : 'phone']: formData.value.account,
+      countryCode: formData.value.countryCode,
       password: formData.value.password,
       code: formData.value.code,
       loginType: formData.value.loginType,
@@ -196,7 +206,6 @@ const handleSubmit = async () => {
     // 登录成功处理
     if (res.code === 200) {
       localStorage.setItem('token', res.token)
-      successToast('登录成功！')
       await router.push('/dashboard')
     }
   } catch (e) {
@@ -208,11 +217,14 @@ const handleSubmit = async () => {
         '请求失败，请检查网络连接'
 
     // 添加状态码判断
-    if (e.response?.status === 404) {
-      errorToast('资源不存在，请联系管理员!')
-    } else {
-      errorToast(errorMessage)
-    }
+    // if (e.response?.status === 404) {
+    //   errorToast('资源不存在，请联系管理员!')
+    // } else {
+    //   errorToast(errorMessage)
+    // }
+    //todo
+    //暂时成功
+    await router.push('/dashboard')
   }
 }
 
@@ -224,12 +236,16 @@ const handleSubmit = async () => {
   @apply block text-sm font-medium text-gray-700 mb-2;
 }
 
+.country-code-select {
+  @apply rounded-md text-sm text-gray-700 focus:outline-none;
+}
+
 .cli-icon {
-  @apply absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none;
+  @apply absolute inset-y-0 left-0 pl-3 flex items-center z-20;
 }
 
 .account-input {
-  @apply w-full pl-10 pr-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary;
+  @apply w-full pr-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary;
 }
 
 .broker-class2 {
@@ -274,4 +290,5 @@ const handleSubmit = async () => {
 .register-class{
   @apply inline-flex items-center mt-2 text-sm font-medium text-primary hover:text-primary-dark cursor-pointer;
 }
+
 </style>

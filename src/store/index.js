@@ -1,25 +1,21 @@
-import Vue from 'vue'
-import Vuex from 'vuex'
-import app from './modules/app'
-import dict from './modules/dict'
-import user from './modules/user'
-import tagsView from './modules/tagsView'
-import permission from './modules/permission'
-import settings from './modules/settings'
-import getters from './getters'
+import { defineStore } from 'pinia'
 
-Vue.use(Vuex)
 
-const store = new Vuex.Store({
-  modules: {
-    app,
-    dict,
-    user,
-    tagsView,
-    permission,
-    settings
-  },
-  getters
+
+// demo 1使用组合式 API 风格
+export const useUserStore = defineStore('user', () => {
+  const count = ref(0)
+  const name = ref('Eduardo')
+  const doubleCount = computed(() => count.value * 2)
+  
+  function increment() {
+    count.value++
+  }
+  
+  async function fetchData() {
+    const response = await fetch('https://api.example.com/data')
+    name.value = await response.json()
+  }
+  
+  return { count, name, doubleCount, increment, fetchData }
 })
-
-export default store

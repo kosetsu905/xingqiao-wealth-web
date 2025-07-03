@@ -4,7 +4,8 @@ import App from './App.vue'
 import { createRouter, createWebHistory } from 'vue-router'
 import { Chart, registerables } from 'chart.js';
 import '@fortawesome/fontawesome-free/css/all.min.css';
-import LoginPage from './components/LoginPage.vue' // 新增导入
+import LoginPage from './components/LoginPage.vue' 
+import { createPinia } from 'pinia'
 
 
 
@@ -22,8 +23,8 @@ const router = createRouter({
 // 在Vue实例中全局挂载
 const app = createApp(App);
 app.config.globalProperties.$Chart = Chart;
-app.use(router) // 注册路由
-
-
+// 注册路由
+app.use(router) 
+app.use(createPinia())
 // 挂载Vue3实例到 #app 容器
 app.mount('#app');
