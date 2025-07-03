@@ -8,18 +8,20 @@
     </div>
 
     <div id="brand-image" class="brand-image">
-      <img class="w-full h-auto rounded-lg" src="/images/1e58e4c6eb-272e2ec5c6e717c81391.png"
+      <img class="w-full h-auto rounded-lg" :src="brandData.image"
            alt="financial wealth management illustration">
     </div>
 
     <div id="brand-text" class="mt-8">
-      <h2 class="text-xl font-bold mb-2">专业财富管理</h2>
-      <p class="text-sm opacity-80">为您的未来提供安全可靠的财务规划和投资解决方案</p>
+      <h2 class="text-xl font-bold mb-2">{{brandData.name}}</h2>
+      <p class="text-sm opacity-80">{{brandData.value}}</p>
     </div>
   </div>
 </template>
 
 <script setup>
+
+defineProps(['brandData']);
 </script>
 
 <style scoped>

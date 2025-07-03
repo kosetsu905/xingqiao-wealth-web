@@ -2,23 +2,25 @@
   <div id="login-page" class="login-page">
     <div id="login-container" class="login-container">
       <!-- 左侧栏-->
-      <BrandSection />
+      <BrandSection :brand-data="brandData"/>
       <!-- 右侧栏-->
       <LoginFormSection />
     </div>
   </div>
 </template>
 
-<script>
-import BrandSection from './login/BrandSection.vue'
-import LoginFormSection from './login/LoginFormSection.vue'
+<script setup>
+import BrandSection from '../components/login/BrandSection.vue'
+import LoginFormSection from '../components/login/LoginFormSection.vue'
+import { ref } from 'vue';
 
-export default {
-  components: {
-    BrandSection,
-    LoginFormSection
-  }
-}
+const brandData = ref({
+  name: '专业财富管理',
+  value: '为您的未来提供安全可靠的财务规划和投资解决方案',
+  image: '/images/1e58e4c6eb-272e2ec5c6e717c81391.png'
+});
+
+
 </script>
 
 

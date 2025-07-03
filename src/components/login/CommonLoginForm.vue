@@ -138,10 +138,11 @@
             </span>
           奖励
         </p>
-        <span class="register-class">
+        <span class="register-class" @click.prevent="goToRegister()">
             立即注册
             <i class="fa-solid fa-arrow-right ml-1 text-xs"></i>
-          </span>
+        </span>
+
       </div>
     </div>
   </div>
@@ -228,6 +229,15 @@ const handleSubmit = async () => {
   }
 }
 
+function goToRegister() {
+  router.push({
+    path: '/register',
+    query: {
+      userType: props.loginObject.userType,
+      loginType: props.loginObject.loginType
+    }
+  })
+}
 
 </script>
 
