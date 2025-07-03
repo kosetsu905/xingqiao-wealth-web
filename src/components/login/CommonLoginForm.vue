@@ -145,7 +145,7 @@ import { login } from '@/api/login' // 新增API引入
 import { useRouter } from 'vue-router' // 新增路由引入
 const router = useRouter()
 import { useToast } from '@/composables/useToast'
-const { success, error } = useToast()
+const { successToast, errorToast } = useToast()
 
 // 定义 props
 const props = defineProps({
@@ -196,7 +196,7 @@ const handleSubmit = async () => {
     // 登录成功处理
     if (res.code === 200) {
       localStorage.setItem('token', res.token)
-      success('登录成功！')
+      successToast('登录成功！')
       await router.push('/dashboard')
     }
   } catch (e) {
@@ -209,9 +209,9 @@ const handleSubmit = async () => {
 
     // 添加状态码判断
     if (e.response?.status === 404) {
-      error('资源不存在，请联系管理员!')
+      errorToast('资源不存在，请联系管理员!')
     } else {
-      error(errorMessage)
+      errorToast(errorMessage)
     }
   }
 }

@@ -13,7 +13,7 @@ export function login(data) {
       // 动态字段根据登录方式
       ...data,
       // 明确传递登录方式参数
-      loginType: data.loginType, // 00-密码登录 01-验证码登录
+      loginType: data.loginType, // 00-邮箱登录 01-手机验证码登录
       userType: data.userType    // 01-经纪人 02-客户
     }
   })

@@ -6,7 +6,10 @@ const toasts
 let toastId = 0
 
 export function useToast() {
-    const showToast = (message: string, type: 'success' | 'info' | 'warning' | 'error' = 'info', duration = 3000) => {
+    const showToast = (message: string,
+                       type: 'success' | 'info' |
+                           'warning' | 'error' = 'info',
+                       duration = 3000) => {
         const id = toastId++
         const toastContainer = document.createElement('div')
         document.body.appendChild(toastContainer)
@@ -34,9 +37,9 @@ export function useToast() {
 
     return {
         showToast,
-        success: (message: string, duration?: number) => showToast(message, 'success', duration),
-        info: (message: string, duration?: number) => showToast(message, 'info', duration),
-        warning: (message: string, duration?: number) => showToast(message, 'warning', duration),
-        error: (message: string, duration?: number) => showToast(message, 'error', duration)
+        successToast: (message: string, duration?: number) => showToast(message, 'success', duration),
+        infoToast: (message: string, duration?: number) => showToast(message, 'info', duration),
+        warningToast: (message: string, duration?: number) => showToast(message, 'warning', duration),
+        errorToast: (message: string, duration?: number) => showToast(message, 'error', duration)
     }
 }
