@@ -6,6 +6,8 @@ import { Chart, registerables } from 'chart.js';
 import '@fortawesome/fontawesome-free/css/all.min.css';
 import LoginPage from './components/LoginPage.vue' // 新增导入
 
+
+
 Chart.register(...registerables);
 
 // 配置路由
@@ -21,6 +23,7 @@ const router = createRouter({
 const app = createApp(App);
 app.config.globalProperties.$Chart = Chart;
 app.use(router) // 注册路由
+
 
 // 挂载Vue3实例到 #app 容器
 app.mount('#app');
