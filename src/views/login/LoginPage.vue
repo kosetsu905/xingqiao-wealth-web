@@ -10,8 +10,8 @@
 </template>
 
 <script setup>
-import BrandSection from '../components/login/BrandSection.vue'
-import LoginFormSection from '../components/login/LoginFormSection.vue'
+import BrandSection from '../../components/login/BrandSection.vue'
+import LoginFormSection from '../../components/login/LoginFormSection.vue'
 import { ref } from 'vue';
 
 const brandData = ref({

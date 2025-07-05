@@ -1,10 +1,7 @@
 <template>
-  <template>
-    <div >
-      <text>404</text>
-    </div>
-  </template>
-
+  <div >
+    <text>404</text>
+  </div>
 </template>
 
 

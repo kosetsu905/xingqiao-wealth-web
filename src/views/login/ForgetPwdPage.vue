@@ -12,7 +12,7 @@
 
 <script setup>
 import { ref } from 'vue';
-import BrandSection from '../components/login/BrandSection.vue'
+import BrandSection from '../../components/login/BrandSection.vue'
 import ForgetPwdFormSection from "@/components/login/ForgetPwdFormSection.vue";
 
 const brandData = ref({

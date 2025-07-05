@@ -236,7 +236,7 @@ const handleSubmit = async () => {
     // 登录成功处理
     if (res.code === 200) {
       localStorage.setItem('token', res.token)
-      await router.push('/dashboard')
+      await router.push('/index')
     }
   } catch (e) {
     console.log('登录失败:', e)
@@ -254,7 +254,7 @@ const handleSubmit = async () => {
     // }
     //todo
     //暂时成功
-    await router.push('/dashboard')
+    await router.push('/index')
   }
 }
 

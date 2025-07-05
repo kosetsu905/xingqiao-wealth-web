@@ -1,9 +1,7 @@
 <template>
-  <template>
-    <div >
-      <text>401</text>
-    </div>
-  </template>
+  <div >
+    <text>401</text>
+  </div>
 
 </template>
 

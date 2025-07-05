@@ -25,7 +25,7 @@
 
 <script setup>
 import { ref } from 'vue';
-import BrandSection from '../components/login/BrandSection.vue'
+import BrandSection from '../../components/login/BrandSection.vue'
 import { useRouter } from 'vue-router'
 const router = useRouter()
 
