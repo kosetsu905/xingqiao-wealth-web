@@ -4,18 +4,19 @@
     <form @submit.prevent="handleSubmit">
       <div class="mb-4">
         <label class="login-label" for="client-email">
-          {{ loginObject.loginTypeName }}
+          {{ loginObject.loginTypeName }}<span class="text-red-500">*</span>
         </label>
         <div class="relative">
           <div class="cli-icon">
-            <!-- 只有邮箱登录时才显示图标 -->
+            <!-- 邮箱登录时和账号登录时显示图标 -->
             <i
-                v-if="loginObject.loginType === '00'"
+                v-if="loginObject.loginType === '00'|| loginObject.loginType === '01'"
                 class="text-gray-400 fa-regular fa-envelope"
             ></i>
+
             <!-- 区号选择只在手机号登录时显示 -->
             <select
-                v-if="loginObject.loginType === '01'"
+                v-if="loginObject.loginType === '02'"
                 v-model="formData.countryCode"
                 class="country-code-select"
             >
@@ -28,17 +29,17 @@
                  :type="loginObject.type"
                  v-model="formData.account"
                  class="account-input"
-                 :class="loginObject.loginType === '01' ? 'pl-20' : 'pl-10'"
+                 :class="loginObject.loginType === '02' ? 'pl-20' : 'pl-10'"
                  :placeholder="loginObject.placeholder">
         </div>
       </div>
-      <!-- 密码登录区域 -->
+      <!-- 账号密码登录区域 -->
       <div v-if="props.loginObject.loginType === '00'"  class="mb-6">
         <div class="broker-class2">
           <label class="broker-class3" for="broker-password">
-            密码
+            密码<span class="text-red-500">*</span>
           </label>
-          <span class="broker-class4">
+          <span class="broker-class4" @click.prevent="goToEditPwd()">
             忘记密码?
           </span>
         </div>
@@ -50,6 +51,7 @@
                  :type="showPassword ? 'text' : 'password'"
                  v-model="formData.password"
                  class="broker-class6"
+                 autocomplete="new-password"
                  placeholder="请输入您的密码">
           <div class="absolute inset-y-0 right-0 pr-3 flex items-center">
             <i class="fa-regular text-gray-400 cursor-pointer"
@@ -61,9 +63,11 @@
       </div>
 
       <!-- 新增验证码登录区域 -->
-      <div v-if="props.loginObject.loginType === '01'" class="mb-6">
+      <div v-if="props.loginObject.loginType === '01'||props.loginObject.loginType === '02'" class="mb-6">
         <div class="broker-class2">
-          <label class="broker-class3">验证码</label>
+          <label class="broker-class3">
+            验证码<span class="text-red-500">*</span>
+          </label>
         </div>
         <div class="relative flex gap-2">
           <div class="broker-class5">
@@ -76,10 +80,11 @@
               type="text"
           >
           <button
-              class="px-4 py-2 bg-primary text-white rounded-lg hover:bg-primary-dark transition"
+              class="px-4 py-2 bg-primary text-white rounded-lg hover:bg-primary-dark transition disabled:opacity-50 disabled:cursor-not-allowed"
               @click.prevent="handleGetCaptcha"
+              :disabled="countdown > 0"
           >
-            获取验证码
+            获取验证码{{ countdown > 0 ? `(${countdown})` : '' }}
           </button>
         </div>
       </div>
@@ -112,7 +117,7 @@
             <span class="font-bold text-wealth-dark">500 港币</span>
             奖励
           </p>
-          <span class="broker-class9">
+          <span class="register-class" @click.prevent="goToRegister()">
              申请成为经纪人
             <i class="fa-solid fa-arrow-right ml-1 text-xs"></i>
           </span>
@@ -149,9 +154,9 @@
 </template>
 
 <script setup>
-import { ref,onMounted  } from 'vue'
-import { login } from '@/api/login' // 新增API引入
-import { useRouter } from 'vue-router' // 新增路由引入
+import { ref, onMounted, onUnmounted } from 'vue'
+import { login } from '@/api/login'
+import { useRouter } from 'vue-router'
 const router = useRouter()
 import { useToast } from '@/composables/useToast'
 const { successToast, errorToast } = useToast()
@@ -161,14 +166,16 @@ const props = defineProps({
   loginObject: {
     type: Object,
     default: () => ({
-      userType: '02',
-      loginTypeName: '邮箱',
+      userType: '00',
+      loginTypeName: '邮箱/手机号',
       loginType: '00',
-      placeholder: '请输入您的电子邮箱',
-      type: 'email'
+      placeholder: '请输入您的邮箱或者手机号',
+      type: 'text'
     })
   }
 })
+
+
 // 响应式数据
 const showPassword = ref(false)
 
@@ -178,9 +185,31 @@ function togglePasswordVisibility() {
   showPassword.value = !showPassword.value
 }
 
+// 倒计时功能
+const countdown = ref(0)
+let timer = null
+
+
 function handleGetCaptcha() {
+  if (countdown.value > 0) return
+
+  // 开始倒计时
+  countdown.value = 60
+  timer = setInterval(() => {
+    countdown.value--
+    if (countdown.value <= 0) {
+      clearInterval(timer)
+    }
+  }, 1000)
+
   console.log('获取验证码逻辑')
 }
+
+// 组件卸载时清除定时器
+onUnmounted(() => {
+  if(timer) clearInterval(timer)
+})
+
 // 表单数据
 const formData = ref({
   account: '',
@@ -233,8 +262,16 @@ function goToRegister() {
   router.push({
     path: '/register',
     query: {
-      userType: props.loginObject.userType,
-      loginType: props.loginObject.loginType
+      userType: props.loginObject.userType
+    }
+  })
+}
+
+function goToEditPwd() {
+  router.push({
+    path: '/forgetPwdPage',
+    query: {
+      userType: props.loginObject.userType
     }
   })
 }

@@ -43,26 +43,37 @@
 
   const userType = ref("02")
 
-  // 邮箱登录对象
+  // 账号密码登录对象
+  const accountLoginObject = ref({
+    userType: userType.value,
+    loginTypeName: '邮箱/手机号',
+    loginType: '00',
+    placeholder: '请输入您的邮箱或者手机号',
+    type: 'text'
+  })
+
   const emailLoginObject = ref({
     userType: userType.value,
     loginTypeName: '邮箱',
-    loginType: '00',
-    placeholder: '请输入您的电子邮箱',
-    type: 'email'
+    loginType: '01',
+    placeholder: '请输入您的邮箱',
+    type: 'text'
   })
+
   // 手机登录对象
   const phoneLoginObject = ref({
     userType: userType.value,
     loginTypeName: '手机号码',
-    loginType: '01',
+    loginType: '02',
     placeholder: '请输入您的手机号码',
     type: 'phone'
   })
 
   // 新增计算属性获取当前登录对象
   const currentLoginObject = computed(() => ({
-    ...(loginType.value === '00' ? emailLoginObject.value : phoneLoginObject.value),
+    ...(loginType.value === '00' ? accountLoginObject.value:(loginType.value === '01' ?
+            emailLoginObject.value : phoneLoginObject.value)
+       ),
     userType: userType.value // 动态注入当前用户类型
   }))
 
@@ -75,7 +86,7 @@
   const loginType = ref("00")
 
   const changeLoginType = (params) => {
-    console.log('父组件方法被触发', params);
+    console.log('更改其他登录方式触发', params);
     loginType.value = params
   };
 </script>

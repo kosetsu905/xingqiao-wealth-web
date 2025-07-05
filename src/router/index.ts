@@ -1,17 +1,23 @@
 // src/router/index.ts
 import { createRouter, createWebHistory } from 'vue-router'
-import loginPage from '../views/loginPage.vue'
-import registerPage from '../views/registerPage.vue'
-import index from '../views/index.vue'
+import LoginPage from '../views/LoginPage.vue'
+import RegisterPage from '../views/registerPage.vue'
+import SuccessRegister from '../views/SuccessRegister.vue'
+import SuccessEditPwd from '../views/SuccessEditPwd.vue'
+import ForgetPwdPage from '../views/ForgetPwdPage.vue'
+import Index from '../views/Index.vue'
 import one from '../views/error/401.vue'
 import two from '../views/error/404.vue'
 
 export const router = createRouter({
   history: createWebHistory(),
   routes: [
-    { path: '/', component: index },
-    { path: '/login', component: loginPage },
-    { path: '/register', component: registerPage },
+    { path: '/', component: Index },
+    { path: '/login', component: LoginPage },
+    { path: '/register', component: RegisterPage },
+    { path: '/successRegister', component: SuccessRegister },
+    { path: '/successEditPwd', component: SuccessEditPwd },
+    { path: '/forgetPwdPage', component: ForgetPwdPage },
     { path: '/401', component: one },
     { path: '/404', component: two },
   ]

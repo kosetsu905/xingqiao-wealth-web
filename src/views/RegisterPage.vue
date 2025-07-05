@@ -4,16 +4,16 @@
       <!-- 左侧栏-->
       <BrandSection :brand-data="brandData"/>
       <!-- 右侧栏-->
-      <LoginFormSection />
+      <RegisterFormSection />
     </div>
   </div>
 </template>
 
 
 <script setup>
-import BrandSection from '../components/login/BrandSection.vue'
 import { ref } from 'vue';
-import LoginFormSection from "@/components/login/LoginFormSection.vue";
+import BrandSection from '../components/login/BrandSection.vue'
+import RegisterFormSection from "@/components/login/RegisterFormSection.vue";
 
 const brandData = ref({
   name: '账户安全保护',
