@@ -214,11 +214,11 @@ const formData = ref({
 // 处理表单提交
 const handleSubmit = async () => {
   console.log("注册开始")
-  await router.push('/successRegister')
+  await router.push('/client/successRegister')
 }
 
 const handleBack = async () => {
-  await router.push('/login')
+  await router.push('/client/login')
 }
 
 </script>

@@ -236,7 +236,7 @@ const handleSubmit = async () => {
     // 登录成功处理
     if (res.code === 200) {
       localStorage.setItem('token', res.token)
-      await router.push('/index')
+      await router.push('/client/index')
     }
   } catch (e) {
     console.log('登录失败:', e)
@@ -254,13 +254,13 @@ const handleSubmit = async () => {
     // }
     //todo
     //暂时成功
-    await router.push('/index')
+    await router.push('/client/index')
   }
 }
 
 function goToRegister() {
   router.push({
-    path: '/register',
+    path: '/client/register',
     query: {
       userType: props.loginObject.userType
     }
@@ -269,7 +269,7 @@ function goToRegister() {
 
 function goToEditPwd() {
   router.push({
-    path: '/forgetPwdPage',
+    path: '/client/forgetPwdPage',
     query: {
       userType: props.loginObject.userType
     }

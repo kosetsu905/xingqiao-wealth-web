@@ -229,11 +229,11 @@ const formData = ref({
 // 处理表单提交
 const handleSubmit = async () => {
   console.log("注册重置密码")
-  await router.push('/successEditPwd')
+  await router.push('/client/successEditPwd')
 }
 
 const handleBack =async () => {
-  await router.push('/login')
+  await router.push('/client/login')
 }
 
 </script>
