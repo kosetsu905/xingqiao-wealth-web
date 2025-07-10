@@ -13,10 +13,11 @@
           <h1 class="ml-3 text-xl font-bold text-gray-800">财富管理 - 投资组合</h1>
         </div>
         <div class="flex items-center space-x-4">
-          <div class="relative">
+
+          <div @click.prevent="toggleMessage" class="relative">
             <button class="p-2 text-gray-500 hover:text-primary hover:bg-gray-100 rounded-full transition-colors relative">
-              <i class="fa fa-bell-o text-xl"></i>
-              <span class="absolute top-0 right-0 h-4 w-4 bg-danger rounded-full flex items-center justify-center text-white text-xs badge-pulse">3</span>
+              <i class="fa-solid fa-bell"></i>
+              <span class="absolute top-0 right-0 h-4 w-4 bg-danger bg-red-500 rounded-full flex items-center justify-center text-white text-xs badge-pulse">3</span>
             </button>
           </div>
           <div class="relative">
@@ -82,6 +83,13 @@ function goToIndex () {
   })
 }
 
+function toggleMessage () {
+  console.log('消息页')
+  router.push({
+    path: '/client/message'
+  })
+}
+
 function goToAccountManagement () {
   console.log('账户设置')
   router.push({
@@ -92,7 +100,7 @@ function goToAccountManagement () {
 function logout () {
   console.log('logout')
   router.push({
-    path: '/client/logout'
+    path: '/client/'
   })
 }
 

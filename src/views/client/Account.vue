@@ -262,14 +262,108 @@
         </div>
 
       </div>
+      <!--  资金转账指引 -->
+      <div id="transfer-instructions" class="bg-white rounded-lg shadow-sm border border-gray-200 mb-8">
+        <div class="px-6 py-4 border-b border-gray-200">
+          <h2 class="text-xl font-semibold text-gray-800 flex items-center">
+            <i class="fas fa-exchange-alt mr-2 text-primary"></i>
+            资金转账指引
+          </h2>
+        </div>
+        <div class="p-6">
+          <div class="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-6">
+            <div class="flex items-center">
+              <i class="fas fa-info-circle text-blue-600 mr-2"></i>
+              <span class="text-blue-800 font-medium">内地资金转至香港账户操作指引</span>
+            </div>
+          </div>
 
+          <div class="space-y-6">
+            <div id="step-1" class="flex items-start space-x-4">
+              <div class="flex-shrink-0 w-8 h-8 bg-primary text-white rounded-full flex items-center justify-center text-sm font-bold">1</div>
+              <div class="flex-grow">
+                <h3 class="font-semibold text-gray-800 mb-2">登录内地银行网银</h3>
+                <p class="text-gray-600">使用您的中国银行网银账户登录，选择"跨境汇款"服务</p>
+              </div>
+            </div>
+
+            <div id="step-2" class="flex items-start space-x-4">
+              <div class="flex-shrink-0 w-8 h-8 bg-primary text-white rounded-full flex items-center justify-center text-sm font-bold">2</div>
+              <div class="flex-grow">
+                <h3 class="font-semibold text-gray-800 mb-2">填写收款人信息</h3>
+                <div class="bg-gray-50 rounded-lg p-4 mt-2">
+                  <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
+                    <div><strong>收款人姓名:</strong> 张明华</div>
+                    <div><strong>收款银行:</strong> HSBC Hong Kong</div>
+                    <div><strong>账户号码:</strong> 400-123456-838</div>
+                    <div><strong>SWIFT代码:</strong> HSBCHKHHHKH</div>
+                    <div class="md:col-span-2"><strong>收款地址:</strong> 香港中环皇后大道中1号</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div id="step-3" class="flex items-start space-x-4">
+              <div class="flex-shrink-0 w-8 h-8 bg-primary text-white rounded-full flex items-center justify-center text-sm font-bold">3</div>
+              <div class="flex-grow">
+                <h3 class="font-semibold text-gray-800 mb-2">设置汇款金额</h3>
+                <p class="text-gray-600">输入汇款金额，注意单笔限额为等值5万美元，年度限额为等值50万美元</p>
+              </div>
+            </div>
+
+            <div id="step-4" class="flex items-start space-x-4">
+              <div class="flex-shrink-0 w-8 h-8 bg-primary text-white rounded-full flex items-center justify-center text-sm font-bold">4</div>
+              <div class="flex-grow">
+                <h3 class="font-semibold text-gray-800 mb-2">选择汇款用途</h3>
+                <p class="text-gray-600">根据实际情况选择汇款用途，如"个人投资"、"生活费"等</p>
+              </div>
+            </div>
+
+            <div id="step-5" class="flex items-start space-x-4">
+              <div class="flex-shrink-0 w-8 h-8 bg-primary text-white rounded-full flex items-center justify-center text-sm font-bold">5</div>
+              <div class="flex-grow">
+                <h3 class="font-semibold text-gray-800 mb-2">确认并提交</h3>
+                <p class="text-gray-600">仔细核对所有信息，确认无误后提交申请，通常1-3个工作日到账</p>
+              </div>
+            </div>
+          </div>
+
+          <div class="bg-yellow-50 border border-yellow-200 rounded-lg p-4 mt-6">
+            <div class="flex items-start">
+              <i class="fas fa-exclamation-triangle text-yellow-600 mr-2 mt-1"></i>
+              <div>
+                <h4 class="font-semibold text-yellow-800 mb-1">重要提醒</h4>
+                <ul class="text-yellow-700 text-sm space-y-1">
+                  <li>• 请确保收款人信息准确无误，错误信息可能导致汇款失败</li>
+                  <li>• 跨境汇款需要遵守外汇管理规定，请合理安排汇款时间</li>
+                  <li>• 汇款手续费约为汇款金额的0.1%-0.15%，最低50元人民币</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div id="action-buttons-section" class="flex flex-col sm:flex-row justify-center space-y-4 sm:space-y-0 sm:space-x-6 mb-8">
+        <button class="bg-primary text-white px-8 py-3 rounded-lg font-medium hover:bg-primary-dark transition flex items-center justify-center">
+          <i class="fas fa-paper-plane mr-2"></i>
+          发起转账
+        </button>
+        <button class="bg-wealth text-white px-8 py-3 rounded-lg font-medium hover:bg-wealth-dark transition flex items-center justify-center">
+          <i class="fas fa-file-alt mr-2"></i>
+          查看账单
+        </button>
+        <button class="bg-secondary text-white px-8 py-3 rounded-lg font-medium hover:bg-secondary-dark transition flex items-center justify-center">
+          <i class="fas fa-chart-line mr-2"></i>
+          汇率查询
+        </button>
+      </div>
     </div>
   </main>
 </template>
 
 
 <script setup lang="ts">
-
+import { ref, computed } from 'vue'
 import Header from "@/components/client/Header.vue";
 </script>
 

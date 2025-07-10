@@ -280,10 +280,12 @@
             <div class="ml-4">
               <h3 class="font-semibold text-gray-800">投资产品管理</h3>
               <p class="text-sm text-gray-600 mt-1">查看和管理您的所有投资产品组合</p>
-              <div class="mt-3 flex items-center text-primary text-sm">
-                <span>查看详情</span>
-                <i class="fa fa-angle-right ml-1"></i>
-              </div>
+              <div
+                  @click.prevent="goToProductManagement()"
+                  class="mt-3 flex items-center text-primary text-sm">
+                  <span>查看详情</span>
+              <i class="fa fa-angle-right ml-1"></i>
+            </div>
             </div>
           </div>
         </div>
@@ -296,8 +298,8 @@
             <div class="ml-4">
               <h3 class="font-semibold text-gray-800">风险评估</h3>
               <p class="text-sm text-gray-600 mt-1">完成风险偏好测试，了解您的投资风格</p>
-              <div class="mt-3 flex items-center text-primary text-sm">
-                <span>开始测试</span>
+              <div  @click.prevent="toggleRiskAssessment()" class="mt-3 flex items-center text-primary text-sm">
+                <span>开始测试</SPAN>
                 <i class="fa fa-angle-right ml-1"></i>
               </div>
             </div>
@@ -505,6 +507,13 @@ function goToAccountManagement () {
   console.log('账户设置')
   router.push({
     path: '/client/account'
+  })
+}
+
+// 添加产品管理跳转方法
+function goToProductManagement() {
+  router.push({
+    path: '/client/product'  // 根据实际路由配置调整路径
   })
 }
 

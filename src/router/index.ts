@@ -9,6 +9,8 @@ import RiskTest from '../views/risk/RiskTest.vue'
 import Index from '../views/client/Index.vue'
 import UserInfo from '../views/client/UserInfo.vue'
 import Account from '../views/client/Account.vue'
+import Message from '../views/client/Message.vue'
+import Product from '../views/client/Product.vue'
 import one from '../views/common/401.vue'
 import two from '../views/common/404.vue'
 
@@ -25,6 +27,8 @@ export const router = createRouter({
     { path: '/client/riskTest', component: RiskTest },
     { path: '/client/userInfo', component: UserInfo },
     { path: '/client/account', component: Account },
+    { path: '/client/message', component: Message },
+    { path: '/client/product', component: Product },
     { path: '/401', component: one },
     { path: '/404', component: two },
   ]

@@ -18,7 +18,74 @@
     transform: translateY(-5px);
     box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
   }
+  .card-shadow {
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+  }
+  .hover-lift {
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+  }
+  .hover-lift:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+  }
+  .sidebar-link {
+    @apply flex items-center px-4 py-3 text-gray-600 hover:bg-primary/5 hover:text-primary rounded-lg transition-all duration-200;
+  }
+  .sidebar-link.active {
+    @apply bg-primary/10 text-primary font-medium;
+  }
+  .form-input-focus {
+    @apply focus:ring-2 focus:ring-primary/50 focus:border-primary transition-colors;
+  }
+  .account-card {
+    @apply border border-gray-200 rounded-xl p-4 hover:border-primary/50 transition-colors;
+  }
+  .payment-card {
+    @apply border border-gray-200 rounded-xl p-4 hover:border-primary/50 transition-colors flex items-center;
+  }
+  .payment-card.active {
+    @apply border-primary bg-primary/5;
+  }
+  .tab-active {
+    @apply text-primary font-medium border-b-2 border-primary;
+  }
+  .step-content {
+    @apply transition-all duration-300 ease-in-out;
+  }
+  .faq-answer {
+    @apply max-h-0 overflow-hidden transition-all duration-300 ease-in-out;
+  }
+  .faq-item.active .faq-answer {
+    @apply max-h-96 p-4;
+  }
+  .faq-item.active .faq-icon {
+    @apply transform rotate-45;
+  }
+  .message-unread {
+    @apply bg-primary/5 border-l-4 border-primary;
+  }
+  .message-read {
+    @apply bg-white border-l-4 border-transparent hover:border-primary/20 transition-colors;
+  }
+  .badge-pulse {
+    animation: pulse 2s infinite;
+  }
+  @keyframes pulse {
+    0% {
+      transform: scale(0.95);
+      box-shadow: 0 0 0 0 rgba(248, 114, 114, 0.7);
+    }
 
+    70% {
+      transform: scale(1);
+      box-shadow: 0 0 0 6px rgba(248, 114, 114, 0);
+    }
+
+    100% {
+      transform: scale(0.95);
+      box-shadow: 0 0 0 0 rgba(248, 114, 114, 0);
+    }
+  }
 }
 
 body {
