@@ -1,4 +1,6 @@
 <template>
+  <!-- 顶部导航栏 -->
+  <Header/>
   <!-- Investment Portfolio Section -->
   <div id="portfolio-section" class="bg-white rounded-lg shadow-sm border border-gray-200 mb-8">
     <div class="px-6 py-4 border-b border-gray-200">
@@ -14,24 +16,24 @@
         </button>
       </div>
     </div>
-    <div class="p-6">
-      <div class="overflow-x-auto">
-        <table class="w-full table-auto">
+    <div class="p-3 md:p-6">
+      <div class="overflow-x-auto -mx-2">
+        <table class="w-full table-auto min-w-[600px] md:min-w-0">
           <thead>
           <tr class="bg-gray-50">
-            <th class="px-4 py-3 text-left text-sm font-medium text-gray-700">产品类型</th>
-            <th class="px-4 py-3 text-left text-sm font-medium text-gray-700">公司名称</th>
-            <th class="px-4 py-3 text-left text-sm font-medium text-gray-700">投资金额</th>
-            <th class="px-4 py-3 text-left text-sm font-medium text-gray-700">购买日期</th>
-            <th class="px-4 py-3 text-left text-sm font-medium text-gray-700">到期日期</th>
-            <th class="px-4 py-3 text-left text-sm font-medium text-gray-700">操作</th>
+            <th class="w-32 md:w-48 px-4 py-3 text-left text-sm font-medium text-gray-700">产品类型</th>
+            <th class="w-48 md:w-64 px-4 py-3 text-left text-sm font-medium text-gray-700">公司名称</th>
+            <th class="w-32 md:w-36 px-4 py-3 text-left text-sm font-medium text-gray-700">投资金额</th>
+            <th class="w-36 md:w-40 px-4 py-3 text-left text-sm font-medium text-gray-700">购买日期</th>
+            <th class="w-36 md:w-40 px-4 py-3 text-left text-sm font-medium text-gray-700">到期日期</th>
+            <th class="w-20 px-4 py-3 text-left text-sm font-medium text-gray-700">操作</th>
           </tr>
           </thead>
           <tbody class="divide-y divide-gray-200">
           <!-- Replace static rows with v-for -->
           <tr v-for="product in paginatedProducts" :key="product.id">
             <td class="px-4 py-3">
-              <select v-model="product.type" class="w-full px-2 py-1 border border-gray-300 rounded text-sm">
+              <select v-model="product.type" class="w-40 md:w-48  px-2 py-1 border border-gray-300 rounded text-sm">
                 <option>人寿保险</option>
                 <option>投资基金</option>
                 <option>定期存款</option>
@@ -40,19 +42,19 @@
               </select>
             </td>
             <td class="px-4 py-3">
-              <input v-model="product.company" type="text" class="w-full px-2 py-1 border border-gray-300 rounded text-sm" placeholder="公司名称">
+              <input v-model="product.company" type="text" class="w-48 md:w-64  px-2 py-1 border border-gray-300 rounded text-sm" placeholder="公司名称">
+            </td>
+            <td class=" px-4 py-3">
+              <input v-model="product.amount" type="number" class="w-32 md:w-36 px-2 py-1 border border-gray-300 rounded text-sm" placeholder="金额">
+            </td>
+            <td class=" px-4 py-3">
+              <input v-model="product.purchaseDate" type="date" class="w-36 md:w-40 px-2 py-1 border border-gray-300 rounded text-sm">
             </td>
             <td class="px-4 py-3">
-              <input v-model="product.amount" type="number" class="w-full px-2 py-1 border border-gray-300 rounded text-sm" placeholder="金额">
-            </td>
-            <td class="px-4 py-3">
-              <input v-model="product.purchaseDate" type="date" class="w-full px-2 py-1 border border-gray-300 rounded text-sm">
-            </td>
-            <td class="px-4 py-3">
-              <input v-model="product.expiryDate" type="date" class="w-full px-2 py-1 border border-gray-300 rounded text-sm">
+              <input v-model="product.expiryDate" type="date" class="w-36 md:w-40  px-2 py-1 border border-gray-300 rounded text-sm">
             </td>
             <!-- 表格行添加删除功能 -->
-            <td class="px-4 py-3">
+            <td class="w-20 px-4 py-3">
               <button
                   @click="deleteProduct(product.id)"
                   class="text-red-600 hover:text-red-800">
@@ -146,6 +148,17 @@
 
 <script setup lang="ts">
 import { ref, computed } from 'vue';
+import Header from "@/components/client/Header.vue";
+
+// 添加 products 响应式数组声明
+const products = ref<Array<{
+  id: number;
+  type: string;
+  company: string;
+  amount: number | null;
+  purchaseDate: string;
+  expiryDate: string;
+}>>([]);
 
 // 分页相关逻辑
 const currentPage = ref(1);
@@ -214,7 +227,12 @@ function handleSubmit() {
     alert('请填写必填字段');
     return;
   }
-
+  // 添加 ID 生成逻辑（示例使用时间戳）
+  products.value.push({
+    ...newProduct.value,
+    id: Date.now()
+  });
+  // 关闭弹窗并重置表单
   dialogVisible.value = false;
   currentPage.value = 1;
 }

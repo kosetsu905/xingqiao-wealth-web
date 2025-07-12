@@ -13,22 +13,51 @@ import Message from '../views/client/Message.vue'
 import Product from '../views/client/Product.vue'
 import one from '../views/common/401.vue'
 import two from '../views/common/404.vue'
+import agencyIndex from '../views/agency/Index.vue'
+import Insurance from '../views/agency/Insurance.vue'
+import Globalinvestmentfund from '../views/agency/Globalinvestmentfund.vue'
+import Digitalcurrency from '../views/agency/Digitalcurrency.vue'
+import EkycView from '../views/agency/EkycView.vue'
+import AgencyUserInfo from '../views/agency/UserInfo.vue'
+import CustomerInfo from '../views/agency/CustomerInfo.vue'
+import CustomerList from '../views/agency/CustomerList.vue'
+import AgencyMessage from '../views/agency/Message.vue'
+import AccountInfo from '../views/agency/AccountInfo.vue'
+import Calculation from '../views/agency/Calculation.vue'
+import PerformanceReport from '../views/agency/PerformanceReport.vue'
+import CommissionHistory from '../views/agency/CommissionHistory.vue'
+import Etf from '../views/agency/Etf.vue'
+
 
 export const router = createRouter({
   history: createWebHistory(),
   routes: [
     { path: '/', component: LoginPage },
-    { path: '/client/login', component: LoginPage },
-    { path: '/client/register', component: RegisterPage },
-    { path: '/client/successRegister', component: SuccessRegister },
-    { path: '/client/successEditPwd', component: SuccessEditPwd },
-    { path: '/client/forgetPwdPage', component: ForgetPwdPage },
+    { path: '/login', component: LoginPage },
+    { path: '/register', component: RegisterPage },
+    { path: '/successRegister', component: SuccessRegister },
+    { path: '/successEditPwd', component: SuccessEditPwd },
+    { path: '/forgetPwdPage', component: ForgetPwdPage },
     { path: '/client/index', component: Index },
     { path: '/client/riskTest', component: RiskTest },
     { path: '/client/userInfo', component: UserInfo },
     { path: '/client/account', component: Account },
     { path: '/client/message', component: Message },
     { path: '/client/product', component: Product },
+    { path: '/agency/index', component: agencyIndex },
+    { path: '/agency/insurance', component: Insurance },
+    { path: '/agency/globalinvestmentfund', component: Globalinvestmentfund },
+    { path: '/agency/digitalcurrency', component: Digitalcurrency },
+    { path: '/agency/ekycView', component: EkycView },
+    { path: '/agency/etf', component: Etf },
+    { path: '/agency/userInfo', component: AgencyUserInfo },
+    { path: '/agency/customerInfo', component: CustomerInfo },
+    { path: '/agency/customerList', component: CustomerList },
+    { path: '/agency/message', component: AgencyMessage },
+    { path: '/agency/accountInfo', component: AccountInfo },
+    { path: '/agency/calculation', component: Calculation },
+    { path: '/agency/performanceReport', component: PerformanceReport },
+    { path: '/agency/commissionHistory', component: CommissionHistory },
     { path: '/401', component: one },
     { path: '/404', component: two },
   ]

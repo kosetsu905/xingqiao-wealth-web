@@ -70,6 +70,18 @@
   .badge-pulse {
     animation: pulse 2s infinite;
   }
+  .progress-step {
+    @apply flex flex-col items-center;
+  }
+  .progress-circle {
+    @apply w-10 h-10 rounded-full flex items-center justify-center font-medium mb-2;
+  }
+  .progress-line {
+    @apply h-1 flex-1 my-5;
+  }
+  .transition-custom {
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  }
   @keyframes pulse {
     0% {
       transform: scale(0.95);
@@ -116,3 +128,6 @@ html, body {
   scrollbar-width: none;
 }
 
+@tailwind base;
+@tailwind components;
+@tailwind utilities;

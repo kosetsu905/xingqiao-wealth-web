@@ -399,16 +399,12 @@
   </footer>
 </template>
 
-<script>
-</script>
+
 <script setup>
 import Header from '@/components/client/Header.vue'
 
 import { useRouter } from 'vue-router'
 const router = useRouter()
-
-import { ref, onMounted, onBeforeUnmount } from 'vue';
-import Highcharts from 'highcharts';
 const portfolioContainer = ref(null);
 const performanceContainer = ref(null);
 let chart = null;

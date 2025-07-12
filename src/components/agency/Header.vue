@@ -72,35 +72,36 @@ import {onBeforeUnmount, onMounted, ref} from "vue";
 function goToPersonalInfo () {
   console.log('个人信息页')
   router.push({
-    path: '/client/userInfo'
+    path: '/agency/userInfo'
   })
 }
 
 function goToIndex () {
   console.log('首页')
   router.push({
-    path: '/client/index'
+    path: '/agency/index'
   })
 }
 
 function toggleMessage () {
   console.log('消息页')
   router.push({
-    path: '/client/message'
+    path: '/agency/message'
   })
 }
 
 function goToAccountManagement () {
   console.log('账户设置')
   router.push({
-    path: '/client/account'
+    path: '/agency/accountInfo'
   })
 }
+
 
 function logout () {
   console.log('logout')
   router.push({
-    path: '/client/'
+    path: '/agency/logout'
   })
 }
 

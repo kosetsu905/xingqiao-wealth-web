@@ -254,7 +254,12 @@ const handleSubmit = async () => {
     // }
     //todo
     //暂时成功
-    await router.push('/client/index')
+    if(formData.value.userType === '01'){
+      await router.push('/client/index')
+    }
+    if(formData.value.userType === '02'){
+      await router.push('/agency/index')
+    }
   }
 }
 
