@@ -101,7 +101,7 @@ function goToAccountManagement () {
 function logout () {
   console.log('logout')
   router.push({
-    path: '/agency/logout'
+    path: '/login'
   })
 }
 

@@ -36,7 +36,7 @@ const brandData = ref({
 });
 
 const goToLogin = () => {
-  router.push('/client/login')
+  router.push('/login')
 }
 </script>
 

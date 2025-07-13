@@ -249,102 +249,6 @@
       </div>
     </div>
 
-    <!-- 专业技能和语言能力 -->
-    <div class="grid md:grid-cols-2 gap-8 mb-12">
-      <div class="bg-white rounded-xl shadow-md p-8">
-        <h3 class="text-xl font-bold mb-6 text-dark">专业技能</h3>
-        <div class="space-y-4">
-          <div>
-            <div class="flex justify-between mb-2">
-              <span class="font-medium">投资组合管理</span>
-              <span>95%</span>
-            </div>
-            <div class="w-full bg-gray-200 rounded-full h-2">
-              <div class="bg-primary h-2 rounded-full" style="width: 95%"></div>
-            </div>
-          </div>
-          <div>
-            <div class="flex justify-between mb-2">
-              <span class="font-medium">财富规划</span>
-              <span>90%</span>
-            </div>
-            <div class="w-full bg-gray-200 rounded-full h-2">
-              <div class="bg-primary h-2 rounded-full" style="width: 90%"></div>
-            </div>
-          </div>
-          <div>
-            <div class="flex justify-between mb-2">
-              <span class="font-medium">风险管理</span>
-              <span>88%</span>
-            </div>
-            <div class="w-full bg-gray-200 rounded-full h-2">
-              <div class="bg-primary h-2 rounded-full" style="width: 88%"></div>
-            </div>
-          </div>
-          <div>
-            <div class="flex justify-between mb-2">
-              <span class="font-medium">客户关系管理</span>
-              <span>92%</span>
-            </div>
-            <div class="w-full bg-gray-200 rounded-full h-2">
-              <div class="bg-primary h-2 rounded-full" style="width: 92%"></div>
-            </div>
-          </div>
-          <div>
-            <div class="flex justify-between mb-2">
-              <span class="font-medium">市场分析</span>
-              <span>85%</span>
-            </div>
-            <div class="w-full bg-gray-200 rounded-full h-2">
-              <div class="bg-primary h-2 rounded-full" style="width: 85%"></div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <div class="bg-white rounded-xl shadow-md p-8">
-        <h3 class="text-xl font-bold mb-6 text-dark">语言能力</h3>
-        <div class="space-y-4">
-          <div>
-            <div class="flex justify-between mb-2">
-              <span class="font-medium">中文（母语）</span>
-              <span>100%</span>
-            </div>
-            <div class="w-full bg-gray-200 rounded-full h-2">
-              <div class="bg-primary h-2 rounded-full" style="width: 100%"></div>
-            </div>
-          </div>
-          <div>
-            <div class="flex justify-between mb-2">
-              <span class="font-medium">英语</span>
-              <span>95%</span>
-            </div>
-            <div class="w-full bg-gray-200 rounded-full h-2">
-              <div class="bg-primary h-2 rounded-full" style="width: 95%"></div>
-            </div>
-          </div>
-          <div>
-            <div class="flex justify-between mb-2">
-              <span class="font-medium">粤语</span>
-              <span>80%</span>
-            </div>
-            <div class="w-full bg-gray-200 rounded-full h-2">
-              <div class="bg-primary h-2 rounded-full" style="width: 80%"></div>
-            </div>
-          </div>
-          <div>
-            <div class="flex justify-between mb-2">
-              <span class="font-medium">日语</span>
-              <span>65%</span>
-            </div>
-            <div class="w-full bg-gray-200 rounded-full h-2">
-              <div class="bg-primary h-2 rounded-full" style="width: 65%"></div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-
     <!-- 业绩统计 -->
     <div class="bg-white rounded-xl shadow-md p-8 mb-12">
       <h3 class="text-xl font-bold mb-6 text-dark">业绩统计</h3>
@@ -446,7 +350,7 @@ import { ekycAuthStore } from '@/store/index';
 // 引入认证状态 store
 const ekycAuth = ekycAuthStore();
 
-const goToEkycView = (step) => {
+const goToEkycView = (step: string) => {
   router.push({
     path: '/agency/ekycView',
     query: { step: step }

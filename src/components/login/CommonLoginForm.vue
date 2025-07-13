@@ -258,7 +258,6 @@ const handleSubmit = async () => {
       await router.push('/client/index')
     }
     if(props.loginObject.userType=== '01'){
-      alert(props.loginObject.userType)
       await router.push('/agency/index')
     }
   }
@@ -266,7 +265,7 @@ const handleSubmit = async () => {
 
 function goToRegister() {
   router.push({
-    path: '/client/register',
+    path: '/register',
     query: {
       userType: props.loginObject.userType
     }
@@ -275,7 +274,7 @@ function goToRegister() {
 
 function goToEditPwd() {
   router.push({
-    path: '/client/forgetPwdPage',
+    path: '/forgetPwdPage',
     query: {
       userType: props.loginObject.userType
     }
