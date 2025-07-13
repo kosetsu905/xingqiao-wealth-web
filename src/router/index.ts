@@ -5,7 +5,10 @@ import RegisterPage from '../views/login/RegisterPage.vue'
 import SuccessRegister from '../views/login/SuccessRegister.vue'
 import SuccessEditPwd from '../views/login/SuccessEditPwd.vue'
 import ForgetPwdPage from '../views/login/ForgetPwdPage.vue'
-import RiskTest from '../views/risk/RiskTest.vue'
+import RiskTest from '../views/client/RiskTest.vue'
+import Risk from '../views/client/Risk.vue'
+import Analysis from '../views/client/Analysis.vue'
+import TransactionInfo from '../views/client/TransactionInfo.vue'
 import Index from '../views/client/Index.vue'
 import UserInfo from '@/views/client/UserInfo.vue'
 import Account from '../views/client/Account.vue'
@@ -40,10 +43,13 @@ export const router = createRouter({
     { path: '/forgetPwdPage', component: ForgetPwdPage },
     { path: '/client/index', component: Index },
     { path: '/client/riskTest', component: RiskTest },
+    { path: '/client/risk', component: Risk },
     { path: '/client/userInfo', component: UserInfo },
     { path: '/client/account', component: Account },
     { path: '/client/message', component: Message },
     { path: '/client/product', component: Product },
+    { path: '/client/analysis', component: Analysis },
+    { path: '/client/transaction', component: TransactionInfo },
     { path: '/agency/index', component: agencyIndex },
     { path: '/agency/insurance', component: Insurance },
     { path: '/agency/globalinvestmentfund', component: Globalinvestmentfund },

@@ -61,48 +61,21 @@
             </div>
           </div>
         </div>
-      </div>
 
-      <!-- 风险评估 -->
-      <div class="bg-white rounded-xl shadow-sm p-5 mb-6">
-        <div class="flex justify-between items-center mb-4">
-          <h3 class="font-semibold text-gray-800">风险评估</h3>
-          <button
-              @click.prevent="toggleRiskAssessment"
-             class="px-3 py-1 text-sm rounded-lg bg-primary text-white hover:bg-primary/90 transition-colors">
-            <i class="fa fa-pencil mr-1"></i>
-            重新测试
-          </button>
-        </div>
-
-        <div class="flex flex-col md:flex-row items-start md:items-center justify-between">
-          <div class="mb-4 md:mb-0">
-            <h4 class="font-medium text-gray-800">您的风险承受能力</h4>
-            <div class="flex items-center mt-2">
-              <div class="w-64 bg-gray-200 rounded-full h-2.5">
-                <div class="bg-primary h-2.5 rounded-full" style="width: 55%"></div>
-              </div>
-              <span class="ml-3 font-medium">平衡型</span>
+        <div id="risk-level-card" class="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
+          <div class="flex items-center justify-between">
+            <div>
+              <div class="text-sm text-gray-500">风险等级</div>
+              <div class="text-xl font-bold text-gray-800">稳健型</div>
+              <div class="text-sm text-primary">适中风险</div>
             </div>
-            <p class="text-sm text-gray-600 mt-2">您适合中等风险投资，能够承受一定的市场波动，追求长期资本增值。</p>
-          </div>
-
-          <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 w-full md:w-auto">
-            <div class="bg-gray-50 rounded-lg p-3 text-center">
-              <p class="text-xs text-gray-500">风险承受</p>
-              <p class="text-lg font-bold mt-1 text-primary">55%</p>
-            </div>
-            <div class="bg-gray-50 rounded-lg p-3 text-center">
-              <p class="text-xs text-gray-500">投资经验</p>
-              <p class="text-lg font-bold mt-1 text-primary">4年</p>
-            </div>
-            <div class="bg-gray-50 rounded-lg p-3 text-center">
-              <p class="text-xs text-gray-500">测试日期</p>
-              <p class="text-lg font-bold mt-1 text-primary">2025-06-15</p>
+            <div class="w-12 h-12 bg-primary-light rounded-lg flex items-center justify-center">
+              <i class="fa-solid fa-shield-halved text-primary text-xl"></i>
             </div>
           </div>
         </div>
       </div>
+
 
 
       <!-- Portfolio Overview and Performance -->
@@ -230,117 +203,6 @@
           </table>
         </div>
       </div>
-
-
-      <!-- 功能区标题 -->
-      <div class="flex justify-between items-center mb-4">
-        <h2 class="text-xl font-bold text-gray-800">功能中心</h2>
-      </div>
-
-      <!-- 功能卡片 -->
-      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mb-6">
-        <div class="block bg-white rounded-xl p-5 shadow-sm hover-lift">
-          <div class="flex items-start">
-            <div class="w-12 h-12 rounded-lg bg-primary/10 flex items-center justify-center flex-shrink-0">
-              <i class="fa fa-user-o text-primary text-xl"></i>
-            </div>
-            <div class="ml-4">
-              <h3 class="font-semibold text-gray-800">个人信息</h3>
-              <p class="text-sm text-gray-600 mt-1">管理您的个人基本信息和联系方式</p>
-              <div
-                  @click.prevent="goToPersonalInfo"
-                  class="mt-3 flex items-center text-primary text-sm">
-                <span>查看详情</span>
-                <i class="fa fa-angle-right ml-1"></i>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <div class="block bg-white rounded-xl p-5 shadow-sm hover-lift">
-          <div class="flex items-start">
-            <div class="w-12 h-12 rounded-lg bg-secondary/10 flex items-center justify-center flex-shrink-0">
-              <i class="fa fa-credit-card text-secondary text-xl"></i>
-            </div>
-            <div class="ml-4">
-              <h3 class="font-semibold text-gray-800">账户管理</h3>
-              <p class="text-sm text-gray-600 mt-1">管理您的银行账户和支付方式</p>
-              <div @click.prevent="goToAccountManagement"
-                  class="mt-3 flex items-center text-primary text-sm">
-                <span>查看详情</span>
-                <i class="fa fa-angle-right ml-1"></i>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <div class="block bg-white rounded-xl p-5 shadow-sm hover-lift">
-          <div class="flex items-start">
-            <div class="w-12 h-12 rounded-lg bg-warning/10 flex items-center justify-center flex-shrink-0">
-              <i class="fa fa-line-chart text-warning text-xl"></i>
-            </div>
-            <div class="ml-4">
-              <h3 class="font-semibold text-gray-800">投资产品管理</h3>
-              <p class="text-sm text-gray-600 mt-1">查看和管理您的所有投资产品组合</p>
-              <div
-                  @click.prevent="goToProductManagement"
-                  class="mt-3 flex items-center text-primary text-sm">
-                  <span>查看详情</span>
-              <i class="fa fa-angle-right ml-1"></i>
-            </div>
-            </div>
-          </div>
-        </div>
-
-        <a href="#risk-assessment" class="block bg-white rounded-xl p-5 shadow-sm hover-lift">
-          <div class="flex items-start">
-            <div class="w-12 h-12 rounded-lg bg-danger/10 flex items-center justify-center flex-shrink-0">
-              <i class="fa fa-shield text-danger text-xl"></i>
-            </div>
-            <div class="ml-4">
-              <h3 class="font-semibold text-gray-800">风险评估</h3>
-              <p class="text-sm text-gray-600 mt-1">完成风险偏好测试，了解您的投资风格</p>
-              <div  @click.prevent="toggleRiskAssessment()" class="mt-3 flex items-center text-primary text-sm">
-                <span>开始测试</SPAN>
-                <i class="fa fa-angle-right ml-1"></i>
-              </div>
-            </div>
-          </div>
-        </a>
-
-        <a href="#analytics" class="block bg-white rounded-xl p-5 shadow-sm hover-lift">
-          <div class="flex items-start">
-            <div class="w-12 h-12 rounded-lg bg-primary/10 flex items-center justify-center flex-shrink-0">
-              <i class="fa fa-pie-chart text-primary text-xl"></i>
-            </div>
-            <div class="ml-4">
-              <h3 class="font-semibold text-gray-800">投资分析</h3>
-              <p class="text-sm text-gray-600 mt-1">深入分析您的投资表现和收益情况</p>
-              <div class="mt-3 flex items-center text-primary text-sm">
-                <span>查看分析</span>
-                <i class="fa fa-angle-right ml-1"></i>
-              </div>
-            </div>
-          </div>
-        </a>
-
-        <a href="#transactions" class="block bg-white rounded-xl p-5 shadow-sm hover-lift">
-          <div class="flex items-start">
-            <div class="w-12 h-12 rounded-lg bg-secondary/10 flex items-center justify-center flex-shrink-0">
-              <i class="fa fa-exchange text-secondary text-xl"></i>
-            </div>
-            <div class="ml-4">
-              <h3 class="font-semibold text-gray-800">交易记录</h3>
-              <p class="text-sm text-gray-600 mt-1">查看您的所有投资交易历史记录</p>
-              <div class="mt-3 flex items-center text-primary text-sm">
-                <span>查看记录</span>
-                <i class="fa fa-angle-right ml-1"></i>
-              </div>
-            </div>
-          </div>
-        </a>
-      </div>
-
 
       <!-- Alerts Section -->
       <div id="alerts-section" class="bg-white rounded-lg shadow-sm border border-gray-200">
@@ -490,7 +352,7 @@ onBeforeUnmount(() => {
 
 const toggleRiskAssessment  = () =>{
   router.push({
-    path: '/client/riskTest'
+    path: '/client/risk'
   })
 }
 

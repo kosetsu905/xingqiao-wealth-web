@@ -1,4 +1,6 @@
 <template>
+  <!-- 顶部导航栏 -->
+  <Header/>
   <div class="risk-assessment">
     <!-- 测试引导页 -->
     <div v-if="currentStep === 0" class="welcome-section">
@@ -95,6 +97,7 @@
 <script setup>
 import { ref, computed, reactive } from 'vue'
 import { useRouter } from 'vue-router'
+import Header from "@/components/client/Header.vue";
 const router = useRouter()
 
 const questions = ref([
