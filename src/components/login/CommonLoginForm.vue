@@ -254,10 +254,11 @@ const handleSubmit = async () => {
     // }
     //todo
     //暂时成功
-    if(formData.value.userType === '01'){
+    if(props.loginObject.userType === '02'){
       await router.push('/client/index')
     }
-    if(formData.value.userType === '02'){
+    if(props.loginObject.userType=== '01'){
+      alert(props.loginObject.userType)
       await router.push('/agency/index')
     }
   }

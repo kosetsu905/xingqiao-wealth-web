@@ -218,8 +218,8 @@
 
         <div class="space-y-4">
           <div class="p-4 border border-gray-200 rounded-lg hover:border-yellow-300 cursor-pointer transition-colors">
-            <div class="flex items-center justify-between">
-              <div class="flex items-center" @click="gotoAccount">
+            <div class="flex items-center justify-between" @click="gotoAccount">
+              <div class="flex items-center" >
                 <i class="text-blue-600 text-lg mr-3" data-fa-i2svg=""><svg class="svg-inline--fa fa-circle-user" aria-hidden="true" focusable="false" data-prefix="fas" data-icon="circle-user" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" data-fa-i2svg=""><path fill="currentColor" d="M399 384.2C376.9 345.8 335.4 320 288 320H224c-47.4 0-88.9 25.8-111 64.2c35.2 39.2 86.2 63.8 143 63.8s107.8-24.7 143-63.8zM0 256a256 256 0 1 1 512 0A256 256 0 1 1 0 256zm256 16a72 72 0 1 0 0-144 72 72 0 1 0 0 144z"></path></svg></i>
                 <span class="font-medium text-gray-900">账户信息</span>
               </div>
@@ -238,8 +238,8 @@
           </button>
 
           <div class="p-4 border border-gray-200 rounded-lg hover:border-yellow-300 cursor-pointer transition-colors">
-            <div class="flex items-center justify-between">
-              <div class="flex items-center" @click="gotoPerformanceReport">
+            <div class="flex items-center justify-between" @click="gotoPerformanceReport">
+              <div class="flex items-center" >
                 <i class="text-purple-600 text-lg mr-3" data-fa-i2svg=""><svg class="svg-inline--fa fa-chart-area" aria-hidden="true" focusable="false" data-prefix="fas" data-icon="chart-area" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" data-fa-i2svg=""><path fill="currentColor" d="M64 64c0-17.7-14.3-32-32-32S0 46.3 0 64V400c0 44.2 35.8 80 80 80H480c17.7 0 32-14.3 32-32s-14.3-32-32-32H80c-8.8 0-16-7.2-16-16V64zm96 288H448c17.7 0 32-14.3 32-32V251.8c0-7.6-2.7-15-7.7-20.8l-65.8-76.8c-12.1-14.2-33.7-15-46.9-1.8l-21 21c-10 10-26.4 9.2-35.4-1.6l-39.2-47c-12.6-15.1-35.7-15.4-48.7-.6L135.9 215c-5.1 5.8-7.9 13.3-7.9 21.1v84c0 17.7 14.3 32 32 32z"></path></svg></i>
                 <span class="font-medium text-gray-900">业绩报告</span>
               </div>
@@ -248,8 +248,8 @@
           </div>
 
           <div class="p-4 border border-gray-200 rounded-lg hover:border-yellow-300 cursor-pointer transition-colors">
-            <div class="flex items-center justify-between">
-              <div class="flex items-center" @click="gotoCommissionHistory">
+            <div class="flex items-center justify-between" @click="gotoCommissionHistory">
+              <div class="flex items-center" >
                 <i class="text-orange-600 text-lg mr-3" data-fa-i2svg=""><svg class="svg-inline--fa fa-file-invoice" aria-hidden="true" focusable="false" data-prefix="fas" data-icon="file-invoice" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 384 512" data-fa-i2svg=""><path fill="currentColor" d="M64 0C28.7 0 0 28.7 0 64V448c0 35.3 28.7 64 64 64H320c35.3 0 64-28.7 64-64V160H256c-17.7 0-32-14.3-32-32V0H64zM256 0V128H384L256 0zM80 64h64c8.8 0 16 7.2 16 16s-7.2 16-16 16H80c-8.8 0-16-7.2-16-16s7.2-16 16-16zm0 64h64c8.8 0 16 7.2 16 16s-7.2 16-16 16H80c-8.8 0-16-7.2-16-16s7.2-16 16-16zm16 96H288c17.7 0 32 14.3 32 32v64c0 17.7-14.3 32-32 32H96c-17.7 0-32-14.3-32-32V256c0-17.7 14.3-32 32-32zm0 32v64H288V256H96zM240 416h64c8.8 0 16 7.2 16 16s-7.2 16-16 16H240c-8.8 0-16-7.2-16-16s7.2-16 16-16z"></path></svg></i>
                 <span class="font-medium text-gray-900">佣金历史</span>
               </div>

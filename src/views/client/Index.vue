@@ -68,9 +68,10 @@
         <div class="flex justify-between items-center mb-4">
           <h3 class="font-semibold text-gray-800">风险评估</h3>
           <button
-              @click.prevent="toggleRiskAssessment()"
+              @click.prevent="toggleRiskAssessment"
              class="px-3 py-1 text-sm rounded-lg bg-primary text-white hover:bg-primary/90 transition-colors">
-            <i class="fa fa-pencil mr-1"></i> 重新测试
+            <i class="fa fa-pencil mr-1"></i>
+            重新测试
           </button>
         </div>
 
@@ -133,7 +134,6 @@
         </div>
       </div>
 
-
       <!-- Investment Products Table -->
       <div id="investments-table" class="bg-white rounded-lg shadow-sm border border-gray-200 mb-8">
         <div class="px-6 py-4 border-b border-gray-200">
@@ -142,8 +142,10 @@
               <i class="fa-solid fa-list mr-2 text-primary"></i>
               投资产品明细
             </h3>
-            <button class="bg-primary text-white px-4 py-2 rounded-lg text-sm hover:bg-primary-dark transition">
-              <i class="fa-solid fa-plus mr-2"></i>新增投资
+            <button
+                @click.prevent="goToProductManagement"
+                class="bg-primary text-white px-4 py-2 rounded-lg text-sm hover:bg-primary-dark transition">
+              <i class="fa-solid fa-plus mr-2"></i>查看更多
             </button>
           </div>
         </div>
@@ -246,7 +248,7 @@
               <h3 class="font-semibold text-gray-800">个人信息</h3>
               <p class="text-sm text-gray-600 mt-1">管理您的个人基本信息和联系方式</p>
               <div
-                  @click.prevent="goToPersonalInfo()"
+                  @click.prevent="goToPersonalInfo"
                   class="mt-3 flex items-center text-primary text-sm">
                 <span>查看详情</span>
                 <i class="fa fa-angle-right ml-1"></i>
@@ -263,7 +265,7 @@
             <div class="ml-4">
               <h3 class="font-semibold text-gray-800">账户管理</h3>
               <p class="text-sm text-gray-600 mt-1">管理您的银行账户和支付方式</p>
-              <div @click.prevent="goToAccountManagement()"
+              <div @click.prevent="goToAccountManagement"
                   class="mt-3 flex items-center text-primary text-sm">
                 <span>查看详情</span>
                 <i class="fa fa-angle-right ml-1"></i>
@@ -281,7 +283,7 @@
               <h3 class="font-semibold text-gray-800">投资产品管理</h3>
               <p class="text-sm text-gray-600 mt-1">查看和管理您的所有投资产品组合</p>
               <div
-                  @click.prevent="goToProductManagement()"
+                  @click.prevent="goToProductManagement"
                   class="mt-3 flex items-center text-primary text-sm">
                   <span>查看详情</span>
               <i class="fa fa-angle-right ml-1"></i>
@@ -402,13 +404,14 @@
 
 <script setup>
 import Header from '@/components/client/Header.vue'
-
 import { useRouter } from 'vue-router'
+import {ref,onMounted,onBeforeUnmount } from "vue";
 const router = useRouter()
 const portfolioContainer = ref(null);
 const performanceContainer = ref(null);
 let chart = null;
 let performanceChart = null;
+import Highcharts from 'highcharts';
 
 
 onMounted(() => {
@@ -485,32 +488,25 @@ onBeforeUnmount(() => {
 });
 
 
-function toggleRiskAssessment () {
-  console.log('切换风险测评状态')
+const toggleRiskAssessment  = () =>{
   router.push({
     path: '/client/riskTest'
   })
 }
 
-function goToPersonalInfo () {
+const goToPersonalInfo  = () =>{
   console.log('个人信息页')
-  router.push({
-    path: '/client/userInfo'
-  })
+  router.push('/client/userInfo');
 }
 
-function goToAccountManagement () {
+const goToAccountManagement = () => {
   console.log('账户设置')
-  router.push({
-    path: '/client/account'
-  })
+  router.push('/client/account');
 }
 
 // 添加产品管理跳转方法
-function goToProductManagement() {
-  router.push({
-    path: '/client/product'  // 根据实际路由配置调整路径
-  })
+const goToProductManagement= () => {
+  router.push('/client/product');
 }
 
 </script>
