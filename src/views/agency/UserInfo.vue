@@ -346,7 +346,7 @@ import Header from "@/components/agency/Header.vue";
 import { computed ,onMounted} from 'vue';
 import { useRouter } from 'vue-router';
 const router = useRouter();
-import { ekycAuthStore } from '@/store/index';
+import { ekycAuthStore } from '@/store/index.ts';
 // 引入认证状态 store
 const ekycAuth = ekycAuthStore();
 

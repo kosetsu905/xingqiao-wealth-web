@@ -279,7 +279,7 @@
 import {ref, onMounted, computed} from 'vue';
 import { useRouter } from 'vue-router';
 import Header from '@/components/agency/Header.vue';
-import { ekycAuthStore } from '@/store/index';
+import { ekycAuthStore } from '@/store/index.js';
 
 // 引入路由实例
 const router = useRouter();

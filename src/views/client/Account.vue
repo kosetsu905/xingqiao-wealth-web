@@ -363,7 +363,6 @@
 
 
 <script setup lang="ts">
-import { ref, computed } from 'vue'
 import Header from "@/components/client/Header.vue";
 </script>
 

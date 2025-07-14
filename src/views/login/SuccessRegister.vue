@@ -1,6 +1,7 @@
 <template>
   <div id="login-page" class="login-page">
-    <div id="login-container" class="login-container items-center justify-center">  <!-- 新增居中属性 -->
+    <div id="login-container" class="login-container items-center justify-center">
+      <!-- 新增居中属性 -->
       <!-- 左侧栏-->
       <BrandSection :brand-data="brandData"/>
       <!-- 右侧栏-->

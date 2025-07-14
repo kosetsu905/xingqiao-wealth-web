@@ -363,7 +363,7 @@
 
 <script setup lang="ts">
 import Header from '@/components/client/Header.vue'
-import { ref, onMounted, onBeforeUnmount } from 'vue'
+import { ref } from 'vue'
 // 响应式状态
 const isEditMode = ref(false)
 

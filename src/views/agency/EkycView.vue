@@ -552,7 +552,7 @@ import {useRoute, useRouter} from 'vue-router'
 const router = useRouter()
 const route = useRoute();
 import cache from '@/plugins/cache'
-import { ekycAuthStore } from '@/store/index';
+import { ekycAuthStore } from '@/store/index.js';
 // 引入认证状态 store
 const ekycAuth = ekycAuthStore();
 // 认证状态
