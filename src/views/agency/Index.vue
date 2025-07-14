@@ -300,7 +300,10 @@ const checkAuthentication = async () => {
 
 // 跳转到认证页面的函数
 const goToAuthPage = () => {
-  router.push('/agency/ekycView'); // 替换为实际的认证页面路由
+  router.push({
+    path: '/agency/ekycView',
+    query: { step: 'personal' }
+  })
 };
 
 // 添加新客户
