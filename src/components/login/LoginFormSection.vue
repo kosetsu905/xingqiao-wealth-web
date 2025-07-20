@@ -42,20 +42,27 @@
   import { ref,computed } from 'vue';
 
   const userType = ref("02")
+  const loginType = ref("0")
+
+  // 切换登录类型的方法
+  function switchTab(tab) {
+    console.log(`切换到 ${tab} 登录`)
+    userType.value = tab
+  }
 
   // 账号密码登录对象
   const accountLoginObject = ref({
     userType: userType.value,
-    loginTypeName: '邮箱/手机号',
-    loginType: '00',
-    placeholder: '请输入您的邮箱或者手机号',
+    loginTypeName: '账号',
+    loginType: '0',
+    placeholder: '请输入您的登录账号',
     type: 'text'
   })
 
   const emailLoginObject = ref({
     userType: userType.value,
     loginTypeName: '邮箱',
-    loginType: '01',
+    loginType: '1',
     placeholder: '请输入您的邮箱',
     type: 'text'
   })
@@ -64,26 +71,19 @@
   const phoneLoginObject = ref({
     userType: userType.value,
     loginTypeName: '手机号码',
-    loginType: '02',
+    loginType: '2',
     placeholder: '请输入您的手机号码',
     type: 'phone'
   })
 
   // 新增计算属性获取当前登录对象
   const currentLoginObject = computed(() => ({
-    ...(loginType.value === '00' ? accountLoginObject.value:(loginType.value === '01' ?
-            emailLoginObject.value : phoneLoginObject.value)
-       ),
-    userType: userType.value // 动态注入当前用户类型
+    ...(loginType.value === '0' ? accountLoginObject.value :
+        loginType.value === '1' ? emailLoginObject.value :
+            phoneLoginObject.value),
+    userType: userType.value // 确保 userType 是响应式更新的
   }))
 
-
-  // 切换登录类型的方法
-  function switchTab(tab) {
-    console.log(`切换到 ${tab} 登录`)
-    userType.value = tab
-  }
-  const loginType = ref("00")
 
   const changeLoginType = (params) => {
     console.log('更改其他登录方式触发', params);

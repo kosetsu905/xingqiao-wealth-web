@@ -4,7 +4,7 @@
   <div id="login-form">
     <form @submit.prevent="handleSubmit">
       <div class="mb-4" v-if="props.currentObject.pwdType === '01'">
-        <label class="login-label" for="client-email">
+        <label class="login-label" for="">
           注册邮箱<span class="text-red-500">*</span>
         </label>
         <div class="relative">
@@ -21,7 +21,7 @@
 
 
       <div class="mb-4" v-if="props.currentObject.pwdType === '02'">
-        <label class="login-label" for="client-email">
+        <label class="login-label" for="">
           手机号码<span class="text-red-500">*</span>
         </label>
         <div class="relative">
@@ -71,7 +71,7 @@
       </div>
 
       <div class="mb-4">
-        <label class="login-label" for="client-email">
+        <label class="login-label" for="">
           密码<span class="text-red-500">*</span>
         </label>
         <div class="relative">
@@ -94,7 +94,7 @@
       </div>
 
       <div class="mb-4">
-        <label class="login-label" for="client-email">
+        <label class="login-label" for="">
           确认密码<span class="text-red-500">*</span>
         </label>
         <div class="relative">

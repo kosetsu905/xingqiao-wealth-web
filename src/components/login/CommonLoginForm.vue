@@ -8,15 +8,16 @@
         </label>
         <div class="relative">
           <div class="cli-icon">
-            <!-- 邮箱登录时和账号登录时显示图标 -->
+            <!-- 账号登录时显示图标 -->
+            <i  v-if="loginObject.loginType === '0'"
+                class="text-gray-400 fa-regular fa-user-circle"></i>
             <i
-                v-if="loginObject.loginType === '00'|| loginObject.loginType === '01'"
+                v-if="loginObject.loginType === '1'"
                 class="text-gray-400 fa-regular fa-envelope"
             ></i>
-
             <!-- 区号选择只在手机号登录时显示 -->
             <select
-                v-if="loginObject.loginType === '02'"
+                v-if="loginObject.loginType === '2'"
                 v-model="formData.countryCode"
                 class="country-code-select"
             >
@@ -29,12 +30,12 @@
                  :type="loginObject.type"
                  v-model="formData.account"
                  class="account-input"
-                 :class="loginObject.loginType === '02' ? 'pl-20' : 'pl-10'"
+                 :class="loginObject.loginType === '2' ? 'pl-20' : 'pl-10'"
                  :placeholder="loginObject.placeholder">
         </div>
       </div>
       <!-- 账号密码登录区域 -->
-      <div v-if="props.loginObject.loginType === '00'"  class="mb-6">
+      <div v-if="props.loginObject.loginType === '0'"  class="mb-6">
         <div class="broker-class2">
           <label class="broker-class3" for="broker-password">
             密码<span class="text-red-500">*</span>
@@ -63,7 +64,7 @@
       </div>
 
       <!-- 新增验证码登录区域 -->
-      <div v-if="props.loginObject.loginType === '01'||props.loginObject.loginType === '02'" class="mb-6">
+      <div v-if="props.loginObject.loginType === '1'||props.loginObject.loginType === '2'" class="mb-6">
         <div class="broker-class2">
           <label class="broker-class3">
             验证码<span class="text-red-500">*</span>
@@ -154,11 +155,12 @@
 </template>
 
 <script setup>
-import { ref, onMounted, onUnmounted } from 'vue'
-import { login } from '@/api/login'
+import { ref, onMounted, onUnmounted,watch } from 'vue'
+import {login, sendCode} from '@/api/login'
 import { useRouter } from 'vue-router'
 const router = useRouter()
 import { useToast } from '@/composables/useToast'
+import {setToken} from "@/utils/auth.js";
 const { successToast, errorToast } = useToast()
 
 // 定义 props
@@ -168,7 +170,7 @@ const props = defineProps({
     default: () => ({
       userType: '00',
       loginTypeName: '邮箱/手机号',
-      loginType: '00',
+      loginType: '0',
       placeholder: '请输入您的邮箱或者手机号',
       type: 'text'
     })
@@ -178,7 +180,6 @@ const props = defineProps({
 
 // 响应式数据
 const showPassword = ref(false)
-
 
 // 方法：切换密码可见性
 function togglePasswordVisibility() {
@@ -190,19 +191,38 @@ const countdown = ref(0)
 let timer = null
 
 
-function handleGetCaptcha() {
-  if (countdown.value > 0) return
+const handleGetCaptcha = async () => {
+  if (countdown.value > 0) {
+    return;
+  }
 
-  // 开始倒计时
-  countdown.value = 60
-  timer = setInterval(() => {
-    countdown.value--
-    if (countdown.value <= 0) {
-      clearInterval(timer)
-    }
-  }, 1000)
 
   console.log('获取验证码逻辑')
+
+  // 构造请求参数
+  const params = {
+    phoneNumber: formData.value.phoneNumber,
+    countryCode: formData.value.countryCode,
+    userType: formData.value.userType,
+    step:'2'
+  }
+
+  // 调用登录接口
+  const res = await sendCode(params)
+  // 登录成功处理
+  if (res.code === 200) {
+    successToast("发送成功");
+    // 开始倒计时
+    countdown.value = 60
+    timer = setInterval(() => {
+      countdown.value--
+      if (countdown.value <= 0) {
+        clearInterval(timer)
+      }
+    }, 1000)
+  }else{
+    successToast("发送失败");
+  }
 }
 
 // 组件卸载时清除定时器
@@ -219,24 +239,54 @@ const formData = ref({
   loginType: props.loginObject.loginType,
   userType: props.loginObject.userType
 })
+
+
+// 监听 loginType 变化并同步到 formData
+watch(
+    () => props.loginObject.loginType,
+    (newVal) => {
+      formData.value.loginType = newVal
+    },
+    { immediate: true } // 立即触发一次同步
+)
+
+// 监听 loginObject.userType 变化并同步到 formData
+watch(
+    () => props.loginObject.userType,
+    (newVal) => {
+      formData.value.userType = newVal
+    },
+    { immediate: true } // 立即触发一次同步
+)
+
+
+
 // 处理表单提交
 const handleSubmit = async () => {
   try {
     // 构造请求参数
     const params = {
-      [props.loginObject.type === 'email' ? 'email' : 'phone']: formData.value.account,
+      account: formData.value.account,
       countryCode: formData.value.countryCode,
       password: formData.value.password,
       code: formData.value.code,
       loginType: formData.value.loginType,
-      userType: formData.value.userType
+      userType: props.loginObject.userType
     }
     // 调用登录接口
     const res = await login(params)
     // 登录成功处理
     if (res.code === 200) {
-      localStorage.setItem('token', res.token)
-      await router.push('/client/index')
+      console.log('登录成功')
+      console.log(res.data.access_token)
+      localStorage.setItem('token', res.data.access_token)
+      setToken(res.data.access_token)
+      if(props.loginObject.userType === '02'){
+        await router.push('/client/index')
+      }
+      if(props.loginObject.userType=== '01'){
+        await router.push('/agency/index')
+      }
     }
   } catch (e) {
     console.log('登录失败:', e)
@@ -246,19 +296,11 @@ const handleSubmit = async () => {
         e.response?.statusText ||
         '请求失败，请检查网络连接'
 
-    // 添加状态码判断
-    // if (e.response?.status === 404) {
-    //   errorToast('资源不存在，请联系管理员!')
-    // } else {
-    //   errorToast(errorMessage)
-    // }
-    //todo
-    //暂时成功
-    if(props.loginObject.userType === '02'){
-      await router.push('/client/index')
-    }
-    if(props.loginObject.userType=== '01'){
-      await router.push('/agency/index')
+    //添加状态码判断
+    if (e.response?.status === 404) {
+      errorToast('资源不存在，请联系管理员!')
+    } else {
+      errorToast(errorMessage)
     }
   }
 }

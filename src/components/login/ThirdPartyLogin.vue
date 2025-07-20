@@ -14,15 +14,15 @@
       <button class="third-party">
         <i class="fa-brands fa-qq text-blue-500"></i>
       </button>
-      <!-- 新增账号密码登录按钮 -->
-      <button class="third-party" @click="handleClick('00')">
+      <!-- 账号密码登录按钮 -->
+      <button class="third-party" @click="handleClick('0')">
         <i class="fa-solid fa-user text-gray-700"></i>
       </button>
-      <!-- 新增邮箱登录按钮 -->
-      <button class="third-party" @click="handleClick('01')">
+      <!-- 邮箱验验证码按钮 -->
+      <button class="third-party" @click="handleClick('1')">
         <i class="fa-regular fa-envelope text-gray-700"></i>
       </button>
-      <button class="third-party" @click="handleClick('02')">
+      <button class="third-party" @click="handleClick('2')">
         <i class="fa-solid fa-mobile-screen-button text-gray-700"></i>
       </button>
     </div>

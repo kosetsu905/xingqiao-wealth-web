@@ -5,11 +5,11 @@ import cache from '@/plugins/cache'
 const service = axios.create({
   baseURL: import.meta.env.VITE_API_BASE_URL,
   timeout: 10000,
-  headers: { 'Content-Type': 'application/json;charset=utf-8' }
+  headers: { 'Content-Type': 'application/json;charset=utf-8','X-Client-Type': 'client' }
 })
 
 // 在请求拦截器前添加路由白名单配置
-const whiteList = ['/auth/login', '/auth/register', '/code'] // 登录、注册、验证码接口
+const whiteList = ['/client/auth/login', '/client/auth/register', '/client/auth/sendCode'] // 登录、注册、验证码接口
 
 
 // 请求拦截器

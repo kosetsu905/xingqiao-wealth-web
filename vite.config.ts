@@ -3,6 +3,8 @@ import { defineConfig } from 'vite'
 import vue from '@vitejs/plugin-vue'
 import path from 'path'
 
+
+
 export default defineConfig({
   plugins: [vue()],
   resolve: {
@@ -11,12 +13,16 @@ export default defineConfig({
     }
   },
   server: {
+    headers: {
+      'Cache-Control': 'public, max-age=31536000, immutable',
+      'Vary': 'Accept-Encoding'
+    },
     host: '0.0.0.0',
     port: 8082,
     open: true,
     proxy: {
       '/api': {
-        target: 'http://localhost:8081', // Should match your backend server
+        target: 'http://localhost:8080', // Should match your backend server
         changeOrigin: true,
         rewrite: (path) => path.replace(/^\/api/, '')
       }

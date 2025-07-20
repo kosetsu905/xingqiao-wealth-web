@@ -4,7 +4,22 @@
   <div id="login-form">
     <form @submit.prevent="handleSubmit">
       <div class="mb-4">
-        <label class="login-label" for="client-email">
+        <label class="login-label" for="">
+          登录账号<span class="text-red-500">*</span>
+        </label>
+        <div class="relative">
+          <div class="cli-icon">
+            <i class="text-gray-400 fa-regular fa-envelope"></i>
+          </div>
+          <input id="bror-reset-account"
+                 type="text"
+                 :class="'pl-10'"
+                 v-model="formData.account"
+                 class="account-input" placeholder="请输入登录账号">
+        </div>
+      </div>
+      <div class="mb-4">
+        <label class="login-label" for="">
           注册邮箱<span class="text-red-500">*</span>
         </label>
         <div class="relative">
@@ -19,10 +34,8 @@
         </div>
       </div>
 
-
-
       <div class="mb-4">
-        <label class="login-label" for="client-email">
+        <label class="login-label" for="">
           手机号码<span class="text-red-500">*</span>
         </label>
         <div class="relative">
@@ -38,7 +51,7 @@
           </div>
           <input id="broker-phone"
                  type="tel"
-                 v-model="formData.phone"
+                 v-model="formData.phoneNumber"
                  class="account-input pl-20"
                  placeholder="请输入您的注册手机号">
         </div>
@@ -72,7 +85,7 @@
       </div>
 
       <div class="mb-4">
-        <label class="login-label" for="client-email">
+        <label class="login-label" for="">
           密码<span class="text-red-500">*</span>
         </label>
         <div class="relative">
@@ -95,7 +108,7 @@
       </div>
 
       <div class="mb-4">
-        <label class="login-label" for="client-email">
+        <label class="login-label" for="">
           确认密码<span class="text-red-500">*</span>
         </label>
         <div class="relative">
@@ -119,8 +132,8 @@
 
 
       <div class="flex items-start mb-12">
-        <input id="remember-broker" type="checkbox" class="broker-class7 mt-1">
-        <label for="remember-broker" class="ml-2 text-sm text-gray-600 leading-relaxed flex items-baseline flex-wrap">
+        <input id="remember-broker" type="checkbox" class="broker-class7 mt-1" v-model="agreed">
+        <label for="remember-broker"  class="ml-2 text-sm text-gray-600 leading-relaxed flex items-baseline flex-wrap">
           已阅读并同意
           <a href="#"
              class="text-primary hover:text-primary-dark hover:underline whitespace-nowrap">
@@ -151,8 +164,8 @@ import { useRouter } from 'vue-router' // 新增路由引入
 const router = useRouter()
 import { useToast } from '@/composables/useToast'
 const { successToast, errorToast } = useToast()
-
-
+const agreed = ref(false)
+import {register, sendCode} from '@/api/login'
 // 定义 props
 const props = defineProps({
   loginObject: {
@@ -180,19 +193,36 @@ function toggleComfirmPasswordVisibility() {
 const countdown = ref(0)
 let timer = null
 
-function handleGetCaptcha() {
-  if (countdown.value > 0) return
-
-  // 开始倒计时
-  countdown.value = 60
-  timer = setInterval(() => {
-    countdown.value--
-    if (countdown.value <= 0) {
-      clearInterval(timer)
-    }
-  }, 1000)
-
+const handleGetCaptcha = async () => {
+  if (countdown.value > 0) {
+    return;
+  }
   console.log('获取验证码逻辑')
+
+  // 构造请求参数
+  const params = {
+    phoneNumber: formData.value.phoneNumber,
+    countryCode: formData.value.countryCode,
+    userType: formData.value.userType,
+    step:'1'
+  }
+
+  // 调用登录接口
+  const res = await sendCode(params)
+  // 登录成功处理
+  if (res.code === 200) {
+    successToast("发送成功");
+    // 开始倒计时
+    countdown.value = 60
+    timer = setInterval(() => {
+      countdown.value--
+      if (countdown.value <= 0) {
+        clearInterval(timer)
+      }
+    }, 1000)
+  }else{
+    successToast("发送失败");
+  }
 }
 
 // 组件卸载时清除定时器
@@ -202,19 +232,83 @@ onUnmounted(() => {
 
 // 表单数据
 const formData = ref({
+  account: '',
   email: '',
-  phone: '',
+  phoneNumber: '',
   password: '',
   comfirmPassword: '',
   code: '',
   countryCode: '+86',
   userType: props.loginObject.userType
-
 })
 // 处理表单提交
 const handleSubmit = async () => {
   console.log("注册开始")
-  await router.push('/successRegister')
+  if (!agreed.value) {
+    errorToast('请勾选“已阅读并同意”选项')
+    return
+  }
+  try {
+    // 构造请求参数
+    const params = {
+      account: formData.value.account,
+      email: formData.value.email,
+      phoneNumber: formData.value.phoneNumber,
+      password: formData.value.password,
+      comfirmPassword: formData.value.comfirmPassword,
+      countryCode: formData.value.countryCode,
+      code: formData.value.code,
+      userType: formData.value.userType,
+      registerType:'COMMON'
+    }
+
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+    if (!emailRegex.test(formData.value.email)) {
+      errorToast('请输入有效的邮箱地址')
+      return
+    }
+    //两次密码校验
+    if (formData.value.password !== formData.value.comfirmPassword) {
+      errorToast('两次输入的密码不一致')
+      return
+    }
+    const phoneRegexMap = {
+      '+86': /^1[3-9]\d{9}$/, // 中国大陆
+      '+852': /^([5|6|8|9])\d{7}$/ // 中国香港
+    }
+    const countryCode = formData.value.countryCode
+    const phoneNumber = formData.value.phoneNumber
+
+    const phoneRegex = phoneRegexMap[countryCode]
+    if (!phoneRegex || !phoneRegex.test(phoneNumber)) {
+      errorToast('请输入有效的手机号码')
+      return
+    }
+    // 调用登录接口
+    const res = await register(params)
+    // 登录成功处理
+    if (res.code === 200) {
+      router.push({
+        path: '/login'
+      })
+    }
+  } catch (e) {
+    console.log('登录失败:', e)
+    // 增强错误处理逻辑
+    const errorMessage = e.response?.data?.msg ||
+        e.message ||
+        e.response?.statusText ||
+        '请求失败，请检查网络连接'
+
+    //添加状态码判断
+    if (e.response?.status === 404) {
+      errorToast('资源不存在，请联系管理员!')
+    } else {
+      errorToast(errorMessage)
+    }
+
+  }
+
 }
 
 const handleBack = async () => {

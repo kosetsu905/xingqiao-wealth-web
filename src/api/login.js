@@ -3,7 +3,7 @@ import request from '@/utils/request'
 // 登录方法
 export function login(data) {
   return request({
-    url: '/auth/login',
+    url: '/auth/client/login',
     headers: {
       isToken: false,
       repeatSubmit: false
@@ -13,7 +13,7 @@ export function login(data) {
       // 动态字段根据登录方式
       ...data,
       // 明确传递登录方式参数
-      loginType: data.loginType, // 00-邮箱登录 01-手机验证码登录
+      loginType: data.loginType, // 0-密码登录 1-手机验证码登录，2-邮箱验证码登录
       userType: data.userType    // 01-经纪人 02-客户
     }
   })
@@ -22,7 +22,7 @@ export function login(data) {
 // 注册方法
 export function register(data) {
   return request({
-    url: '/auth/register',
+    url: '/auth/client/register',
     headers: {
       isToken: false
     },
@@ -34,7 +34,7 @@ export function register(data) {
 // 刷新方法
 export function refreshToken() {
   return request({
-    url: '/auth/refresh',
+    url: '/auth/client/refresh',
     method: 'post'
   })
 }
@@ -42,7 +42,7 @@ export function refreshToken() {
 // 获取用户详细信息
 export function getInfo() {
   return request({
-    url: '/system/user/getInfo',
+    url: '/auth/client/getInfo',
     method: 'get'
   })
 }
@@ -50,19 +50,20 @@ export function getInfo() {
 // 退出方法
 export function logout() {
   return request({
-    url: '/auth/logout',
+    url: '/auth/client/logout',
     method: 'delete'
   })
 }
 
 // 获取验证码
-export function getCodeImg() {
+export function sendCode(data) {
   return request({
-    url: '/code',
+    url: '/auth/client/sendCode',
     headers: {
       isToken: false
     },
-    method: 'get',
+    method: 'post',
+    data: data,
     timeout: 20000
   })
 }

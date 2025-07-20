@@ -1,8 +1,8 @@
 import Cookies from 'js-cookie'
 
-const TokenKey = 'Web-Token'
+const TokenKey = 'Web-Client-Token'
 
-const ExpiresInKey = 'Web-Expires-In'
+const ExpiresInKey = 'Web-Client-Expires-In'
 
 export function getToken() {
   return Cookies.get(TokenKey)
