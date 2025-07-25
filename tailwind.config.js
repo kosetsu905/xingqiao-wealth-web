@@ -17,9 +17,12 @@ export default {
           DEFAULT: "#FAAD14",
           dark: "#AD6800"
         },
+        secondary1:"#F8F9FA",
         success: '#00B42A',
         danger: '#F53F3F',
         dark: '#1D2129',
+        accent: "#28A745",
+        border: "#DCDCDC",
         wealth: {
           light: "#F6FFED",
           DEFAULT: "#52C41A",

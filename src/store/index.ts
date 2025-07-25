@@ -21,3 +21,5 @@ export const ekycAuthStore = defineStore('ekycAuth', {
     }
   }
 });
+
+

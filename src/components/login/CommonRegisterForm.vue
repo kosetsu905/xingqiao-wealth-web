@@ -284,14 +284,17 @@ const handleSubmit = async () => {
       errorToast('请输入有效的手机号码')
       return
     }
-    // 调用登录接口
-    const res = await register(params)
-    // 登录成功处理
-    if (res.code === 200) {
-      router.push({
-        path: '/login'
-      })
-    }
+    router.push({
+      path: '/login'
+    })
+    // 调用注册接口
+    // const res = await register(params)
+    // 登录注册处理
+    // if (res.code === 200) {
+    //   router.push({
+    //     path: '/login'
+    //   })
+    // }
   } catch (e) {
     console.log('登录失败:', e)
     // 增强错误处理逻辑

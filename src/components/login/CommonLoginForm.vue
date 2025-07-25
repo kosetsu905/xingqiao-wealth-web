@@ -273,21 +273,28 @@ const handleSubmit = async () => {
       loginType: formData.value.loginType,
       userType: props.loginObject.userType
     }
-    // 调用登录接口
-    const res = await login(params)
-    // 登录成功处理
-    if (res.code === 200) {
-      console.log('登录成功')
-      console.log(res.data.access_token)
-      localStorage.setItem('token', res.data.access_token)
-      setToken(res.data.access_token)
-      if(props.loginObject.userType === '02'){
-        await router.push('/client/index')
-      }
-      if(props.loginObject.userType=== '01'){
-        await router.push('/agency/index')
-      }
+
+    if(props.loginObject.userType === '02'){
+      await router.push('/client/index')
     }
+    if(props.loginObject.userType=== '01'){
+      await router.push('/agency/index')
+    }
+    // 调用登录接口
+    // const res = await login(params)
+    // 登录成功处理
+    // if (res.code === 200) {
+    //   console.log('登录成功')
+    //   console.log(res.data.access_token)
+    //   localStorage.setItem('token', res.data.access_token)
+    //   setToken(res.data.access_token)
+    //   if(props.loginObject.userType === '02'){
+    //     await router.push('/client/index')
+    //   }
+    //   if(props.loginObject.userType=== '01'){
+    //     await router.push('/agency/index')
+    //   }
+    // }
   } catch (e) {
     console.log('登录失败:', e)
     // 增强错误处理逻辑

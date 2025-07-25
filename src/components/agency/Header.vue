@@ -12,8 +12,26 @@
           </div>
           <h1 class="ml-3 text-xl font-bold text-gray-800">财富管理</h1>
         </div>
-        <div class="flex items-center space-x-4">
 
+        <div class="hidden md:block">
+          <!-- 修改后的导航结构 -->
+          <div class="ml-10 flex items-center space-x-4">
+            <a
+                v-for="item in navItems"
+                :key="item.activeIndex"
+                @click="item.handler"
+                :class="[
+        'py-2 rounded-md text-sm font-medium transition-custom',
+        currentTabActive === item.activeIndex
+          ? 'bg-primary hover:bg-primary/90 text-white px-4'
+          : 'text-gray-600 hover:text-primary px-3']"
+                :style="{ cursor: item.handler ? 'pointer' : 'default' }">
+              {{ item.label }}
+            </a>
+          </div>
+        </div>
+
+        <div class="flex items-center space-x-4">
           <div @click.prevent="toggleMessage" class="relative">
             <button class="p-2 text-gray-500 hover:text-primary hover:bg-gray-100 rounded-full transition-colors relative">
               <i class="fa-solid fa-bell"></i>
@@ -22,40 +40,40 @@
           </div>
           <div class="relative">
             <button id="profile-menu-button"
-                    @click="toggleMenu"
                     class="flex items-center space-x-2 focus:outline-none">
               <img src="https://picsum.photos/id/64/40/40" alt="用户头像"
                    class="w-8 h-8 rounded-full object-cover border-2 border-primary/20">
               <span class="md:inline font-medium">张先生</span>
-              <i class="fa fa-angle-down text-gray-500"></i>
             </button>
-
-            <!-- 个人菜单下拉框 -->
-            <div id="profile-menu"
-                 ref="dropdownRef"
-                 class="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg py-1 z-50"
-                 v-show="isMenuOpen">
-              <div
-                  @click.prevent="goToPersonalInfo()"
-                  class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
-                <i class="fa-solid fa-user mr-2"></i>
-                个人信息
-              </div>
-              <div
-                  @click.prevent="goToAccountManagement()"
-                  class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
-                <i class="fa-solid fa-gear mr-2"></i>
-                账户设置
-              </div>
-              <div class="border-t border-gray-100 my-1"></div>
-              <div
-                  @click.prevent="logout()"
-                  class="block px-4 py-2 text-sm text-red-600 hover:bg-gray-100">
-                <i class="fa-solid fa-right-from-bracket mr-2"></i>
-                退出登录
-              </div>
-            </div>
           </div>
+        </div>
+        <div class="md:hidden">
+          <button id="menu-toggle"
+                  @click="toggleMenu"
+                  class="text-gray-600 hover:text-primary focus:outline-none">
+            <i class="fa fa-bars text-xl"></i>
+          </button>
+        </div>
+      </div>
+      <!-- 移动端菜单 -->
+      <div id="mobile-menu"
+           :class="{ 'hidden': !isMenuOpen }"
+           class="md:hidden bg-white shadow-lg">
+        <div class="px-2 pt-2 pb-3 space-y-1 sm:px-3">
+          <a
+              v-for="item in navItems"
+              :key="item.activeIndex"
+              @click.stop.prevent="item.handler"
+              :class="[
+              'py-2 rounded-md text-base font-medium',
+              currentTabActive === item.activeIndex
+                ? 'bg-primary hover:bg-primary/90 text-white block px-4 text-center'
+                : 'text-gray-600 hover:text-primary block px-3'
+            ]"
+              :style="{ cursor: item.handler ? 'pointer' : 'default' }"
+          >
+            {{ item.label }}
+          </a>
         </div>
       </div>
     </div>
@@ -64,15 +82,89 @@
 </template>
 
 <script setup>
-import { useRouter } from 'vue-router'
+import { useRouter,useRoute } from 'vue-router'
 const router = useRouter()
+const route = useRoute()
 // 响应式状态控制
-import {onBeforeUnmount, onMounted, ref} from "vue";
+import {onBeforeUnmount, onMounted, ref, watch, computed} from "vue";
 
-function goToPersonalInfo () {
-  console.log('个人信息页')
+const isMenuOpen = ref(false)
+const dropdownRef = ref(null)
+const currentTabActive = ref(0)
+
+
+
+
+// 在脚本部分添加导航配置
+const allNavItems = ref([
+  { label: '首页', activeIndex: 0, handler: goToIndex },
+  { label: '个人中心', activeIndex: 1, handler: goToUserInfo },
+  { label: '账户', activeIndex: 2, handler: goToAccountManagement },
+  { label: '行情', activeIndex: 3, handler: goToStableCoinMainPage },
+  { label: '投资组合', activeIndex: 4, handler: goToStableCoinPortfolio },
+  { label: '交易', activeIndex: 5, handler: goToStableCoinPurchase },
+  { label: '退出', activeIndex: 6, handler: goToLogin }
+]);
+
+
+
+// 修复后的计算属性：根据当前路由决定显示哪些导航项
+const navItems = computed(() => {
+  const stableCoinPaths = ['/agency/stableCoinMainPage', '/agency/stableCoinPortfolio', '/agency/stableCoinPurchase'];
+  const isStableCoinPage = stableCoinPaths.some(path => route.path.startsWith(path));
+
+  if (isStableCoinPage) {
+    // 在稳定币页面显示所有导航项
+    return allNavItems.value; // 使用 .value 访问实际数组
+  } else {
+    // 非稳定币页面隐藏稳定币相关项（行情、投资组合、交易）
+    return allNavItems.value.filter(item => // 使用 .value 访问实际数组
+        ![3, 4, 5].includes(item.activeIndex)
+    );
+  }
+});
+
+// 改进后的路由监听
+const routeMapping = [
+  { path: '/agency/index', index: 0 },
+  { path: '/agency/userInfo', index: 1 },
+  { path: '/agency/accountInfo', index: 2 },
+  { path: '/agency/stableCoinMainPage', index: 3 },
+  { path: '/agency/stableCoinPortfolio', index: 4 },
+  { path: '/agency/stableCoinPurchase', index: 5 },
+  { path: '/logout', index: 6 }
+];
+
+watch(() => route.path, (newPath) => {
+  console.log('路由变化:', newPath)
+  // 通过遍历映射表简化判断逻辑
+  const matchedRoute = routeMapping.find(r => newPath.startsWith(r.path))
+  if (matchedRoute) {
+    currentTabActive.value = matchedRoute.index
+  }
+}, { immediate: true })
+
+
+
+
+function goToStableCoinPurchase () {
+  console.log('稳定币交易')
   router.push({
-    path: '/agency/userInfo'
+    path: '/agency/stableCoinPurchase'
+  })
+}
+
+function goToStableCoinMainPage () {
+  console.log('稳定币行情')
+  router.push({
+    path: '/agency/stableCoinMainPage'
+  })
+}
+
+function goToStableCoinPortfolio () {
+  console.log('稳定币投资组合')
+  router.push({
+    path: '/agency/stableCoinPortfolio'
   })
 }
 
@@ -97,16 +189,21 @@ function goToAccountManagement () {
   })
 }
 
+function goToUserInfo () {
+  console.log('个人中心')
+  router.push({
+    path: '/agency/userInfo'
+  })
+}
 
-function logout () {
-  console.log('logout')
+function goToLogin () {
+  console.log('登录页')
+  currentTabActive.value =0;
   router.push({
     path: '/login'
   })
 }
 
-const isMenuOpen = ref(false)
-const dropdownRef = ref(null)
 
 // 切换菜单显示状态
 const toggleMenu = () => {
@@ -131,6 +228,7 @@ onBeforeUnmount(() => {
 onMounted(() => {
   document.addEventListener('click', closeMenuOnOutsideClick)
 })
+
 </script>
 
 

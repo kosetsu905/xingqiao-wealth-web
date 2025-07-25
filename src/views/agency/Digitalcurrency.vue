@@ -78,7 +78,9 @@
           </div>
         </div>
 
-        <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6 hover:shadow-md transition-shadow cursor-pointer">
+        <div
+            @click="handlePurchase"
+            class="bg-white rounded-xl shadow-sm border border-gray-200 p-6 hover:shadow-md transition-shadow cursor-pointer">
           <div class="w-16 h-16 bg-green-100 rounded-xl flex items-center justify-center mb-4">
             <i class="fas fa-coins text-green-600 text-2xl"></i>
           </div>
@@ -274,7 +276,7 @@
     </section>
 
     <!-- Stablecoins -->
-    <section id="stablecoins" class="mb-8">
+    <section id="stablecoins" class="mb-8" >
       <h3 class="text-2xl font-bold text-gray-900 mb-6">稳定币投资</h3>
       <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
         <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
@@ -290,12 +292,22 @@
                   <div class="text-sm text-gray-500">年化收益 4.5%</div>
                 </div>
               </div>
-              <button class="bg-green-600 text-white px-4 py-2 rounded-lg text-sm hover:bg-green-700">
+              <button @click="handlePurchase"
+                  class="bg-green-600 text-white px-4 py-2 rounded-lg text-sm hover:bg-green-700">
                 申购</button></div></div></div></div></section></main>
 </template>
 
 <script setup lang="ts">
+import { useRouter } from 'vue-router';
+const router = useRouter();
+
 import Header from "@/components/agency/Header.vue";
+const handlePurchase = () => {
+  console.log('goTo stableCoinMainPage')
+  router.push({
+    path: '/agency/stableCoinMainPage'
+  })
+}
 </script>
 
 

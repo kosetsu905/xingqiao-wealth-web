@@ -29,8 +29,11 @@ import AccountInfo from '../views/agency/AccountInfo.vue'
 import Calculation from '../views/agency/Calculation.vue'
 import PerformanceReport from '../views/agency/PerformanceReport.vue'
 import CommissionHistory from '../views/agency/CommissionHistory.vue'
+import SalesOpportunity from '../views/agency/SalesOpportunity.vue'
+import StableCoinMainPage from "@/views/agency/StableCoinMainPage.vue";
+import StableCoinPortfolio from "@/views/agency/StableCoinPortfolio.vue";
+import StableCoinPurchase from "@/views/agency/StableCoinPurchase.vue";
 import Etf from '../views/agency/Etf.vue'
-
 
 export const router = createRouter({
   history: createWebHistory(),
@@ -64,6 +67,10 @@ export const router = createRouter({
     { path: '/agency/calculation', component: Calculation },
     { path: '/agency/performanceReport', component: PerformanceReport },
     { path: '/agency/commissionHistory', component: CommissionHistory },
+    { path: '/agency/salesOpportunity', component: SalesOpportunity },
+    { path: '/agency/stableCoinMainPage', component: StableCoinMainPage },
+    { path: '/agency/stableCoinPortfolio', component: StableCoinPortfolio },
+    { path: '/agency/stableCoinPurchase', component: StableCoinPurchase },
     { path: '/401', component: one },
     { path: '/404', component: two },
   ]
@@ -73,6 +80,39 @@ export const router = createRouter({
 // 注册全局前置守卫
 router.beforeEach((to, _from, next) => {
   console.log('路由守卫触发:', to.path)
-  // 此处可加入权限判断、登录态校验等逻辑
-  next()
+
+  // 获取 token（假设存在 localStorage 中）
+  const token = localStorage.getItem('token')
+
+  // 判断是否需要登录权限的路由
+  const requiresAuth = to.matched.some(record => record.meta.requiresAuth)
+
+  // 校验 token 合法性
+  if (requiresAuth) {
+    if (!token) {
+      // token 不存在，跳转到登录页
+      next({ path: '/LoginPage' })
+    } else {
+      // token 存在，校验是否合法（如是否过期、是否被篡改）
+      // isTokenValid(token);
+      // store.dispatch('verifyToken', token)
+      //     .then(() => {
+      //       // token 合法，继续导航
+      //       next()
+      //     })
+      //     .catch(() => {
+      //       // token 不合法，跳转到登录页
+      //       next({ path: '/LoginPage' })
+      //     })
+    }
+  } else {
+    // 不需要权限的路由直接进入
+    next()
+  }
+
+
+
 })
+
+
+
