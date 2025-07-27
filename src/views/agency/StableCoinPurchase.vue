@@ -64,7 +64,7 @@
               <button class="px-3 py-1 text-sm text-gray-600 hover:bg-gray-100 rounded">30天</button>
             </div>
           </div>
-          <div id="price-chart-container" class="h-80"></div>
+          <div id="priceContainer" class="h-80"></div>
         </section>
 
         <section id="transaction-history" class="bg-white rounded-lg border border-border p-6">
@@ -132,7 +132,7 @@
 
             <div>
               <label class="block text-sm font-medium text-gray-700 mb-2">预计获得 (RWA)</label>
-              <input type="text" value="1,460.23" readonly="" class="w-full p-3 border border-border rounded-lg bg-gray-50">
+              <input type="text" value="1,460.23"  class="w-full p-3 border border-border rounded-lg bg-gray-50">
             </div>
 
             <div class="bg-secondary1 rounded-lg p-3">
@@ -164,7 +164,7 @@
 
             <div>
               <label class="block text-sm font-medium text-gray-700 mb-2">预计收到 (CNY)</label>
-              <input type="text" value="¥6,830.50" readonly="" class="w-full p-3 border border-border rounded-lg bg-gray-50">
+              <input type="text" value="¥6,830.50"  class="w-full p-3 border border-border rounded-lg bg-gray-50">
             </div>
 
             <div class="bg-secondary1 rounded-lg p-3">
@@ -177,7 +177,6 @@
                 <span class="text-gray-900">1-2个工作日</span>
               </div>
             </div>
-
             <button class="w-full bg-red-500 text-white py-3 rounded-lg font-medium hover:bg-red-600 transition-colors">
               确认卖出
             </button>
@@ -190,14 +189,13 @@
 </template>
 
 
-<script setup lang="ts">
+<script setup >
 import Header from "@/components/agency/Header.vue";
 import {onMounted,onBeforeUnmount } from "vue";
-let chart = null;
 import Highcharts from 'highcharts';
-
+let chart = null;
 onMounted(() => {
-  chart = Highcharts.chart('price-chart-container', {
+  chart = Highcharts.chart('priceContainer', {
     chart: {
       type: 'line',
       backgroundColor: 'transparent'

@@ -9,3 +9,7 @@ npm install
 
 # 步骤4：验证缓存状态（可选）
 npm cache verify
+
+
+#打包
+npm run build   # 或 yarn build

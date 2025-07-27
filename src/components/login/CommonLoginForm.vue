@@ -28,7 +28,7 @@
 
           <input id="client-account"
                  :type="loginObject.type"
-                 v-model="formData.account"
+                 v-model="formData.userName"
                  class="account-input"
                  :class="loginObject.loginType === '2' ? 'pl-20' : 'pl-10'"
                  :placeholder="loginObject.placeholder">
@@ -232,7 +232,7 @@ onUnmounted(() => {
 
 // 表单数据
 const formData = ref({
-  account: '',
+  userName: '',
   password: '',
   code: '',
   countryCode: '+86',
@@ -266,35 +266,35 @@ const handleSubmit = async () => {
   try {
     // 构造请求参数
     const params = {
-      account: formData.value.account,
+      userName: formData.value.userName,
       countryCode: formData.value.countryCode,
       password: formData.value.password,
       code: formData.value.code,
       loginType: formData.value.loginType,
       userType: props.loginObject.userType
     }
-
-    if(props.loginObject.userType === '02'){
-      await router.push('/client/index')
-    }
-    if(props.loginObject.userType=== '01'){
-      await router.push('/agency/index')
-    }
-    // 调用登录接口
-    // const res = await login(params)
-    // 登录成功处理
-    // if (res.code === 200) {
-    //   console.log('登录成功')
-    //   console.log(res.data.access_token)
-    //   localStorage.setItem('token', res.data.access_token)
-    //   setToken(res.data.access_token)
-    //   if(props.loginObject.userType === '02'){
-    //     await router.push('/client/index')
-    //   }
-    //   if(props.loginObject.userType=== '01'){
-    //     await router.push('/agency/index')
-    //   }
+    //
+    // if(props.loginObject.userType === '02'){
+    //   await router.push('/client/index')
     // }
+    // if(props.loginObject.userType=== '01'){
+    //   await router.push('/agency/index')
+    // }
+    // 调用登录接口
+    const res = await login(params)
+    // 登录成功处理
+    if (res.code === 200) {
+      console.log('登录成功')
+      console.log(res.data.access_token)
+      localStorage.setItem('token', res.data.access_token)
+      setToken(res.data.access_token)
+      if(props.loginObject.userType === '02'){
+        await router.push('/client/index')
+      }
+      if(props.loginObject.userType=== '01'){
+        await router.push('/agency/index')
+      }
+    }
   } catch (e) {
     console.log('登录失败:', e)
     // 增强错误处理逻辑

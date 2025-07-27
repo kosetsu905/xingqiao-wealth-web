@@ -14,7 +14,7 @@
           <input id="bror-reset-account"
                  type="text"
                  :class="'pl-10'"
-                 v-model="formData.account"
+                 v-model="formData.userName"
                  class="account-input" placeholder="请输入登录账号">
         </div>
       </div>
@@ -221,7 +221,7 @@ const handleGetCaptcha = async () => {
       }
     }, 1000)
   }else{
-    successToast("发送失败");
+    successToast("发送失败" );
   }
 }
 
@@ -232,7 +232,7 @@ onUnmounted(() => {
 
 // 表单数据
 const formData = ref({
-  account: '',
+  userName: '',
   email: '',
   phoneNumber: '',
   password: '',
@@ -251,7 +251,7 @@ const handleSubmit = async () => {
   try {
     // 构造请求参数
     const params = {
-      account: formData.value.account,
+      userName: formData.value.userName,
       email: formData.value.email,
       phoneNumber: formData.value.phoneNumber,
       password: formData.value.password,
@@ -284,17 +284,17 @@ const handleSubmit = async () => {
       errorToast('请输入有效的手机号码')
       return
     }
-    router.push({
-      path: '/login'
-    })
+    // router.push({
+    //   path: '/login'
+    // })
     // 调用注册接口
-    // const res = await register(params)
+    const res = await register(params)
     // 登录注册处理
-    // if (res.code === 200) {
-    //   router.push({
-    //     path: '/login'
-    //   })
-    // }
+    if (res.code === 200) {
+      router.push({
+        path: '/login'
+      })
+    }
   } catch (e) {
     console.log('登录失败:', e)
     // 增强错误处理逻辑
