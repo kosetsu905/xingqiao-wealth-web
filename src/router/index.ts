@@ -33,6 +33,10 @@ import SalesOpportunity from '../views/agency/SalesOpportunity.vue'
 import StableCoinMainPage from "@/views/agency/StableCoinMainPage.vue";
 import StableCoinPortfolio from "@/views/agency/StableCoinPortfolio.vue";
 import StableCoinPurchase from "@/views/agency/StableCoinPurchase.vue";
+import CbdcView from "@/views/agency/CbdcView.vue";
+import TradingCenter from "@/views/agency/TradingCenter.vue";
+import News from "@/views/agency/News.vue";
+import Academy from "@/views/agency/Academy.vue";
 import Etf from '../views/agency/Etf.vue'
 
 export const router = createRouter({
@@ -71,6 +75,10 @@ export const router = createRouter({
     { path: '/agency/stableCoinMainPage', component: StableCoinMainPage },
     { path: '/agency/stableCoinPortfolio', component: StableCoinPortfolio },
     { path: '/agency/stableCoinPurchase', component: StableCoinPurchase },
+    { path: '/agency/cbdc', component: CbdcView },
+    { path: '/agency/tradingCenter', component: TradingCenter },
+    { path: '/agency/news', component: News },
+    { path: '/agency/academy', component: Academy },
     { path: '/401', component: one },
     { path: '/404', component: two },
   ]

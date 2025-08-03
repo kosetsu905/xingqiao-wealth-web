@@ -3,7 +3,7 @@
 
 
   <!-- Header -->
-  <Header/>
+  <Header :from="etf" :currentTabActive="5"/>
 
   <main id="main-content" class="max-w-7xl mx-auto px-4 py-6">
     <section id="asset-overview" class="mb-6">
@@ -190,6 +190,7 @@
 
 
 <script setup >
+const etf = 'etf';
 import Header from "@/components/agency/Header.vue";
 import {onMounted,onBeforeUnmount } from "vue";
 import Highcharts from 'highcharts';

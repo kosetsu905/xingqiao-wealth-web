@@ -14,16 +14,18 @@
     "@fortawesome/free-solid-svg-icons": "^6.7.2",
     "@fortawesome/vue-fontawesome": "^3.0.8",
     "@types/chart.js": "^2.9.41",
-    "axios": "^1.10.0",
-    "chart.js": "^4.4.8",
+    "axios": "^1.11.0",
+    "chart.js": "^4.5.0",
     "file-saver": "2.0.5",
     "highcharts": "^12.3.0",
     "js-beautify": "1.13.0",
     "js-cookie": "3.0.1",
     "pinia": "^3.0.3",
+    "socket.io-client": "^4.8.1",
     "vue": "^3.5.13",
     "vue-highcharts": "^0.2.0",
-    "vue-router": "^4.5.1"
+    "vue-router": "^4.5.1",
+    "ws": "^8.18.3"
   },
   "devDependencies": {
     "@types/node": "^24.0.10",

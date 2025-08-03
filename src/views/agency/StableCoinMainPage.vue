@@ -2,10 +2,10 @@
 <template>
 
   <!-- Header -->
-  <Header/>
+  <Header :from="etf" :currentTabActive="3"/>
 
   <main id="main-content" class="max-w-7xl mx-auto px-4 py-6">
-    <section id="hero-banner" class="bg-gradient-to-r from-primary to-blue-600 rounded-lg p-8 text-white mb-8 h-64">
+    <section id="hero-banner" class="bg-gradient-to-r from-primary to-blue-600 rounded-lg p-8 text-white mb-8 h-70">
       <div class="max-w-4xl">
         <h1 class="text-3xl font-bold mb-4">RWA支持的稳定币平台</h1>
         <p class="text-lg mb-6 opacity-90">基于真实世界资产支持的稳定币，提供透明、合规和潜在收益的数字资产解决方案</p>
@@ -265,6 +265,7 @@
 
 
 <script setup lang="ts">
+const etf = 'etf';
 
 import Header from "@/components/agency/Header.vue";
 </script>

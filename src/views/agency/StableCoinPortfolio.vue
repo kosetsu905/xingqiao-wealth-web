@@ -3,7 +3,8 @@
 
 
   <!-- Header -->
-  <Header/>
+  <Header :from="etf" :currentTabActive="4"/>
+
   <main id="main-content" class="max-w-7xl mx-auto px-4 py-6">
 
     <section id="portfolio-header" class="mb-6">
@@ -198,6 +199,7 @@
 
 
 <script setup>
+const etf = 'etf';
 import Header from "@/components/agency/Header.vue";
 import {onMounted,onBeforeUnmount } from "vue";
 let chart = null;

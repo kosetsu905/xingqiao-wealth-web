@@ -19,7 +19,7 @@
             <a
                 v-for="item in navItems"
                 :key="item.activeIndex"
-                @click="item.handler"
+                @click.prevent="handleNavClick(item)"
                 :class="[
         'py-2 rounded-md text-sm font-medium transition-custom',
         currentTabActive === item.activeIndex
@@ -38,12 +38,15 @@
               <span class="absolute top-0 right-0 h-4 w-4 bg-danger bg-red-500 rounded-full flex items-center justify-center text-white text-xs badge-pulse">3</span>
             </button>
           </div>
-          <div class="relative">
+
+          <div
+              @click.prevent="goToUserInfo()"
+              class="relative cursor-pointer">
             <button id="profile-menu-button"
                     class="flex items-center space-x-2 focus:outline-none">
               <img src="https://picsum.photos/id/64/40/40" alt="用户头像"
                    class="w-8 h-8 rounded-full object-cover border-2 border-primary/20">
-              <span class="md:inline font-medium">张先生</span>
+              <span class="md:inline font-medium">{{userName}}</span>
             </button>
           </div>
         </div>
@@ -63,7 +66,7 @@
           <a
               v-for="item in navItems"
               :key="item.activeIndex"
-              @click.stop.prevent="item.handler"
+              @click.prevent="handleNavClick(item)"
               :class="[
               'py-2 rounded-md text-base font-medium',
               currentTabActive === item.activeIndex
@@ -90,83 +93,94 @@ import {onBeforeUnmount, onMounted, ref, watch, computed} from "vue";
 
 const isMenuOpen = ref(false)
 const dropdownRef = ref(null)
-const currentTabActive = ref(0)
+const localCurrentTabActive = ref(0)
+const userName = ref('张三')
 
+const props = defineProps({
+  from: {
+    type: String,
+    default: ''
+  },
+  currentTabActive: {
+    type: Number,
+    default: null
+  }
+})
 
+// 计算当前激活的tab，优先使用传入的props，否则使用本地状态
+const currentTabActive = computed(() => {
+  return props.currentTabActive !== null ? props.currentTabActive : localCurrentTabActive.value
+})
 
-
-// 在脚本部分添加导航配置
-const allNavItems = ref([
-  { label: '首页', activeIndex: 0, handler: goToIndex },
-  { label: '个人中心', activeIndex: 1, handler: goToUserInfo },
-  { label: '账户', activeIndex: 2, handler: goToAccountManagement },
-  { label: '行情', activeIndex: 3, handler: goToStableCoinMainPage },
-  { label: '投资组合', activeIndex: 4, handler: goToStableCoinPortfolio },
-  { label: '交易', activeIndex: 5, handler: goToStableCoinPurchase },
-  { label: '退出', activeIndex: 6, handler: goToLogin }
-]);
-
-
-
-// 修复后的计算属性：根据当前路由决定显示哪些导航项
+// 根据from属性计算应该显示的菜单项
 const navItems = computed(() => {
-  const stableCoinPaths = ['/agency/stableCoinMainPage', '/agency/stableCoinPortfolio', '/agency/stableCoinPurchase'];
-  const isStableCoinPage = stableCoinPaths.some(path => route.path.startsWith(path));
-
-  if (isStableCoinPage) {
-    // 在稳定币页面显示所有导航项
-    return allNavItems.value; // 使用 .value 访问实际数组
+  if (props.from === 'cbdc') {
+    return [
+      { label: '首页',activeIndex: 0,  path: '/agency/index' },
+      { label: '个人中心', activeIndex: 1 ,  path: '/agency/userInfo'},
+      { label: '账户管理', activeIndex: 2,  path: '/agency/accountInfo' },
+      { label: '市场',activeIndex: 3,  path: '/agency/cbdc' },
+      { label: '交易', activeIndex: 4, path: '/agency/tradingCenter' },
+      { label: '资讯', activeIndex: 5, path: '/agency/news'},
+      { label: '学院', activeIndex: 6, path: '/agency/academy' },
+      { label: '退出', activeIndex: 7, path: '/logout' }
+    ]
+  }else if (props.from === 'etf') {
+    return [
+      { label: '首页',activeIndex: 0,  path: '/agency/index' },
+      { label: '个人中心', activeIndex: 1 ,  path: '/agency/userInfo'},
+      { label: '账户管理', activeIndex: 2,  path: '/agency/accountInfo' },
+      { label: '行情', activeIndex: 3, path: '/agency/stableCoinMainPage'},
+      { label: '投资组合', activeIndex: 4, path: '/agency/stableCoinPortfolio'},
+      { label: '交易', activeIndex: 5, path: '/agency/stableCoinPurchase' },
+      { label: '退出', activeIndex: 6, path: '/logout' }
+    ]
   } else {
-    // 非稳定币页面隐藏稳定币相关项（行情、投资组合、交易）
-    return allNavItems.value.filter(item => // 使用 .value 访问实际数组
-        ![3, 4, 5].includes(item.activeIndex)
-    );
+    return [
+      // 默认菜单项
+      { label: '首页',activeIndex: 0,  path: '/agency/index' },
+      { label: '个人中心', activeIndex: 1 ,  path: '/agency/userInfo'},
+      { label: '账户管理', activeIndex: 2,  path: '/agency/accountInfo' },
+      { label: '退出', activeIndex: 3, path: '/logout' }
+    ]
   }
-});
+})
 
-// 改进后的路由监听
-const routeMapping = [
-  { path: '/agency/index', index: 0 },
-  { path: '/agency/userInfo', index: 1 },
-  { path: '/agency/accountInfo', index: 2 },
-  { path: '/agency/stableCoinMainPage', index: 3 },
-  { path: '/agency/stableCoinPortfolio', index: 4 },
-  { path: '/agency/stableCoinPurchase', index: 5 },
-  { path: '/logout', index: 6 }
-];
-
-watch(() => route.path, (newPath) => {
-  console.log('路由变化:', newPath)
-  // 通过遍历映射表简化判断逻辑
-  const matchedRoute = routeMapping.find(r => newPath.startsWith(r.path))
-  if (matchedRoute) {
-    currentTabActive.value = matchedRoute.index
+// 处理菜单点击事件
+function handleNavClick(item) {
+  // 更新本地状态
+  localCurrentTabActive.value = item.activeIndex
+  //判断是包含/logout
+  if(item.path.includes('/logout')){
+    localStorage.removeItem('token')
+    router.push('/login')
+    return;
   }
-}, { immediate: true })
 
-
-
-
-function goToStableCoinPurchase () {
-  console.log('稳定币交易')
-  router.push({
-    path: '/agency/stableCoinPurchase'
-  })
+  if (item.path) {
+    router.push(item.path)
+  }
 }
 
-function goToStableCoinMainPage () {
-  console.log('稳定币行情')
-  router.push({
-    path: '/agency/stableCoinMainPage'
-  })
-}
+// 监听路由变化，更新当前激活的菜单项（仅在没有传入currentTabActive时）
+watch(
+    () => route.path,
+    (newPath) => {
+      // 只有在没有通过props指定currentTabActive时才自动更新
+      if (props.currentTabActive === null) {
+        const activeItem = navItems.value.find(item =>
+            item.path && newPath.startsWith(item.path)
+        )
+        if (activeItem) {
+          localCurrentTabActive.value = activeItem.activeIndex
+        }
+      }
+    },
+    { immediate: true }
+)
 
-function goToStableCoinPortfolio () {
-  console.log('稳定币投资组合')
-  router.push({
-    path: '/agency/stableCoinPortfolio'
-  })
-}
+
+
 
 function goToIndex () {
   console.log('首页')
@@ -182,13 +196,6 @@ function toggleMessage () {
   })
 }
 
-function goToAccountManagement () {
-  console.log('账户设置')
-  router.push({
-    path: '/agency/accountInfo'
-  })
-}
-
 function goToUserInfo () {
   console.log('个人中心')
   router.push({
@@ -196,20 +203,13 @@ function goToUserInfo () {
   })
 }
 
-function goToLogin () {
-  console.log('登录页')
-  currentTabActive.value =0;
-  router.push({
-    path: '/login'
-  })
-}
-
 
 // 切换菜单显示状态
 const toggleMenu = () => {
   isMenuOpen.value = !isMenuOpen.value
-  console.log(isMenuOpen.value)
 }
+
+
 
 // 点击外部关闭菜单
 const closeMenuOnOutsideClick = (event) => {
@@ -221,13 +221,131 @@ const closeMenuOnOutsideClick = (event) => {
   }
 }
 
+
 onBeforeUnmount(() => {
   document.removeEventListener('click', closeMenuOnOutsideClick)
 })
 
+
 onMounted(() => {
   document.addEventListener('click', closeMenuOnOutsideClick)
+
+  // 如果传入了currentTabActive，则初始化时设置localCurrentTabActive
+  if (props.currentTabActive !== null) {
+    localCurrentTabActive.value = props.currentTabActive
+  }
 })
+
+// 在脚本部分添加导航配置
+// const allNavItems = ref([
+//   { label: '首页', activeIndex: 0, handler: goToIndex },
+//   { label: '个人中心', activeIndex: 1, handler: goToUserInfo },
+//   { label: '账户', activeIndex: 2, handler: goToAccountManagement },
+//   { label: '行情', activeIndex: 3, handler: goToStableCoinMainPage },
+//   { label: '投资组合', activeIndex: 4, handler: goToStableCoinPortfolio },
+//   { label: '交易', activeIndex: 5, handler: goToStableCoinPurchase },
+//   { label: '退出', activeIndex: 6, handler: goToLogin }
+// ]);
+//
+
+
+
+// 在脚本部分添加导航配置
+// const cbdcNavItems = ref([
+//   { label: '首页', activeIndex: 0, handler: goToIndex },
+//   { label: '市场', activeIndex: 1, handler: goToUserInfo },
+//   { label: '交易', activeIndex: 2, handler: goToAccountManagement },
+//   { label: '资讯', activeIndex: 3, handler: goToStableCoinMainPage },
+//   { label: '学院', activeIndex: 4, handler: goToStableCoinPortfolio },
+//   { label: '退出', activeIndex: 6, handler: goToLogin }
+// ]);
+
+
+// 修复后的计算属性：根据当前路由决定显示哪些导航项
+// const navItems = computed(() => {
+//   const stableCoinPaths = ['/agency/stableCoinMainPage', '/agency/stableCoinPortfolio', '/agency/stableCoinPurchase'];
+//   const isStableCoinPage = stableCoinPaths.some(path => route.path.startsWith(path));
+//
+//   if (isStableCoinPage) {
+//     // 在稳定币页面显示所有导航项
+//     return allNavItems.value; // 使用 .value 访问实际数组
+//   } else {
+//     // 非稳定币页面隐藏稳定币相关项（行情、投资组合、交易）
+//     return allNavItems.value.filter(item => // 使用 .value 访问实际数组
+//         ![3, 4, 5].includes(item.activeIndex)
+//     );
+//   }
+// });
+
+// 改进后的路由监听
+// const routeMapping = [
+//   { path: '/agency/index', index: 0 },
+//   { path: '/agency/userInfo', index: 1 },
+//   { path: '/agency/accountInfo', index: 2 },
+//   { path: '/agency/stableCoinMainPage', index: 3 },
+//   { path: '/agency/stableCoinPortfolio', index: 4 },
+//   { path: '/agency/stableCoinPurchase', index: 5 },
+//   { path: '/logout', index: 6 },
+//   { path: '/agency/stableCoinPurchase', index: 7 },
+// ];
+
+// watch(() => route.path, (newPath) => {
+//   console.log('路由变化:', newPath)
+//   // 通过遍历映射表简化判断逻辑
+//   const matchedRoute = routeMapping.find(r => newPath.startsWith(r.path))
+//   if (matchedRoute) {
+//     currentTabActive.value = matchedRoute.index
+//   }
+// }, { immediate: true })
+
+
+//
+//
+// function goToStableCoinPurchase () {
+//   console.log('稳定币交易')
+//   router.push({
+//     path: '/agency/stableCoinPurchase'
+//   })
+// }
+//
+// function goToStableCoinMainPage () {
+//   console.log('稳定币行情')
+//   router.push({
+//     path: '/agency/stableCoinMainPage'
+//   })
+// }
+//
+// function goToStableCoinPortfolio () {
+//   console.log('稳定币投资组合')
+//   router.push({
+//     path: '/agency/stableCoinPortfolio'
+//   })
+// }
+
+//
+// function goToAccountManagement () {
+//   console.log('账户设置')
+//   router.push({
+//     path: '/agency/accountInfo'
+//   })
+// }
+//
+// function goToUserInfo () {
+//   console.log('个人中心')
+//   router.push({
+//     path: '/agency/userInfo'
+//   })
+// }
+//
+// function goToLogin () {
+//   console.log('登录页')
+//   currentTabActive.value =0;
+//   router.push({
+//     path: '/login'
+//   })
+// }
+//
+
 
 </script>
 
