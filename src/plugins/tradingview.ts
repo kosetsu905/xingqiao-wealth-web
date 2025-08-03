@@ -75,7 +75,7 @@ export function useTradingView(config: TradingViewConfig) {
           interval: config.interval,
           container_id: config.containerId,
           width: config.width || '100%',
-          height: config.height || '400px',
+          height: config.height || '600px',
           theme: config.theme || 'light',
           style: '1',
           locale: 'zh_CN',
