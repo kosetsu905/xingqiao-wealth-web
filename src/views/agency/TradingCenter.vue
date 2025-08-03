@@ -652,7 +652,7 @@ const ordersPagination = ref({
 const tradingViewLoaded = ref(false);
 
 // 使用 TradingView composable
-const { chart, updateChart } = useTradingView({
+const {updateChart } = useTradingView({
   symbol: selectedPair.value,
   interval: selectedInterval.value,
   containerId: 'tradingview-chart',
@@ -771,13 +771,13 @@ const refreshOrderbook = () => {
 };
 
 // 填充卖出订单
-const fillSellOrder = (price: number) => {
+const fillSellOrder = (price) => {
   sellAmount.value = '';
   // 这里可以实现根据价格填充订单的逻辑
 };
 
 // 填充买入订单
-const fillBuyOrder = (price: number) => {
+const fillBuyOrder = (price) => {
   buyAmount.value = '';
   // 这里可以实现根据价格填充订单的逻辑
 };
