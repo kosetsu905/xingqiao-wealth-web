@@ -771,15 +771,21 @@ const refreshOrderbook = () => {
 };
 
 // 填充卖出订单
-const fillSellOrder = (price) => {
+const fillSellOrder = (price: number) => {
+  // 根据点击的价格填充卖出表单
   sellAmount.value = '';
-  // 这里可以实现根据价格填充订单的逻辑
+  // 可以在这里添加更多基于价格的逻辑
+  // 例如：自动填充最佳卖出数量或设置价格
+  console.log('Selected sell price:', price);
 };
 
 // 填充买入订单
-const fillBuyOrder = (price) => {
+const fillBuyOrder = (price: number) => {
+  // 根据点击的价格填充买入表单
   buyAmount.value = '';
-  // 这里可以实现根据价格填充订单的逻辑
+  // 可以在这里添加更多基于价格的逻辑
+  // 例如：自动填充最佳买入数量或设置价格
+  console.log('Selected buy price:', price);
 };
 
 // 设置活动订单标签页

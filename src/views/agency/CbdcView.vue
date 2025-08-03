@@ -15,12 +15,16 @@
               实时掌握全球加密货币市场动态，获取专业分析与交易工具，开启您的数字资产之旅。
             </p>
             <div class="flex flex-col sm:flex-row space-y-4 sm:space-y-0 sm:space-x-4">
-              <button class="px-6 py-3 rounded-lg bg-white text-primary font-medium hover:bg-gray-100 transition-colors shadow-lg">
+              <router-link
+                  to="/agency/tradingCenter"
+                  class="px-6 py-3 rounded-lg bg-white text-primary font-medium hover:bg-gray-100 transition-colors shadow-lg">
                 开始交易
-              </button>
-              <button class="px-6 py-3 rounded-lg bg-transparent border-2 border-white text-white font-medium hover:bg-white/10 transition-colors">
+              </router-link>
+              <router-link
+                  to="/agency/news"
+                  class="px-6 py-3 rounded-lg bg-transparent border-2 border-white text-white font-medium hover:bg-white/10 transition-colors">
                 了解更多 <i class="fa fa-arrow-right ml-2"></i>
-              </button>
+              </router-link>
             </div>
           </div>
           <div class="md:w-1/2">

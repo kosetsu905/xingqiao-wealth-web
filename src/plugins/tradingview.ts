@@ -11,11 +11,18 @@ interface TradingViewConfig {
   theme?: 'light' | 'dark';
 }
 
+// 扩展 Window 接口
+declare global {
+  interface Window {
+    TradingView: any;
+  }
+}
+
 // 动态加载 TradingView 脚本
 const loadTradingViewScript = (): Promise<void> => {
   return new Promise((resolve, reject) => {
     // 检查是否已经加载
-    if (window.TradingView) {
+    if (typeof window !== 'undefined' && window.TradingView) {
       resolve();
       return;
     }
@@ -42,18 +49,24 @@ const loadTradingViewScript = (): Promise<void> => {
 // 创建 TradingView 组件的组合式函数
 export function useTradingView(config: TradingViewConfig) {
   const chart = ref<any>(null);
-  let retryTimer: number | null = null;
 
   // 初始化 TradingView 图表
   const initChart = async () => {
     try {
+      // 确保容器元素存在
+      const container = document.getElementById(config.containerId);
+      if (!container) {
+        console.warn(`Container with id '${config.containerId}' not found`);
+        return;
+      }
+
       await loadTradingViewScript();
 
       if (typeof window !== 'undefined' && window.TradingView) {
-        // 销毁之前的图表实例（如果存在）
+        // 清理之前的图表实例（如果存在）
         if (chart.value) {
-          // TradingView widget 没有 destroy 方法
-          chart.value = null;
+          // TradingView widget 没有 destroy 方法，但我们可以移除之前的图表
+          container.innerHTML = '';
         }
 
         // 创建新的图表实例
@@ -66,7 +79,7 @@ export function useTradingView(config: TradingViewConfig) {
           theme: config.theme || 'light',
           style: '1',
           locale: 'zh_CN',
-          toolbar_bg: '#f1f3f6',
+          toolbar_bg: config.theme === 'dark' ? '#1e293b' : '#f1f3f6',
           enable_publishing: false,
           hide_top_toolbar: false,
           save_image: false,
@@ -85,17 +98,19 @@ export function useTradingView(config: TradingViewConfig) {
 
   // 在挂载时初始化图表
   onMounted(() => {
-    // 确保 DOM 元素已经渲染
-    setTimeout(() => {
+    // 延迟一小段时间确保 DOM 完全渲染
+    const timer = setTimeout(() => {
       initChart();
-    }, 0);
+    }, 100);
+
+    // 清理定时器
+    onUnmounted(() => {
+      clearTimeout(timer);
+    });
   });
 
   // 在卸载时清理资源
   onUnmounted(() => {
-    if (retryTimer) {
-      clearTimeout(retryTimer);
-    }
     // TradingView widget 没有 destroy 方法
     chart.value = null;
   });
@@ -104,9 +119,7 @@ export function useTradingView(config: TradingViewConfig) {
   const updateChart = (newConfig: Partial<TradingViewConfig>) => {
     const updatedConfig = { ...config, ...newConfig };
     Object.assign(config, updatedConfig);
-    if (chart.value) {
-      initChart();
-    }
+    initChart();
   };
 
   return {
