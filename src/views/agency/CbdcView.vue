@@ -15,9 +15,7 @@
               实时掌握全球加密货币市场动态，获取专业分析与交易工具，开启您的数字资产之旅。
             </p>
             <div class="flex flex-col sm:flex-row space-y-4 sm:space-y-0 sm:space-x-4">
-              <button
-                  @click.prevent="goToTradingPage()"
-                  class="px-6 py-3 rounded-lg bg-white text-primary font-medium hover:bg-gray-100 transition-colors shadow-lg">
+              <button class="px-6 py-3 rounded-lg bg-white text-primary font-medium hover:bg-gray-100 transition-colors shadow-lg">
                 开始交易
               </button>
               <button class="px-6 py-3 rounded-lg bg-transparent border-2 border-white text-white font-medium hover:bg-white/10 transition-colors">
@@ -630,9 +628,7 @@ import { onMounted, onBeforeUnmount } from "vue";
 const cdbc = 'cbdc';
 let chart = null;
 import Highcharts from 'highcharts';
-import {useRouter} from "vue-router";
-// 引入路由实例
-const router = useRouter();
+
 // 在 onMounted 中初始化图表
 onMounted(() => {
   // 生成模拟数据
@@ -735,11 +731,6 @@ onMounted(() => {
     }
   });
 });
-
-// 跳转到交易页面的函数
-const goToTradingPage = () => {
-  router.push("/agency/tradingCenter");
-};
 
 // 在组件销毁前清理图表
 onBeforeUnmount(() => {
