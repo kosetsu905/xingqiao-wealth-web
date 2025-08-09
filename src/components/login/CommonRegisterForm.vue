@@ -56,6 +56,31 @@
                  placeholder="请输入您的注册手机号">
         </div>
       </div>
+      <!-- 图形验证码 -->
+      <div class="mb-6" v-if="captchaEnabled">
+        <div class="broker-class2">
+          <label class="broker-class3">
+            图形验证码<span class="text-red-500">*</span>
+          </label>
+        </div>
+        <div class="relative flex gap-2">
+          <div class="broker-class5">
+            <i class="fas fa-shield-alt text-gray-400"></i>
+          </div>
+          <input
+              class="broker-class6 flex-1"
+              v-model="formData.code"
+              placeholder="请输入验证码"
+              type="text"
+          />
+          <div class="relative">
+            <img v-if="codeUrl" :src="codeUrl" @click="getCode" class="login-code-img cursor-pointer" alt="验证码"/>
+            <div v-else class="login-code-img bg-gray-100 flex items-center justify-center">
+              <i class="fas fa-spinner fa-spin text-gray-400"></i>
+            </div>
+          </div>
+        </div>
+      </div>
 
       <!-- 新增验证码登录区域 -->
       <div  class="mb-6">
@@ -70,10 +95,10 @@
           </div>
           <input
               class="broker-class6 flex-1"
-              v-model="formData.code"
+              v-model="formData.sendCode"
               placeholder="请输入验证码"
               type="text"
-          >
+          />
           <button
               class="px-4 py-2 bg-primary text-white rounded-lg hover:bg-primary-dark transition disabled:opacity-50 disabled:cursor-not-allowed"
               @click.prevent="handleGetCaptcha"
@@ -165,7 +190,7 @@ const router = useRouter()
 import { useToast } from '@/composables/useToast'
 const { successToast, errorToast } = useToast()
 const agreed = ref(false)
-import {register, sendCode} from '@/api/login'
+import {getCodeImg, register, sendCode} from '@/api/login'
 // 定义 props
 const props = defineProps({
   loginObject: {
@@ -179,8 +204,22 @@ const props = defineProps({
 // 响应式数据
 const showPassword = ref(false)
 const showComfirmPassword = ref(false)
+let captchaEnabled = ref(true)
+let codeUrl = ref("")
 
-
+// 表单数据
+const formData = ref({
+  userName: '',
+  email: '',
+  phoneNumber: '',
+  code: '',
+  password: '',
+  comfirmPassword: '',
+  sendCode: '',
+  uuid: '',
+  countryCode: '+86',
+  userType: props.loginObject.userType
+})
 
 // 方法：切换密码可见性
 function togglePasswordVisibility() {
@@ -201,10 +240,13 @@ const handleGetCaptcha = async () => {
 
   // 构造请求参数
   const params = {
+    email: formData.value.email,
+    code: formData.value.code,
+    uuid: formData.value.uuid,
     phoneNumber: formData.value.phoneNumber,
     countryCode: formData.value.countryCode,
     userType: formData.value.userType,
-    step:'1'
+    step:'2'
   }
 
   // 调用登录接口
@@ -221,7 +263,7 @@ const handleGetCaptcha = async () => {
       }
     }, 1000)
   }else{
-    successToast("发送失败" );
+    successToast(res.msg||"发送失败" );
   }
 }
 
@@ -230,17 +272,7 @@ onUnmounted(() => {
   if(timer) clearInterval(timer)
 })
 
-// 表单数据
-const formData = ref({
-  userName: '',
-  email: '',
-  phoneNumber: '',
-  password: '',
-  comfirmPassword: '',
-  code: '',
-  countryCode: '+86',
-  userType: props.loginObject.userType
-})
+
 // 处理表单提交
 const handleSubmit = async () => {
   console.log("注册开始")
@@ -258,6 +290,7 @@ const handleSubmit = async () => {
       comfirmPassword: formData.value.comfirmPassword,
       countryCode: formData.value.countryCode,
       code: formData.value.code,
+      sendCode: formData.value.sendCode,
       userType: formData.value.userType,
       registerType:'COMMON'
     }
@@ -284,17 +317,17 @@ const handleSubmit = async () => {
       errorToast('请输入有效的手机号码')
       return
     }
-    router.push({
-      path: '/login'
-    })
+    // router.push({
+    //   path: '/login'
+    // })
     // 调用注册接口
-    // const res = await register(params)
+    const res = await register(params)
     // 登录注册处理
-    // if (res.code === 200) {
-    //   router.push({
-    //     path: '/login'
-    //   })
-    // }
+    if (res.code === 200) {
+      await router.push({
+        path: '/login'
+      })
+    }
   } catch (e) {
     console.log('登录失败:', e)
     // 增强错误处理逻辑
@@ -317,6 +350,32 @@ const handleSubmit = async () => {
 const handleBack = async () => {
   await router.push('/login')
 }
+
+const getCode = async () => {
+  try {
+    const res = await getCodeImg()
+    captchaEnabled.value = res.captchaEnabled === undefined ? true : res.captchaEnabled
+    if (captchaEnabled.value) {
+      // 检查返回的数据是否是 base64 格式
+      if (res.img.startsWith('data:image')) {
+        codeUrl.value = res.img
+      } else {
+        // 如果不是 base64 格式，则按原格式处理
+        codeUrl.value = "data:image/gif;base64," + res.img
+      }
+      formData.value.uuid = res.uuid
+    }
+  } catch (error) {
+    errorToast("获取验证码失败")
+    console.error('获取验证码失败:', error)
+  }
+}
+
+
+// 组件挂载时获取验证码
+onMounted(() => {
+  getCode()
+})
 
 </script>
 
@@ -380,6 +439,14 @@ const handleBack = async () => {
 }
 .register-class{
   @apply inline-flex items-center mt-2 text-sm font-medium text-primary hover:text-primary-dark cursor-pointer;
+}
+
+.login-code-img {
+  height: 42px; /* 与输入框高度保持一致 */
+  border: 0; /* 与输入框边框颜色保持一致 */
+  border-radius: 0.5rem; /* 与输入框圆角保持一致 */
+  width: 100px; /* 设置固定宽度 */
+  object-fit: contain; /* 保持图片比例 */
 }
 
 </style>

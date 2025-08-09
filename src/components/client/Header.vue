@@ -139,6 +139,7 @@ function goToIndex () {
 function goToLogin () {
   console.log('登录页')
   currentTabActive.value =0;
+  localStorage.removeItem('client-token')
   router.push({
     path: '/login'
   })

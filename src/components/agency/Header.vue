@@ -152,7 +152,7 @@ function handleNavClick(item) {
   localCurrentTabActive.value = item.activeIndex
   //判断是包含/logout
   if(item.path.includes('/logout')){
-    localStorage.removeItem('token')
+    localStorage.removeItem('agency-token')
     router.push('/login')
     return;
   }
@@ -235,116 +235,6 @@ onMounted(() => {
     localCurrentTabActive.value = props.currentTabActive
   }
 })
-
-// 在脚本部分添加导航配置
-// const allNavItems = ref([
-//   { label: '首页', activeIndex: 0, handler: goToIndex },
-//   { label: '个人中心', activeIndex: 1, handler: goToUserInfo },
-//   { label: '账户', activeIndex: 2, handler: goToAccountManagement },
-//   { label: '行情', activeIndex: 3, handler: goToStableCoinMainPage },
-//   { label: '投资组合', activeIndex: 4, handler: goToStableCoinPortfolio },
-//   { label: '交易', activeIndex: 5, handler: goToStableCoinPurchase },
-//   { label: '退出', activeIndex: 6, handler: goToLogin }
-// ]);
-//
-
-
-
-// 在脚本部分添加导航配置
-// const cbdcNavItems = ref([
-//   { label: '首页', activeIndex: 0, handler: goToIndex },
-//   { label: '市场', activeIndex: 1, handler: goToUserInfo },
-//   { label: '交易', activeIndex: 2, handler: goToAccountManagement },
-//   { label: '资讯', activeIndex: 3, handler: goToStableCoinMainPage },
-//   { label: '学院', activeIndex: 4, handler: goToStableCoinPortfolio },
-//   { label: '退出', activeIndex: 6, handler: goToLogin }
-// ]);
-
-
-// 修复后的计算属性：根据当前路由决定显示哪些导航项
-// const navItems = computed(() => {
-//   const stableCoinPaths = ['/agency/stableCoinMainPage', '/agency/stableCoinPortfolio', '/agency/stableCoinPurchase'];
-//   const isStableCoinPage = stableCoinPaths.some(path => route.path.startsWith(path));
-//
-//   if (isStableCoinPage) {
-//     // 在稳定币页面显示所有导航项
-//     return allNavItems.value; // 使用 .value 访问实际数组
-//   } else {
-//     // 非稳定币页面隐藏稳定币相关项（行情、投资组合、交易）
-//     return allNavItems.value.filter(item => // 使用 .value 访问实际数组
-//         ![3, 4, 5].includes(item.activeIndex)
-//     );
-//   }
-// });
-
-// 改进后的路由监听
-// const routeMapping = [
-//   { path: '/agency/index', index: 0 },
-//   { path: '/agency/userInfo', index: 1 },
-//   { path: '/agency/accountInfo', index: 2 },
-//   { path: '/agency/stableCoinMainPage', index: 3 },
-//   { path: '/agency/stableCoinPortfolio', index: 4 },
-//   { path: '/agency/stableCoinPurchase', index: 5 },
-//   { path: '/logout', index: 6 },
-//   { path: '/agency/stableCoinPurchase', index: 7 },
-// ];
-
-// watch(() => route.path, (newPath) => {
-//   console.log('路由变化:', newPath)
-//   // 通过遍历映射表简化判断逻辑
-//   const matchedRoute = routeMapping.find(r => newPath.startsWith(r.path))
-//   if (matchedRoute) {
-//     currentTabActive.value = matchedRoute.index
-//   }
-// }, { immediate: true })
-
-
-//
-//
-// function goToStableCoinPurchase () {
-//   console.log('稳定币交易')
-//   router.push({
-//     path: '/agency/stableCoinPurchase'
-//   })
-// }
-//
-// function goToStableCoinMainPage () {
-//   console.log('稳定币行情')
-//   router.push({
-//     path: '/agency/stableCoinMainPage'
-//   })
-// }
-//
-// function goToStableCoinPortfolio () {
-//   console.log('稳定币投资组合')
-//   router.push({
-//     path: '/agency/stableCoinPortfolio'
-//   })
-// }
-
-//
-// function goToAccountManagement () {
-//   console.log('账户设置')
-//   router.push({
-//     path: '/agency/accountInfo'
-//   })
-// }
-//
-// function goToUserInfo () {
-//   console.log('个人中心')
-//   router.push({
-//     path: '/agency/userInfo'
-//   })
-// }
-//
-// function goToLogin () {
-//   console.log('登录页')
-//   currentTabActive.value =0;
-//   router.push({
-//     path: '/login'
-//   })
-// }
-//
 
 
 </script>

@@ -37,7 +37,7 @@
           </div>
           <input id="broker-phone"
                  type="tel"
-                 v-model="formData.phone"
+                 v-model="formData.phoneNumber"
                  class="account-input pl-20"
                  placeholder="请输入您的注册手机号">
         </div>
@@ -195,7 +195,7 @@ function toggleComfirmPasswordVisibility() {
 const countdown = ref(0)
 let timer = null
 
-function handleGetCaptcha() {
+const handleGetCaptcha = async () => {
   if (countdown.value > 0) return
 
   // 开始倒计时
@@ -208,6 +208,33 @@ function handleGetCaptcha() {
   }, 1000)
 
   console.log('获取验证码逻辑')
+
+  // 构造请求参数
+  const params = {
+    phoneNumber: formData.value.phoneNumber,
+    email: formData.value.email,
+    countryCode: formData.value.countryCode,
+    userType: formData.value.userType,
+    step:'2'
+  }
+
+  // 调用登录接口
+  const res = await sendCode(params)
+  // 登录成功处理
+  if (res.code === 200) {
+    successToast("发送成功");
+    // 开始倒计时
+    countdown.value = 60
+    timer = setInterval(() => {
+      countdown.value--
+      if (countdown.value <= 0) {
+        clearInterval(timer)
+      }
+    }, 1000)
+  }else{
+    successToast("发送失败");
+  }
+
 }
 
 // 组件卸载时清除定时器

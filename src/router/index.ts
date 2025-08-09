@@ -39,88 +39,107 @@ import News from "@/views/agency/News.vue";
 import Academy from "@/views/agency/Academy.vue";
 import Etf from '../views/agency/Etf.vue'
 
-export const router = createRouter({
-  history: createWebHistory(),
-  routes: [
-    { path: '/', component: LoginPage },
-    { path: '/login', component: LoginPage },
-    { path: '/register', component: RegisterPage },
-    { path: '/successRegister', component: SuccessRegister },
-    { path: '/successEditPwd', component: SuccessEditPwd },
-    { path: '/forgetPwdPage', component: ForgetPwdPage },
-    { path: '/client/index', component: Index },
-    { path: '/client/riskTest', component: RiskTest },
-    { path: '/client/risk', component: Risk },
-    { path: '/client/userInfo', component: UserInfo },
-    { path: '/client/account', component: Account },
-    { path: '/client/message', component: Message },
-    { path: '/client/product', component: Product },
-    { path: '/client/analysis', component: Analysis },
-    { path: '/client/transaction', component: TransactionInfo },
-    { path: '/agency/index', component: agencyIndex },
-    { path: '/agency/insurance', component: Insurance },
-    { path: '/agency/globalinvestmentfund', component: Globalinvestmentfund },
-    { path: '/agency/digitalcurrency', component: Digitalcurrency },
-    { path: '/agency/ekycView', component: EkycView },
-    { path: '/agency/etf', component: Etf },
-    { path: '/agency/userInfo', component: AgencyUserInfo },
-    { path: '/agency/customerInfo', component: CustomerInfo },
-    { path: '/agency/customerList', component: CustomerList },
-    { path: '/agency/message', component: AgencyMessage },
-    { path: '/agency/accountInfo', component: AccountInfo },
-    { path: '/agency/calculation', component: Calculation },
-    { path: '/agency/performanceReport', component: PerformanceReport },
-    { path: '/agency/commissionHistory', component: CommissionHistory },
-    { path: '/agency/salesOpportunity', component: SalesOpportunity },
-    { path: '/agency/stableCoinMainPage', component: StableCoinMainPage },
-    { path: '/agency/stableCoinPortfolio', component: StableCoinPortfolio },
-    { path: '/agency/stableCoinPurchase', component: StableCoinPurchase },
-    { path: '/agency/cbdc', component: CbdcView },
-    { path: '/agency/tradingCenter', component: TradingCenter },
-    { path: '/agency/news', component: News },
-    { path: '/agency/academy', component: Academy },
-    { path: '/401', component: one },
-    { path: '/404', component: two },
-  ]
+const WHITE_LIST: string[] = [
+  '/client/auth/login',
+  '/client/auth/register',
+  '/client/auth/sendCode',
+  '/login',
+  '/register',
+  '/successRegister',
+  '/successEditPwd',
+  '/forgetPwdPage',
+  '/401',
+  '/404',
+];
+
+// 定义路由配置
+const routes = [
+  { path: '/', component: LoginPage },
+  { path: '/login', component: LoginPage },
+  { path: '/register', component: RegisterPage },
+  { path: '/successRegister', component: SuccessRegister },
+  { path: '/successEditPwd', component: SuccessEditPwd },
+  { path: '/forgetPwdPage', component: ForgetPwdPage },
+  { path: '/client/index', component: Index },
+  { path: '/client/riskTest', component: RiskTest },
+  { path: '/client/risk', component: Risk },
+  { path: '/client/userInfo', component: UserInfo },
+  { path: '/client/account', component: Account },
+  { path: '/client/message', component: Message },
+  { path: '/client/product', component: Product },
+  { path: '/client/analysis', component: Analysis },
+  { path: '/client/transaction', component: TransactionInfo },
+  { path: '/agency/index', component: agencyIndex },
+  { path: '/agency/insurance', component: Insurance },
+  { path: '/agency/globalinvestmentfund', component: Globalinvestmentfund },
+  { path: '/agency/digitalcurrency', component: Digitalcurrency },
+  { path: '/agency/ekycView', component: EkycView },
+  { path: '/agency/etf', component: Etf },
+  { path: '/agency/userInfo', component: AgencyUserInfo },
+  { path: '/agency/customerInfo', component: CustomerInfo },
+  { path: '/agency/customerList', component: CustomerList },
+  { path: '/agency/message', component: AgencyMessage },
+  { path: '/agency/accountInfo', component: AccountInfo },
+  { path: '/agency/calculation', component: Calculation },
+  { path: '/agency/performanceReport', component: PerformanceReport },
+  { path: '/agency/commissionHistory', component: CommissionHistory },
+  { path: '/agency/salesOpportunity', component: SalesOpportunity },
+  { path: '/agency/stableCoinMainPage', component: StableCoinMainPage },
+  { path: '/agency/stableCoinPortfolio', component: StableCoinPortfolio },
+  { path: '/agency/stableCoinPurchase', component: StableCoinPurchase },
+  { path: '/agency/cbdc', component: CbdcView },
+  { path: '/agency/tradingCenter', component: TradingCenter },
+  { path: '/agency/news', component: News },
+  { path: '/agency/academy', component: Academy },
+  { path: '/401', component: one,meta:{requiresAuth: false} },
+  { path: '/404', component: two,meta:{requiresAuth: false} },
+]
+
+// 为路由批量添加 meta 信息
+routes.forEach(route => {
+  // 如果路径在白名单中，则设置 requiresAuth 为 false，否则设置为 true
+  if (WHITE_LIST.includes(route.path)) {
+    route.meta = { requiresAuth: false }
+  } else {
+    route.meta = { requiresAuth: true }
+  }
 })
 
+export const router = createRouter({
+  history: createWebHistory(),
+  routes
+})
 
 // 注册全局前置守卫
-router.beforeEach((to, _from, next) => {
+router.beforeEach(async (to, _from, next) => {
   console.log('路由守卫触发:', to.path)
 
   // 获取 token（假设存在 localStorage 中）
-  const token = localStorage.getItem('token')
+  const clientToken = localStorage.getItem('client-token')
+  console.log("clientToken:"+clientToken)
+
+  const agencyToken = localStorage.getItem('agency-token')
+  console.log("agencyToken:"+agencyToken)
 
   // 判断是否需要登录权限的路由
-  const requiresAuth = to.matched.some(record => record.meta.requiresAuth)
+  const requiresAuth = to.matched.some(record => record.meta?.requiresAuth)
+  console.log("requiresAuth:"+requiresAuth)
 
   // 校验 token 合法性
   if (requiresAuth) {
-    if (!token) {
+    if (to.path.startsWith('/agency')&&!agencyToken) {
+      console.log("校验agency token")
       // token 不存在，跳转到登录页
-      next({ path: '/LoginPage' })
-    } else {
-      // token 存在，校验是否合法（如是否过期、是否被篡改）
-      // isTokenValid(token);
-      // store.dispatch('verifyToken', token)
-      //     .then(() => {
-      //       // token 合法，继续导航
-      //       next()
-      //     })
-      //     .catch(() => {
-      //       // token 不合法，跳转到登录页
-      //       next({ path: '/LoginPage' })
-      //     })
+      next({ path: '/login' })
+    }if (to.path.startsWith('/client')&&!clientToken) {
+      console.log("校验client token")
+      // token 不存在，跳转到登录页
+      next({ path: '/login' })
+    }  else {
+      next()
     }
   } else {
     // 不需要权限的路由直接进入
     next()
   }
-
-
-
 })
-
-
-

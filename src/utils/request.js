@@ -1,6 +1,8 @@
 import axios from 'axios'
 import { getToken } from '@/utils/auth'
 import cache from '@/plugins/cache'
+import {useToast} from "@/composables/useToast.js";
+const { successToast, errorToast } = useToast()
 
 const service = axios.create({
   baseURL: import.meta.env.VITE_API_BASE_URL,
@@ -8,18 +10,11 @@ const service = axios.create({
   headers: { 'Content-Type': 'application/json;charset=utf-8','X-Client-Type': 'client' }
 })
 
-// 在请求拦截器前添加路由白名单配置
-const whiteList = ['/client/auth/login', '/client/auth/register', '/client/auth/sendCode'] // 登录、注册、验证码接口
 
 
 // 请求拦截器
 service.interceptors.request.use(config => {
-
-  // 添加白名单判断
-  if (whiteList.includes(config.url)) {
-    config.headers.isToken = false   // 不携带token
-    config.headers.repeatSubmit = false // 不校验重复提交
-  }
+  console.log("请求拦截器")
 
   // Token 处理
   if (getToken() && config.headers.isToken !== false) {
@@ -41,7 +36,7 @@ service.interceptors.request.use(config => {
 
     const lastRequest = cache.session.getJSON('lastRequest')
     if (lastRequest?.key === requestKey && Date.now() - lastRequest.time < 1000) {
-      return Promise.reject(new Error('数据正在处理，请勿重复提交'))
+      errorToast('数据正在处理，请勿重复提交!')
     }
     cache.session.setJSON('lastRequest', { key: requestKey, time: Date.now() })
   }
@@ -56,7 +51,7 @@ service.interceptors.response.use(
     if (response.config.responseType === 'blob') return data
 
     if (data.code && data.code !== 200) {
-      return Promise.reject(new Error(data.msg || '请求处理失败'))
+      errorToast(data.msg || '请求处理失败')
     }
     return data
   },

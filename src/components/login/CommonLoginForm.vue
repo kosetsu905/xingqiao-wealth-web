@@ -195,13 +195,12 @@ const handleGetCaptcha = async () => {
   if (countdown.value > 0) {
     return;
   }
-
-
   console.log('获取验证码逻辑')
 
   // 构造请求参数
   const params = {
     phoneNumber: formData.value.phoneNumber,
+    email: formData.value.email,
     countryCode: formData.value.countryCode,
     userType: formData.value.userType,
     step:'2'
@@ -274,28 +273,29 @@ const handleSubmit = async () => {
       userType: props.loginObject.userType
     }
     //
-    if(props.loginObject.userType === '02'){
-      await router.push('/client/index')
-    }
-    if(props.loginObject.userType=== '01'){
-      await router.push('/agency/index')
-    }
+    // if(props.loginObject.userType === '02'){
+    //   await router.push('/client/index')
+    // }
+    // if(props.loginObject.userType=== '01'){
+    //   await router.push('/agency/index')
+    // }
 
     // 调用登录接口
-    // const res = await login(params)
+    const res = await login(params)
     // 登录成功处理
-    // if (res.code === 200) {
-    //   console.log('登录成功')
-    //   console.log(res.data.access_token)
-    //   localStorage.setItem('token', res.data.access_token)
-    //   setToken(res.data.access_token)
-    //   if(props.loginObject.userType === '02'){
-    //     await router.push('/client/index')
-    //   }
-    //   if(props.loginObject.userType=== '01'){
-    //     await router.push('/agency/index')
-    //   }
-    // }
+    if (res.code === 200) {
+      console.log('登录成功')
+      console.log(res.data.access_token)
+      setToken(res.data.access_token)
+      if(props.loginObject.userType === '02'){
+        localStorage.setItem('client-token', res.data.access_token)
+        await router.push('/client/index')
+      }
+      if(props.loginObject.userType=== '01'){
+        localStorage.setItem('agency-token', res.data.access_token)
+        await router.push('/agency/index')
+      }
+    }
   } catch (e) {
     console.log('登录失败:', e)
     // 增强错误处理逻辑
