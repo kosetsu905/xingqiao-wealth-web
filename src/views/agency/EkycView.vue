@@ -199,40 +199,58 @@
                   </h3>
 
                   <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <!-- 证件正面照部分 -->
                     <div>
                       <label class="block text-sm font-medium text-gray-700 mb-1">
                         证件正面照
                         <span class="text-red-500">*</span>
                       </label>
-                      <div class="border-2 border-dashed border-light-1 rounded-lg p-4 text-center hover:border-primary transition-custom cursor-pointer">
+                      <div class="border-2 border-dashed border-light-1 rounded-lg p-4 text-center hover:border-primary transition-custom">
                         <input type="file" class="hidden" id="front-id-upload"
                                @change="handleFrontIdUpload"
-                               ref="frontIdFileRef">
-                        <label for="front-id-upload" class="cursor-pointer">
+                               ref="frontIdFileRef"
+                               accept="image/*">
+                        <label for="front-id-upload" class="cursor-pointer" v-if="!form.frontIdFileUrl">
                           <i class="fa fa-cloud-upload text-2xl text-dark-3 mb-2"></i>
                           <p class="text-sm text-dark-3">点击上传或拖拽文件到此处</p>
                           <p class="text-xs text-dark-3 mt-1">支持 JPG, PNG 格式，最大 5MB</p>
                           <p v-if="form.frontIdFile" class="text-xs text-primary mt-1">{{ form.frontIdFile.name }}</p>
                         </label>
+                        <!-- 回显图片 -->
+                        <div v-else class="relative">
+                          <img :src="form.frontIdFileUrl" alt="证件正面照" class="max-h-40 mx-auto rounded">
+                          <button type="button" @click="removeFrontIdFile" class="absolute top-0 right-0 bg-red-500 text-white rounded-full w-6 h-6 flex items-center justify-center">
+                            <i class="fa fa-times"></i>
+                          </button>
+                        </div>
                       </div>
                     </div>
 
+                    <!-- 证件反面照部分 -->
                     <div>
                       <label class="block text-sm font-medium text-gray-700 mb-1">
                         证件反面照
                         <span class="text-red-500">*</span>
                       </label>
-                      <div class="border-2 border-dashed border-light-1 rounded-lg p-4 text-center hover:border-primary transition-custom cursor-pointer">
+                      <div class="border-2 border-dashed border-light-1 rounded-lg p-4 text-center hover:border-primary transition-custom">
                         <input type="file" class="hidden"
                                id="back-id-upload"
                                ref="backIdFileRef"
-                               @change="handleBackIdUpload">
-                        <label for="back-id-upload" class="cursor-pointer">
+                               @change="handleBackIdUpload"
+                               accept="image/*">
+                        <label for="back-id-upload" class="cursor-pointer" v-if="!form.backIdFileUrl">
                           <i class="fa fa-cloud-upload text-2xl text-dark-3 mb-2"></i>
                           <p class="text-sm text-dark-3">点击上传或拖拽文件到此处</p>
                           <p class="text-xs text-dark-3 mt-1">支持 JPG, PNG 格式，最大 5MB</p>
                           <p v-if="form.backIdFile" class="text-xs text-primary mt-1">{{ form.backIdFile.name }}</p>
                         </label>
+                        <!-- 回显图片 -->
+                        <div v-else class="relative">
+                          <img :src="form.backIdFileUrl" alt="证件反面照" class="max-h-40 mx-auto rounded">
+                          <button type="button" @click="removeBackIdFile" class="absolute top-0 right-0 bg-red-500 text-white rounded-full w-6 h-6 flex items-center justify-center">
+                            <i class="fa fa-times"></i>
+                          </button>
+                        </div>
                       </div>
                     </div>
                   </div>
@@ -348,22 +366,42 @@
                   <h3 class="font-medium text-dark mb-4">资质证书上传</h3>
 
                   <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <!-- 资质证书照片部分 -->
                     <div>
                       <label class="block text-sm font-medium text-gray-700 mb-1">
                         资质证书照片
                         <span class="text-red-500">*</span>
                       </label>
-                      <div class="border-2 border-dashed border-light-1 rounded-lg p-4 text-center hover:border-primary transition-custom cursor-pointer">
+                      <div class="border-2 border-dashed border-light-1 rounded-lg p-4 text-center hover:border-primary transition-custom">
                         <input type="file" class="hidden"
                                id="certificate-upload"
                                ref="certificateFileRef"
-                               @change="handleCertificateUpload">
-                        <label for="certificate-upload" class="cursor-pointer">
+                               @change="handleCertificateUpload"
+                               accept="image/*,.pdf">
+                        <label for="certificate-upload" class="cursor-pointer" v-if="!form.certificateFileUrl">
                           <i class="fa fa-cloud-upload text-2xl text-dark-3 mb-2"></i>
                           <p class="text-sm text-dark-3">点击上传或拖拽文件到此处</p>
                           <p class="text-xs text-dark-3 mt-1">支持 JPG, PNG, PDF 格式，最大 10MB</p>
                           <p v-if="form.certificateFile" class="text-xs text-primary mt-1">{{ form.certificateFile.name }}</p>
                         </label>
+                        <!-- 回显文件 -->
+                        <div v-else class="relative">
+                          <div v-if="isImageFile(form.certificateFileUrl)" class="mb-2">
+                            <img :src="form.certificateFileUrl" alt="资质证书" class="max-h-40 mx-auto rounded">
+                          </div>
+                          <div v-else class="max-h-40 mx-auto flex items-center justify-center mb-2">
+                            <i class="fa fa-file-pdf-o text-4xl text-red-500"></i>
+                          </div>
+                          <!-- 文件名可点击下载 -->
+                          <a :href="form.certificateFileUrl"
+                             :download="getFileName(form.certificateFileUrl)"
+                             class="text-primary hover:underline cursor-pointer block text-center">
+                            {{ getFileName(form.certificateFileUrl) }}
+                          </a>
+                          <button type="button" @click="removeCertificateFile" class="absolute top-0 right-0 bg-red-500 text-white rounded-full w-6 h-6 flex items-center justify-center">
+                            <i class="fa fa-times"></i>
+                          </button>
+                        </div>
                       </div>
                     </div>
 
@@ -372,17 +410,36 @@
                         执业证明文件
                         <span class="text-red-500">*</span>
                       </label>
-                      <div class="border-2 border-dashed border-light-1 rounded-lg p-4 text-center hover:border-primary transition-custom cursor-pointer">
+                      <div class="border-2 border-dashed border-light-1 rounded-lg p-4 text-center hover:border-primary transition-custom">
                         <input type="file" class="hidden"
                                id="practice-certificate-upload"
                                ref="practiceCertificateFileRef"
-                               @change="handlePracticeCertificateUpload">
-                        <label for="practice-certificate-upload" class="cursor-pointer">
+                               @change="handlePracticeCertificateUpload"
+                               accept="image/*,.pdf">
+                        <label for="practice-certificate-upload" class="cursor-pointer" v-if="!form.practiceCertificateFileUrl">
                           <i class="fa fa-cloud-upload text-2xl text-dark-3 mb-2"></i>
                           <p class="text-sm text-dark-3">点击上传或拖拽文件到此处</p>
                           <p class="text-xs text-dark-3 mt-1">支持 JPG, PNG, PDF 格式，最大 10MB</p>
                           <p v-if="form.practiceCertificateFile" class="text-xs text-primary mt-1">{{ form.practiceCertificateFile.name }}</p>
                         </label>
+                        <!-- 回显文件 -->
+                        <div v-else class="relative">
+                          <div v-if="isImageFile(form.practiceCertificateFileUrl)" class="mb-2">
+                            <img :src="form.practiceCertificateFileUrl" alt="执业证明" class="max-h-40 mx-auto rounded">
+                          </div>
+                          <div v-else class="max-h-40 mx-auto flex items-center justify-center mb-2">
+                            <i class="fa fa-file-pdf-o text-4xl text-red-500"></i>
+                          </div>
+                          <!-- 文件名可点击下载 -->
+                          <a :href="form.practiceCertificateFileUrl"
+                             :download="getFileName(form.practiceCertificateFileUrl)"
+                             class="text-primary hover:underline cursor-pointer block text-center">
+                            {{ getFileName(form.practiceCertificateFileUrl) }}
+                          </a>
+                          <button type="button" @click="removePracticeCertificateFile" class="absolute top-0 right-0 bg-red-500 text-white rounded-full w-6 h-6 flex items-center justify-center">
+                            <i class="fa fa-times"></i>
+                          </button>
+                        </div>
                       </div>
                     </div>
                   </div>
@@ -553,6 +610,10 @@ const router = useRouter()
 const route = useRoute();
 import cache from '@/plugins/cache'
 import { ekycAuthStore } from '@/store/index.js';
+import {useToast} from "@/composables/useToast.js";
+import {uploadFile} from "@/api/file.js";
+const { successToast, errorToast } = useToast()
+
 // 引入认证状态 store
 const ekycAuth = ekycAuthStore();
 // 认证状态
@@ -671,12 +732,12 @@ const validateProfessionalForm = () => {
     yearsOfPracticeRef.value.focus();
     return false;
   }
-  if (!form.certificateFile) {
-    certificateFileRef.value.click(); // 点击文件上传按钮
+  if (!form.certificateFileUrl) {
+    alert('请上传资质证书照片');
     return false;
   }
-  if (!form.practiceCertificateFile) {
-    practiceCertificateFileRef.value.click(); // 点击文件上传按钮
+  if (!form.practiceCertificateFileUrl) {
+    alert('请上传执业证明文件');
     return false;
   }
   if (!form.professionalConfirmed) {
@@ -694,7 +755,9 @@ const form = reactive({
   issueDate: '',
   expiryDate: '',
   frontIdFile: null,
+  frontIdFileUrl: null,
   backIdFile: null,
+  backIdFileUrl: null,
   identityConfirmed: false,
   qualificationType: 'cfp',
   certificateNumber: '',
@@ -703,7 +766,9 @@ const form = reactive({
   certificateExpiryDate: '',
   yearsOfPractice: '',
   certificateFile: null,
+  certificateFileUrl: null,
   practiceCertificateFile: null,
+  practiceCertificateFileUrl: null,
   professionalConfirmed: false,
   professionalExperience: '',
   // 新增个人信息字段
@@ -842,26 +907,85 @@ const goToDashboard = () => {
 };
 
 // 文件上传处理
-const handleFrontIdUpload = (event) => {
-  form.frontIdFile = event.target.files[0];
+// 处理证件正面照上传
+const handleFrontIdUpload = async (event) => {
+  const file = event.target.files[0];
+  if (file) {
+    form.frontIdFile = file;
+    try {
+      // 上传到OSS并获取URL
+      const fileUrl = await uploadFileToOSS(file);
+      form.frontIdFileUrl = fileUrl;
+      // 清除原始文件引用以节省内存
+      form.frontIdFile = null;
+      successToast('证件正面照上传成功');
+    } catch (error) {
+      console.error('上传证件正面照失败:', error);
+      errorToast('上传证件正面照失败，请重试');
+    }
+  }
 };
 
-const handleBackIdUpload = (event) => {
-  form.backIdFile = event.target.files[0];
+// 处理证件反面照上传
+const handleBackIdUpload = async (event) => {
+  const file = event.target.files[0];
+  if (file) {
+    form.backIdFile = file;
+    try {
+      // 上传到OSS并获取URL
+      const fileUrl = await uploadFileToOSS(file);
+      form.backIdFileUrl = fileUrl;
+      // 清除原始文件引用以节省内存
+      form.backIdFile = null;
+      successToast('证件反面照上传成功');
+    } catch (error) {
+      console.error('上传证件反面照失败:', error);
+      errorToast('上传证件反面照失败，请重试');
+    }
+  }
 };
 
-const handleCertificateUpload = (event) => {
-  form.certificateFile = event.target.files[0];
+// 处理资质证书上传
+const handleCertificateUpload = async (event) => {
+  const file = event.target.files[0];
+  if (file) {
+    form.certificateFile = file;
+    try {
+      // 上传到OSS并获取URL
+      const fileUrl = await uploadFileToOSS(file);
+      form.certificateFileUrl = fileUrl;
+      // 清除原始文件引用以节省内存
+      form.certificateFile = null;
+      successToast('资质证书上传成功');
+    } catch (error) {
+      console.error('上传资质证书失败:', error);
+      errorToast('上传资质证书失败，请重试');
+    }
+  }
 };
 
-const handlePracticeCertificateUpload = (event) => {
-  form.practiceCertificateFile = event.target.files[0];
+// 处理执业证明文件上传
+const handlePracticeCertificateUpload = async (event) => {
+  const file = event.target.files[0];
+  if (file) {
+    form.practiceCertificateFile = file;
+    try {
+      // 上传到OSS并获取URL
+      const fileUrl = await uploadFileToOSS(file);
+      form.practiceCertificateFileUrl = fileUrl;
+      // 清除原始文件引用以节省内存
+      form.practiceCertificateFile = null;
+      successToast('执业证明文件上传成功');
+    } catch (error) {
+      console.error('上传执业证明文件失败:', error);
+      errorToast('上传执业证明文件失败，请重试');
+    }
+  }
 };
 
 
 
 onMounted(() => {
-
   // 恢复缓存数据
   const cachedFormData = cache.local.getJSON('ekycFormData');
   if (cachedFormData) {
@@ -903,6 +1027,7 @@ onMounted(() => {
 });
 
 
+
 // 监听表单数据变化，实时缓存
 watch(form, (newFormData) => {
   // 过滤掉文件对象，因为文件对象无法直接存储在缓存中
@@ -913,6 +1038,91 @@ watch(form, (newFormData) => {
   cache.local.setJSON('ekycFormData', formDataToCache);
 }, { deep: true });
 
+
+// 上传文件到OSS
+const uploadFileToOSS = async (file) => {
+  try {
+    const formData = new FormData();
+    formData.append('file', file);
+
+    // 调用后端上传接口
+    const response = await uploadFile(formData);
+
+    if (response.code === 200) {
+      return response.data; // 假设后端返回OSS文件访问URL
+    } else {
+      errorToast(response.msg || '文件上传失败');
+    }
+  } catch (error) {
+    console.log('文件上传失败:', error);
+    errorToast(error.message || '文件上传失败');
+    throw error;
+  }
+};
+
+
+// 移除证件正面照
+const removeFrontIdFile = () => {
+  form.frontIdFileUrl = '';
+  form.frontIdFile = null;
+  // 重置文件输入框
+  if (frontIdFileRef.value) {
+    frontIdFileRef.value.value = '';
+  }
+};
+
+// 移除证件反面照
+const removeBackIdFile = () => {
+  form.backIdFileUrl = '';
+  form.backIdFile = null;
+  // 重置文件输入框
+  if (backIdFileRef.value) {
+    backIdFileRef.value.value = '';
+  }
+};
+
+
+// 移除资质证书
+const removeCertificateFile = () => {
+  form.certificateFileUrl = '';
+  form.certificateFile = null;
+  // 重置文件输入框
+  if (certificateFileRef.value) {
+    certificateFileRef.value.value = '';
+  }
+};
+
+// 移除执业证明文件
+const removePracticeCertificateFile = () => {
+  form.practiceCertificateFileUrl = '';
+  form.practiceCertificateFile = null;
+  // 重置文件输入框
+  if (practiceCertificateFileRef.value) {
+    practiceCertificateFileRef.value.value = '';
+  }
+};
+
+
+// 判断是否为图片文件
+const isImageFile = (url) => {
+    if (!url) return false;
+  const imageExtensions = ['.jpg', '.jpeg', '.png', '.gif', '.bmp', '.webp'];
+  let urls=url.split("?");
+  const  isImage=imageExtensions.some(ext => urls[0].toLowerCase().endsWith(ext));
+  console.log('isImage:',isImage)
+  return isImage;
+};
+
+// 获取文件名
+const getFileName = (url) => {
+  if (!url) return '';
+  // 从URL中提取文件名
+  const fileName = url.split('?')[0];
+  console.log('fileName:',fileName)
+  const urlParts = fileName.split('/');
+  // 移除查询参数（如果有的话）
+  return urlParts[urlParts.length-1];
+};
 
 </script>
 

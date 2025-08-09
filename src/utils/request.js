@@ -6,7 +6,7 @@ const { successToast, errorToast } = useToast()
 
 const service = axios.create({
   baseURL: import.meta.env.VITE_API_BASE_URL,
-  timeout: 10000,
+  timeout: 600000,
   headers: { 'Content-Type': 'application/json;charset=utf-8','X-Client-Type': 'client' }
 })
 

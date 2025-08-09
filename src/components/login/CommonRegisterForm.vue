@@ -263,7 +263,7 @@ const handleGetCaptcha = async () => {
       }
     }, 1000)
   }else{
-    successToast(res.msg||"发送失败" );
+    errorToast(res.msg||"发送失败" );
   }
 }
 
