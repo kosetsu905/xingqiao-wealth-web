@@ -56,31 +56,6 @@
                  placeholder="请输入您的注册手机号">
         </div>
       </div>
-      <!-- 图形验证码 -->
-      <div class="mb-6" v-if="captchaEnabled">
-        <div class="broker-class2">
-          <label class="broker-class3">
-            图形验证码<span class="text-red-500">*</span>
-          </label>
-        </div>
-        <div class="relative flex gap-2">
-          <div class="broker-class5">
-            <i class="fas fa-shield-alt text-gray-400"></i>
-          </div>
-          <input
-              class="broker-class6 flex-1"
-              v-model="formData.code"
-              placeholder="请输入验证码"
-              type="text"
-          />
-          <div class="relative">
-            <img v-if="codeUrl" :src="codeUrl" @click="getCode" class="login-code-img cursor-pointer" alt="验证码"/>
-            <div v-else class="login-code-img bg-gray-100 flex items-center justify-center">
-              <i class="fas fa-spinner fa-spin text-gray-400"></i>
-            </div>
-          </div>
-        </div>
-      </div>
 
       <!-- 新增验证码登录区域 -->
       <div  class="mb-6">
@@ -101,10 +76,8 @@
           />
           <button
               class="px-4 py-2 bg-primary text-white rounded-lg hover:bg-primary-dark transition disabled:opacity-50 disabled:cursor-not-allowed"
-              @click.prevent="handleGetCaptcha"
-              :disabled="countdown > 0"
-          >
-            获取验证码{{ countdown > 0 ? `(${countdown})` : '' }}
+              @click.prevent="handleGetCaptcha">
+            获取验证码
           </button>
         </div>
       </div>
@@ -184,13 +157,13 @@
 </template>
 
 <script setup>
-import { ref, onMounted, onUnmounted } from 'vue'
+import { ref,defineEmits } from 'vue'
 import { useRouter } from 'vue-router' // 新增路由引入
 const router = useRouter()
 import { useToast } from '@/composables/useToast'
 const { successToast, errorToast } = useToast()
 const agreed = ref(false)
-import {getCodeImg, register, sendCode} from '@/api/login'
+import { register} from '@/api/login'
 // 定义 props
 const props = defineProps({
   loginObject: {
@@ -204,19 +177,18 @@ const props = defineProps({
 // 响应式数据
 const showPassword = ref(false)
 const showComfirmPassword = ref(false)
-let captchaEnabled = ref(true)
-let codeUrl = ref("")
+
+// 定义事件发射器
+const emit = defineEmits(['show-register-code'])
 
 // 表单数据
 const formData = ref({
   userName: '',
   email: '',
   phoneNumber: '',
-  code: '',
   password: '',
   comfirmPassword: '',
   sendCode: '',
-  uuid: '',
   countryCode: '+86',
   userType: props.loginObject.userType
 })
@@ -228,49 +200,17 @@ function togglePasswordVisibility() {
 function toggleComfirmPasswordVisibility() {
   showComfirmPassword.value = !showComfirmPassword.value
 }
-// 倒计时功能
-const countdown = ref(0)
-let timer = null
+
 
 const handleGetCaptcha = async () => {
-  if (countdown.value > 0) {
-    return;
-  }
+
   console.log('获取验证码逻辑')
+  // 触发显示验证码弹框
+  emit('show-register-code')
 
-  // 构造请求参数
-  const params = {
-    email: formData.value.email,
-    code: formData.value.code,
-    uuid: formData.value.uuid,
-    phoneNumber: formData.value.phoneNumber,
-    countryCode: formData.value.countryCode,
-    userType: formData.value.userType,
-    step:'2'
-  }
 
-  // 调用登录接口
-  const res = await sendCode(params)
-  // 登录成功处理
-  if (res.code === 200) {
-    successToast("发送成功");
-    // 开始倒计时
-    countdown.value = 60
-    timer = setInterval(() => {
-      countdown.value--
-      if (countdown.value <= 0) {
-        clearInterval(timer)
-      }
-    }, 1000)
-  }else{
-    errorToast(res.msg||"发送失败" );
-  }
 }
 
-// 组件卸载时清除定时器
-onUnmounted(() => {
-  if(timer) clearInterval(timer)
-})
 
 
 // 处理表单提交
@@ -351,31 +291,6 @@ const handleBack = async () => {
   await router.push('/login')
 }
 
-const getCode = async () => {
-  try {
-    const res = await getCodeImg()
-    captchaEnabled.value = res.captchaEnabled === undefined ? true : res.captchaEnabled
-    if (captchaEnabled.value) {
-      // 检查返回的数据是否是 base64 格式
-      if (res.img.startsWith('data:image')) {
-        codeUrl.value = res.img
-      } else {
-        // 如果不是 base64 格式，则按原格式处理
-        codeUrl.value = "data:image/gif;base64," + res.img
-      }
-      formData.value.uuid = res.uuid
-    }
-  } catch (error) {
-    errorToast("获取验证码失败")
-    console.error('获取验证码失败:', error)
-  }
-}
-
-
-// 组件挂载时获取验证码
-onMounted(() => {
-  getCode()
-})
 
 </script>
 

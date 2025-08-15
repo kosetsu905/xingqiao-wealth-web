@@ -31,22 +31,33 @@
         经纪人注册
       </button>
     </div>
-    <CommonRegisterForm :login-object="currentPwdObject" />
+    <CommonRegisterForm @show-register-code="openMessageCodeEvent" :login-object="currentPwdObject" />
   </div>
 </template>
 
 <script setup>
   import CommonRegisterForm from './CommonRegisterForm.vue'
-  import { ref,computed } from 'vue';
+  import {ref, computed, defineEmits, watch} from 'vue';
   import { useRoute } from 'vue-router' // 新增路由引入
   const route = useRoute()
   const userType = ref(route.query.userType || "02") // 接收路由参数
+  // 定义事件发射器
+  const emit = defineEmits(['show-register-code', 'user-type-changed'])
+
+  // 监听 userType 变化
+  watch(userType, (newValue, oldValue) => {
+    emit('user-type-changed', newValue)
+  })
+
+  const openMessageCodeEvent = () => {
+      // 触发显示验证码弹框
+      emit('show-register-code')
+  }
 
   // 注册对象
   const currentObject = ref({
     userType: userType.value
   })
-
 
   // 新增计算属性获取当前登录对象
   const currentPwdObject = computed(() => ({

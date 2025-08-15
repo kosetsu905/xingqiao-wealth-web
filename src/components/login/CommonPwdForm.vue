@@ -196,6 +196,7 @@ const countdown = ref(0)
 let timer = null
 
 const handleGetCaptcha = async () => {
+
   if (countdown.value > 0) return
 
   // 开始倒计时
