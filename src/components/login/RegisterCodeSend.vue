@@ -1,7 +1,7 @@
 <!-- 验证弹框 -->
 <template>
   <div
-      class="relative bg-white rounded-2xl w-full max-w-md shadow-lg overflow-hidden transform transition-all duration-300">
+      class="relative  bg-white rounded-2xl w-11/12 max-w-md shadow-lg overflow-hidden transform transition-all duration-300">
     <!-- 导航栏 -->
     <div class="px-6 py-4 border-b border-gray-100 flex items-center justify-between">
       <a href="#" @click.prevent="goBack"
@@ -104,10 +104,11 @@
             <input
                 v-model="emailForm.captcha"
                 type="text"
-                class="flex-1 px-4 py-3 border-0 focus:ring-0 outline-none"
+                class="w-2/3 px-4 py-3 border-0 focus:ring-0 outline-none"
                 placeholder="请输入图形验证码">
-            <div class="w-32 bg-neutral flex items-center justify-center">
-              <img v-if="codeUrl" :src="codeUrl" @click="getCode" class="w-full h-full object-cover" alt="图形验证码"/>
+            <div class="w-1/3 bg-neutral flex items-center justify-center">
+              <img v-if="codeUrl" :src="codeUrl" @click="getCode"
+                   class="w-full h-full object-cover rounded-lg border border-gray-200 bg-white shadow-sm"/>
             </div>
           </div>
         </div>
@@ -144,7 +145,6 @@
 import {ref, onMounted, reactive, defineEmits, watch} from 'vue'
 import {getCodeImg, sendCode} from '@/api/login'
 import {useToast} from '@/composables/useToast'
-
 const {successToast, errorToast} = useToast()
 let codeUrl = ref("")
 // 定义 emits
@@ -207,8 +207,6 @@ watch(() => smsForm.value.countryCode, (newValue) => {
   emit('update:countryCode', newValue);
 });
 
-
-
 watch(() => emailForm.value.email, (newValue) => {
   emit('update:email', newValue);
 });
@@ -241,10 +239,10 @@ const getCode = async () => {
       codeUrl.value = "data:image/gif;base64," + res.img
     }
     if (activeTab.value === 'sms') {
-      smsForm.uuid = res.uuid
+      smsForm.value.uuid = res.uuid
     }
     if (activeTab.value === 'email') {
-      emailForm.uuid = res.uuid
+      emailForm.value.uuid = res.uuid
     }
   } catch (error) {
     errorToast("获取验证码失败")
@@ -259,22 +257,30 @@ onMounted(() => {
 
 // 发送短信验证码
 const sendSmsCode = async () => {
-  if (!smsForm.phone) {
-    alert('请输入手机号')
+  if (!smsForm.value.phoneNumber) {
+    errorToast("请输入手机号")
     return
   }
 
-  if (!smsForm.captcha) {
-    alert('请输入图形验证码')
+  //校验手机号码格式，17665319189我的手机，报请输入正确的手机号码
+  const phoneRegex = /^1(3[0-9]|4[5789]|5[0-35-9]|6[257]|7[0-25-8]|8[0-9]|9[189])\d{8}$/;
+  if (!phoneRegex.test(smsForm.value.phoneNumber)) {
+    errorToast("请输入正确的手机号码")
+    return
+  }
+
+  if (!smsForm.value.captcha) {
+    errorToast("请输入图形验证码")
     return
   }
   // 构造请求参数
   const params = {
-    phone: smsForm.phone,
-    code: smsForm.captcha,
-    uuid: smsForm.uuid,
-    userType: userType,
-    step: '2'
+    phoneNumber: smsForm.value.phoneNumber,
+    countryCode: smsForm.value.countryCode,
+    code: smsForm.value.captcha,
+    uuid: smsForm.value.uuid,
+    userType: smsForm.value.userType,
+    step: '1'
   }
   // 调用登录接口
   const res = await sendCode(params)
@@ -282,35 +288,36 @@ const sendSmsCode = async () => {
   // 登录成功处理
   if (res.code === 200) {
     successToast("发送成功");
-    startEmailCountdown()
+    startSmsCountdown()
   } else {
     errorToast(res.msg || "发送失败");
   }
-
-
-  // 模拟发送验证码
-  startSmsCountdown()
-
 };
 
 // 发送邮件验证码
 const sendEmailCode = async () => {
-  if (!emailForm.email) {
+  if (!emailForm.value.email) {
     alert('请输入邮箱地址')
     return
   }
+  //校验邮箱号码格式
+  const emailRegex = /^[a-zA-Z0-9_-]+@[a-zA-Z0-9_-]+(\.[a-zA-Z0-9_-]+)+$/;
+  if (!emailRegex.test(emailForm.value.email)) {
+    alert('请输入正确的邮箱地址')
+    return
+  }
 
-  if (!emailForm.captcha) {
+  if (!emailForm.value.captcha) {
     alert('请输入图形验证码')
     return
   }
 
   // 构造请求参数
   const params = {
-    email: emailForm.email,
-    code: emailForm.captcha,
-    uuid: emailForm.uuid,
-    userType: userType,
+    email: emailForm.value.email,
+    code: emailForm.value.captcha,
+    uuid: emailForm.value.uuid,
+    userType: emailForm.value.userType,
     step: '2'
   }
 
