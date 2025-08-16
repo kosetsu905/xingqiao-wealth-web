@@ -1,9 +1,11 @@
 <!-- 验证弹框 -->
 <template>
-  <div class="relative bg-white rounded-2xl w-full max-w-md shadow-lg overflow-hidden transform transition-all duration-300">
+  <div
+      class="relative bg-white rounded-2xl w-full max-w-md shadow-lg overflow-hidden transform transition-all duration-300">
     <!-- 导航栏 -->
     <div class="px-6 py-4 border-b border-gray-100 flex items-center justify-between">
-      <a href="#" @click.prevent="goBack" class="text-secondary hover:text-primary transition-colors flex items-center gap-2">
+      <a href="#" @click.prevent="goBack"
+         class="text-secondary hover:text-primary transition-colors flex items-center gap-2">
         <i class="fa fa-arrow-left"></i>
         <span>返回注册页面</span>
       </a>
@@ -49,7 +51,7 @@
                 placeholder="请输入图形验证码">
             <div class="w-1/3 bg-neutral flex items-center justify-center">
               <img v-if="codeUrl" :src="codeUrl" @click="getCode"
-                   class="w-full h-full object-cover rounded-lg border border-gray-200 bg-white shadow-sm" />
+                   class="w-full h-full object-cover rounded-lg border border-gray-200 bg-white shadow-sm"/>
             </div>
           </div>
         </div>
@@ -60,20 +62,18 @@
           <label class="block text-sm font-medium text-gray-700">手机号</label>
           <div class="input-group">
             <i class="fa fa-mobile input-icon px-3 py-3"></i>
-            <div class="w-1/5">
+            <div class="w-3/12">
               <!-- 国家区号选择框 -->
               <select
                   v-model="smsForm.countryCode"
                   class="w-full border-r-gray-100">
-                <option value="+86"> +86&nbsp;&nbsp;&nbsp;(中国)</option>
-                <option value="+852">+852 (香港)</option>
-                <option value="+853">+853 (澳门)</option>
-                <option value="+886">+886 (台湾)</option>
+                <option value="+86"> +86</option>
+                <option value="+852">+852</option>
               </select>
             </div>
-            <div class="w-4/5">
+            <div class="w-9/12">
               <input
-                  v-model="smsForm.phone"
+                  v-model="smsForm.phoneNumber"
                   type="tel"
                   class="py-3 border-0 focus:ring-0 outline-none"
                   placeholder="请输入手机号">
@@ -140,31 +140,79 @@
   </div>
 </template>
 
-<script setup >
-import { ref, onMounted, reactive,defineEmits } from 'vue'
+<script setup>
+import {ref, onMounted, reactive, defineEmits, watch} from 'vue'
 import {getCodeImg, sendCode} from '@/api/login'
-import { useToast } from '@/composables/useToast'
-const { successToast, errorToast } = useToast()
+import {useToast} from '@/composables/useToast'
+
+const {successToast, errorToast} = useToast()
 let codeUrl = ref("")
 // 定义 emits
-const emit = defineEmits(['close'])
+const emit = defineEmits(['close', 'update:phone', 'update:countryCode', 'update:email'])
 // 当前激活的Tab
 const activeTab = ref('sms')
-const { userType } =defineProps(['userType']);
+
+
 
 // 表单数据
-const smsForm = reactive({
+const smsForm = ref({
   captcha: '',
-  phone: '',
+  phoneNumber: '',
   uuid: '',
+  userType: '',
   countryCode: '+86'
 })
 
-const emailForm = reactive({
+const emailForm = ref({
   captcha: '',
   email: '',
-  uuid: ''
+  uuid: '',
+  userType: '',
 })
+
+//接收父组件传递的参数
+const props = defineProps({
+  loginObject: {
+    type: Object,
+    default: () => ({
+      userType: '00',
+      phoneNumber: '',
+      countryCode: '',
+      email: ''
+    })
+  }
+})
+
+const currentLoginData = ref({...props.loginObject});
+
+// 监听loginObject变化
+watch(() => props.loginObject, (newVal) => {
+  console.log('RegisterCodeSend接收到新的loginObject:', newVal);
+  currentLoginData.value = {...newVal};
+  smsForm.value.userType = newVal.userType;
+  smsForm.value.phoneNumber = newVal.phoneNumber;
+  smsForm.value.countryCode = newVal.countryCode;
+  emailForm.value.userType = newVal.userType;
+  emailForm.value.email = newVal.email;
+}, { deep: true, immediate: true });
+
+
+
+// 监听表单数据变化，通知父组件
+watch(() => smsForm.value.phoneNumber, (newValue) => {
+  emit('update:phone', newValue);
+});
+
+watch(() => smsForm.value.countryCode, (newValue) => {
+  emit('update:countryCode', newValue);
+});
+
+
+
+watch(() => emailForm.value.email, (newValue) => {
+  emit('update:email', newValue);
+});
+
 
 // 验证码按钮状态
 const smsCodeDisabled = ref(false)
@@ -192,10 +240,10 @@ const getCode = async () => {
       // 如果不是 base64 格式，则按原格式处理
       codeUrl.value = "data:image/gif;base64," + res.img
     }
-    if(activeTab.value === 'sms'){
+    if (activeTab.value === 'sms') {
       smsForm.uuid = res.uuid
     }
-    if(activeTab.value === 'email'){
+    if (activeTab.value === 'email') {
       emailForm.uuid = res.uuid
     }
   } catch (error) {
@@ -210,7 +258,7 @@ onMounted(() => {
 })
 
 // 发送短信验证码
-const sendSmsCode = async ()=>   {
+const sendSmsCode = async () => {
   if (!smsForm.phone) {
     alert('请输入手机号')
     return
@@ -220,33 +268,33 @@ const sendSmsCode = async ()=>   {
     alert('请输入图形验证码')
     return
   }
-
-
   // 构造请求参数
   const params = {
     phone: smsForm.phone,
     code: smsForm.captcha,
     uuid: smsForm.uuid,
     userType: userType,
-    step:'2'
+    step: '2'
   }
-
   // 调用登录接口
   const res = await sendCode(params)
+
   // 登录成功处理
   if (res.code === 200) {
     successToast("发送成功");
     startEmailCountdown()
-  }else{
-    errorToast(res.msg||"发送失败" );
+  } else {
+    errorToast(res.msg || "发送失败");
   }
+
 
   // 模拟发送验证码
   startSmsCountdown()
-}
+
+};
 
 // 发送邮件验证码
-const sendEmailCode = async ()=>  {
+const sendEmailCode = async () => {
   if (!emailForm.email) {
     alert('请输入邮箱地址')
     return
@@ -263,7 +311,7 @@ const sendEmailCode = async ()=>  {
     code: emailForm.captcha,
     uuid: emailForm.uuid,
     userType: userType,
-    step:'2'
+    step: '2'
   }
 
   // 调用登录接口
@@ -272,8 +320,8 @@ const sendEmailCode = async ()=>  {
   if (res.code === 200) {
     successToast("发送成功");
     startEmailCountdown()
-  }else{
-    errorToast(res.msg||"发送失败" );
+  } else {
+    errorToast(res.msg || "发送失败");
   }
 }
 

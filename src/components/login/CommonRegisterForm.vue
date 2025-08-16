@@ -157,41 +157,90 @@
 </template>
 
 <script setup>
-import { ref,defineEmits } from 'vue'
-import { useRouter } from 'vue-router' // 新增路由引入
+import {ref, defineEmits, watch} from 'vue'
+import { useRouter } from 'vue-router'
 const router = useRouter()
 import { useToast } from '@/composables/useToast'
-const { successToast, errorToast } = useToast()
+const {  errorToast } = useToast()
 const agreed = ref(false)
 import { register} from '@/api/login'
-// 定义 props
+//接收父组件传递的参数
 const props = defineProps({
   loginObject: {
     type: Object,
     default: () => ({
-      userType: '00'
+      userType: '00',
+      phoneNumber: '',
+      countryCode: '',
+      email: ''
     })
   }
 })
-
-// 响应式数据
-const showPassword = ref(false)
-const showComfirmPassword = ref(false)
-
-// 定义事件发射器
-const emit = defineEmits(['show-register-code'])
+// 定义 emits
+const emit = defineEmits(['close','show-register-code'])
 
 // 表单数据
 const formData = ref({
   userName: '',
   email: '',
-  phoneNumber: '',
+  phoneNumber: props.loginObject.phoneNumber || '',
   password: '',
   comfirmPassword: '',
   sendCode: '',
-  countryCode: '+86',
-  userType: props.loginObject.userType
+  countryCode: props.loginObject.countryCode || '+86',
+  userType: props.loginObject.userType || '00'
 })
+
+
+// 监听props变化，更新表单数据
+// 监听整个 loginObject 对象，使用深度监听
+watch(
+    () => props.loginObject,
+    (newValue) => {
+      console.log('loginObject updated:', newValue);
+      if (newValue) {
+        // 更新用户类型
+        if (newValue.userType && formData.value.userType !== newValue.userType) {
+          formData.value.userType = newValue.userType;
+        }
+        // 更新手机号
+        if (newValue.phoneNumber && formData.value.phoneNumber !== newValue.phoneNumber) {
+          formData.value.phoneNumber = newValue.phoneNumber;
+        }
+        // 更新国家代码
+        if (newValue.countryCode && formData.value.countryCode !== newValue.countryCode) {
+          formData.value.countryCode = newValue.countryCode;
+        }
+        // 更新邮箱
+        if (newValue.email && formData.value.email !== newValue.email) {
+          formData.value.email = newValue.email;
+        }
+      }
+    },
+    { deep: true }
+)
+
+
+// 修正这些监听器，使用 formData.value 访问属性
+watch(() => formData.value.phoneNumber, (newValue) => {
+  console.info('common phoneNumber updated:', newValue)
+  formData.value.phoneNumber = newValue;
+});
+
+watch(() => formData.value.countryCode, (newValue) => {
+  console.info('common countryCode updated:', newValue)
+  formData.value.countryCode = newValue;
+});
+
+watch(() => formData.value.email, (newValue) => {
+  console.info('common email updated:', newValue)
+  formData.value.email = newValue;
+});
+
+// 响应式数据
+const showPassword = ref(false)
+const showComfirmPassword = ref(false)
+
 
 // 方法：切换密码可见性
 function togglePasswordVisibility() {
@@ -203,12 +252,9 @@ function toggleComfirmPasswordVisibility() {
 
 
 const handleGetCaptcha = async () => {
-
-  console.log('获取验证码逻辑')
+  console.log('获取验证码逻辑'+formData.value)
   // 触发显示验证码弹框
-  emit('show-register-code')
-
-
+  emit('show-register-code',formData.value)
 }
 
 

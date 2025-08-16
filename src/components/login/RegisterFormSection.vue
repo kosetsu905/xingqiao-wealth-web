@@ -31,39 +31,73 @@
         经纪人注册
       </button>
     </div>
-    <CommonRegisterForm @show-register-code="openMessageCodeEvent" :login-object="currentPwdObject" />
+    <CommonRegisterForm
+        @show-register-code="updateFormData"
+        :login-object="currentPwdObject"
+    />
   </div>
 </template>
 
 <script setup>
   import CommonRegisterForm from './CommonRegisterForm.vue'
   import {ref, computed, defineEmits, watch} from 'vue';
-  import { useRoute } from 'vue-router' // 新增路由引入
+  import { useRoute } from 'vue-router'
   const route = useRoute()
   const userType = ref(route.query.userType || "02") // 接收路由参数
+
   // 定义事件发射器
   const emit = defineEmits(['show-register-code', 'user-type-changed'])
+  const { phoneNumber, countryCode, email } = defineProps({ phoneNumber: String, countryCode: String, email: String });
 
   // 监听 userType 变化
   watch(userType, (newValue, oldValue) => {
     emit('user-type-changed', newValue)
   })
 
-  const openMessageCodeEvent = () => {
-      // 触发显示验证码弹框
-      emit('show-register-code')
-  }
 
   // 注册对象
   const currentObject = ref({
-    userType: userType.value
+    userType: userType.value,
+    phoneNumber: phoneNumber,
+    countryCode: countryCode,
+    email: email
   })
 
   // 新增计算属性获取当前登录对象
   const currentPwdObject = computed(() => ({
     ...(currentObject.value),
-    userType: userType.value // 动态注入当前用户类型
+    userType: userType.value
   }))
+
+
+  // 监听props变化，更新表单数据
+  watch(() => phoneNumber, (newValue) => {
+    console.log('phoneNumber >>>>'+newValue)
+    if (newValue && currentObject.value.phoneNumber !== newValue) {
+      currentObject.value.phoneNumber = newValue;
+    }
+  });
+
+  watch(() => countryCode, (newValue) => {
+    if (newValue && currentObject.value.countryCode !== newValue) {
+      console.log('countryCode'+newValue)
+      currentObject.value.countryCode = newValue;
+    }
+  });
+
+
+  watch(() => email, (newValue) => {
+    if (newValue && currentObject.value.email !== newValue) {
+      console.log('email'+newValue)
+      currentObject.value.email = newValue;
+    }
+  });
+
+
+  const updateFormData = (data) => {
+    console.log('接收CommonRegisterForm r 组件的数据更新', data)
+    emit('show-register-code', data)
+  }
 
   // 切换登录类型的方法
   function switchTab(tab) {
