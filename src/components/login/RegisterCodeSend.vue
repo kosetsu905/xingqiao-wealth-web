@@ -297,18 +297,18 @@ const sendSmsCode = async () => {
 // 发送邮件验证码
 const sendEmailCode = async () => {
   if (!emailForm.value.email) {
-    alert('请输入邮箱地址')
+    errorToast('请输入邮箱地址')
     return
   }
   //校验邮箱号码格式
   const emailRegex = /^[a-zA-Z0-9_-]+@[a-zA-Z0-9_-]+(\.[a-zA-Z0-9_-]+)+$/;
   if (!emailRegex.test(emailForm.value.email)) {
-    alert('请输入正确的邮箱地址')
+    errorToast('请输入正确的邮箱地址')
     return
   }
 
   if (!emailForm.value.captcha) {
-    alert('请输入图形验证码')
+    errorToast('请输入图形验证码')
     return
   }
 

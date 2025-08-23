@@ -140,7 +140,8 @@ const navItems = computed(() => {
       // 默认菜单项
       { label: '首页',activeIndex: 0,  path: '/agency/index' },
       { label: '个人中心', activeIndex: 1 ,  path: '/agency/userInfo'},
-      { label: '账户管理', activeIndex: 2,  path: '/agency/accountInfo' },
+      { label: 'EKYC认证', activeIndex: 2 ,  path: '/agency/ekycIndex'},
+      // { label: '账户管理', activeIndex: 2,  path: '/agency/accountInfo' },
       { label: '退出', activeIndex: 3, path: '/logout' }
     ]
   }

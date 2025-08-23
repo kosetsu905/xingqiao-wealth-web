@@ -20,7 +20,7 @@ import agencyIndex from '../views/agency/Index.vue'
 import Insurance from '../views/agency/Insurance.vue'
 import Globalinvestmentfund from '../views/agency/Globalinvestmentfund.vue'
 import Digitalcurrency from '../views/agency/Digitalcurrency.vue'
-import EkycView from '../views/agency/EkycView.vue'
+import EkycIndex from '../views/agency/EkycIndex.vue'
 import AgencyUserInfo from '../views/agency/UserInfo.vue'
 import CustomerInfo from '../views/agency/CustomerInfo.vue'
 import CustomerList from '../views/agency/CustomerList.vue'
@@ -73,7 +73,7 @@ const routes = [
   { path: '/agency/insurance', component: Insurance },
   { path: '/agency/globalinvestmentfund', component: Globalinvestmentfund },
   { path: '/agency/digitalcurrency', component: Digitalcurrency },
-  { path: '/agency/ekycView', component: EkycView },
+  { path: '/agency/ekycIndex', component: EkycIndex },
   { path: '/agency/etf', component: Etf },
   { path: '/agency/userInfo', component: AgencyUserInfo },
   { path: '/agency/customerInfo', component: CustomerInfo },
