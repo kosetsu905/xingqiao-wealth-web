@@ -44,9 +44,11 @@
               class="relative cursor-pointer">
             <button id="profile-menu-button"
                     class="flex items-center space-x-2 focus:outline-none">
-              <img src="https://picsum.photos/id/64/40/40" alt="用户头像"
-                   class="w-8 h-8 rounded-full object-cover border-2 border-primary/20">
-              <span class="md:inline font-medium">{{userName}}</span>
+              <img v-if="userAvatar" :src="userAvatar" alt="用户头像" class="w-8 h-8 rounded-full object-cover border-2 border-primary/20" />
+              <span v-if="userName" class="username">{{ userName }}</span>
+<!--              <img src="https://picsum.photos/id/64/40/40" alt="用户头像"-->
+<!--                   class="w-8 h-8 rounded-full object-cover border-2 border-primary/20">-->
+<!--              <span class="md:inline font-medium">{{userName}}</span>-->
             </button>
           </div>
         </div>
@@ -94,7 +96,9 @@ import {onBeforeUnmount, onMounted, ref, watch, computed} from "vue";
 const isMenuOpen = ref(false)
 const dropdownRef = ref(null)
 const localCurrentTabActive = ref(0)
-const userName = ref('张三')
+const userName = ref('')
+// 定义响应式数据
+const userAvatar = ref('')
 
 const props = defineProps({
   from: {
@@ -235,11 +239,20 @@ onMounted(() => {
   if (props.currentTabActive !== null) {
     localCurrentTabActive.value = props.currentTabActive
   }
+  const avatar = localStorage.getItem('avatar')
+  const name = localStorage.getItem('userName')
+
+  if (avatar) {
+    userAvatar.value = avatar
+  }
+
+  if (name) {
+    userName.value = name
+  }
+
 })
 
-
 </script>
-
 
 <style scoped>
 

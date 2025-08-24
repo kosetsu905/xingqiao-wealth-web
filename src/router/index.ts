@@ -24,12 +24,15 @@ import EkycIndex from '../views/agency/EkycIndex.vue'
 import AgencyUserInfo from '../views/agency/UserInfo.vue'
 import CustomerInfo from '../views/agency/CustomerInfo.vue'
 import CustomerList from '../views/agency/CustomerList.vue'
+import CustomerDetail from '../views/agency/CustomerDetail.vue'
 import AgencyMessage from '../views/agency/Message.vue'
 import AccountInfo from '../views/agency/AccountInfo.vue'
 import Calculation from '../views/agency/Calculation.vue'
 import PerformanceReport from '../views/agency/PerformanceReport.vue'
 import CommissionHistory from '../views/agency/CommissionHistory.vue'
 import SalesOpportunity from '../views/agency/SalesOpportunity.vue'
+import SalesOpportunityList from '../views/agency/SalesOpportunityList.vue'
+import SalesOpportunityDetail from '../views/agency/SalesOpportunityDetail.vue'
 import StableCoinMainPage from "@/views/agency/StableCoinMainPage.vue";
 import StableCoinPortfolio from "@/views/agency/StableCoinPortfolio.vue";
 import StableCoinPurchase from "@/views/agency/StableCoinPurchase.vue";
@@ -78,12 +81,15 @@ const routes = [
   { path: '/agency/userInfo', component: AgencyUserInfo },
   { path: '/agency/customerInfo', component: CustomerInfo },
   { path: '/agency/customerList', component: CustomerList },
+  { path: '/agency/customerDetail', component: CustomerDetail },
   { path: '/agency/message', component: AgencyMessage },
   { path: '/agency/accountInfo', component: AccountInfo },
   { path: '/agency/calculation', component: Calculation },
   { path: '/agency/performanceReport', component: PerformanceReport },
   { path: '/agency/commissionHistory', component: CommissionHistory },
   { path: '/agency/salesOpportunity', component: SalesOpportunity },
+  { path: '/agency/salesOpportunityList', component: SalesOpportunityList },
+  { path: '/agency/salesOpportunityDetail', component: SalesOpportunityDetail },
   { path: '/agency/stableCoinMainPage', component: StableCoinMainPage },
   { path: '/agency/stableCoinPortfolio', component: StableCoinPortfolio },
   { path: '/agency/stableCoinPurchase', component: StableCoinPurchase },
