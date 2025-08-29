@@ -97,6 +97,23 @@
             <i class="fas fa-search mr-2"></i>
             查询
           </button>
+          <!-- 新增的邀请按钮 -->
+          <button
+              @click="sendEmailInvitation"
+              :disabled="selectedCustomers.length === 0"
+              class="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors flex items-center disabled:opacity-50 disabled:cursor-not-allowed"
+          >
+            <i class="fas fa-envelope mr-2"></i>
+            邮件邀请
+          </button>
+          <button
+              @click="sendSmsInvitation"
+              :disabled="selectedCustomers.length === 0"
+              class="px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition-colors flex items-center disabled:opacity-50 disabled:cursor-not-allowed"
+          >
+            <i class="fas fa-sms mr-2"></i>
+            短信邀请
+          </button>
         </div>
       </div>
     </div>
@@ -106,6 +123,15 @@
         <table class="w-full">
           <thead class="bg-gray-50 border-b border-gray-200">
           <tr>
+            <!-- 添加复选框列 -->
+            <th class="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+              <input
+                  type="checkbox"
+                  :checked="selectedCustomers.length > 0 && selectedCustomers.length === customerList.length"
+                  @change="toggleSelectAll"
+                  class="rounded border-gray-300 text-blue-600 focus:ring-blue-500"
+              >
+            </th>
             <th class="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">客户信息</th>
             <th class="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">联系方式</th>
             <th class="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">婚姻状况</th>
@@ -117,6 +143,15 @@
           </thead>
           <tbody class="bg-white divide-y divide-gray-200">
           <tr v-for="customer in customerList" :key="customer.id" class="hover:bg-gray-50">
+            <!-- 添加复选框 -->
+            <td class="px-6 py-4 whitespace-nowrap">
+              <input
+                  type="checkbox"
+                  :checked="selectedCustomers.includes(customer.userTempId)"
+                  @change="toggleCustomerSelection(customer.id)"
+                  class="rounded border-gray-300 text-blue-600 focus:ring-blue-500"
+              >
+            </td>
             <td class="px-6 py-4 whitespace-nowrap">
               <div class="flex items-center">
                 <div class="w-10 h-10 rounded-full bg-gray-200 flex items-center justify-center mr-3">
@@ -229,12 +264,13 @@
   </main>
 </template>
 
-<script setup >
+<script setup>
 import { ref, onMounted } from 'vue'
 import Header from "@/components/agency/Header.vue";
 import { useRouter } from 'vue-router';
 import { useToast } from '@/composables/useToast'
 import {deleteCustomerInfo, getCustomerList} from '@/api/customer'
+import {sendInviteMessageBatch} from "@/api/message.js";
 
 const router = useRouter();
 const { successToast,errorToast } = useToast()
@@ -254,6 +290,8 @@ const fullName = ref('')
 const email = ref('')
 const phoneNumber = ref('')
 
+// 选中的客户
+const selectedCustomers = ref([])
 
 // 重置搜索条件
 const resetSearch = () => {
@@ -324,6 +362,60 @@ const deleteClient = async (userTempId) =>  {
   } catch (error) {
     console.error('删除销售机会失败:', error)
     errorToast('删除失败，请重试')
+  }
+}
+
+// 发送邮件邀请
+const sendEmailInvitation = async () => {
+  if (selectedCustomers.value.length === 0) return;
+  // 这里添加发送邮件邀请的逻辑
+  console.log('发送邮件邀请给:', selectedCustomers.value);
+  const inviteList={
+    idList:selectedCustomers.value,
+    type: "2"
+  }
+  // alert(`将向 ${selectedCustomers.value.length} 位客户发送邮件邀请`);
+  // 实际项目中应该调用相应的API sendInviteMessageBatch
+  const response = await  sendInviteMessageBatch(inviteList)
+  if (response.code === 200) {
+    successToast('发送成功')
+  }
+}
+
+// 发送短信邀请
+const sendSmsInvitation = async () => {
+  if (selectedCustomers.value.length === 0) return;
+  // 这里添加发送短信邀请的逻辑
+  console.log('发送短信邀请给:', selectedCustomers.value);
+  alert(`将向 ${selectedCustomers.value.length} 位客户发送短信邀请`);
+  const inviteList={
+    idList:selectedCustomers.value,
+    type: "1"
+  }
+  const response = await  sendInviteMessageBatch(inviteList)
+  if (response.code === 200) {
+    successToast('发送成功')
+  }
+}
+
+// 切换客户选择
+const toggleCustomerSelection = (id) => {
+  const index = selectedCustomers.value.indexOf(id);
+  if (index === -1) {
+    selectedCustomers.value.push(id);
+  } else {
+    selectedCustomers.value.splice(index, 1);
+  }
+}
+
+// 全选/取消全选
+const toggleSelectAll = () => {
+  if (selectedCustomers.value.length === customerList.value.length) {
+    // 如果已经全选，则取消全选
+    selectedCustomers.value = [];
+  } else {
+    // 否则全选所有客户
+    selectedCustomers.value = customerList.value.map(customer => customer.userTempId);
   }
 }
 
@@ -403,6 +495,7 @@ const fetchCustomerList = async () => {
     if (response.code === 200) {
       customerList.value = response.rows
       total.value = response.total
+      totalPages.value = Math.ceil(total.value / pageSize.value)
       loading.value = false
     } else {
       errorToast(response.msg || '获取客户列表失败')

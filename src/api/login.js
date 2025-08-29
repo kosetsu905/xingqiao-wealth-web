@@ -58,7 +58,7 @@ export function logout() {
 // 获取验证码
 export function sendCode(data) {
   return request({
-    url: '/auth/client/sendCode',
+    url: '/message/sendCode',
     headers: {
       isToken: false
     },

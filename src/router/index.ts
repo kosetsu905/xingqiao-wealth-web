@@ -45,7 +45,7 @@ import Etf from '../views/agency/Etf.vue'
 const WHITE_LIST: string[] = [
   '/client/auth/login',
   '/client/auth/register',
-  '/client/auth/sendCode',
+  '/message/sendCode',
   '/login',
   '/register',
   '/successRegister',

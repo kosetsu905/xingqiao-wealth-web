@@ -249,11 +249,15 @@ const fetchUserInfo = async () => {
   try {
     const response = await getSystemInfo()
     if (response.code === 200) {
-      userInfo.value = {
-        ...userInfo.value,
-        ...response.data,
-        // 特殊处理资质信息
-        qualifications: response.data.qualifications || []
+      if(response.data!=null){
+        userInfo.value = {
+          ...userInfo.value,
+          ...response.data,
+          // 特殊处理资质信息
+          qualifications: response.data.qualifications || []
+        }
+      }else{
+        successToast('用户消息为空！')
       }
 
     } else {
