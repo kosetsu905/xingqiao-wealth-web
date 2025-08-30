@@ -1,9 +1,9 @@
 import request from '@/utils/request'
 
 // 获取用户信息
-export function getSystemInfo() {
+export function getEmployeeInfo() {
     return request({
-        url: '/system/agency/employ/getInfo',
+        url: '/system/agency/employee/getInfo',
         method: 'get'
     })
 }

@@ -135,7 +135,7 @@
 import { ref, onMounted } from 'vue'
 import Header from "@/components/agency/Header.vue"
 import { useToast } from "@/composables/useToast.js"
-import {getSystemInfo, uploadAvatar} from "@/api/employ.js"
+import {getEmployeeInfo, uploadAvatar} from "@/api/employee.js"
 import {uploadFile} from "@/api/file.js";
 import cache from "@/plugins/cache.js";
 
@@ -247,7 +247,7 @@ const formatAsset = (asset) => {
 // 获取用户信息
 const fetchUserInfo = async () => {
   try {
-    const response = await getSystemInfo()
+    const response = await getEmployeeInfo()
     if (response.code === 200) {
       if(response.data!=null){
         userInfo.value = {

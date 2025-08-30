@@ -39,14 +39,14 @@
           <div :class="[
         'progress-circle',
         isIdentityStepCompleted ? 'bg-success text-white' :
-        (currentSection === 'identity' || currentSection === 'professional' || currentSection === 'editIng' || currentSection === 'authIng')
+        (currentSection === 'identity' || currentSection === 'professional' ||  currentSection === 'authIng')
           ? 'bg-success text-white' : 'bg-gray-200 text-gray-500'
       ]">2
           </div>
           <span :class="[
         'text-sm font-medium',
         isIdentityStepCompleted ? 'text-success' :
-        (currentSection === 'identity' || currentSection === 'professional' || currentSection === 'editIng' || currentSection === 'authIng')
+        (currentSection === 'identity' || currentSection === 'professional' || currentSection === 'authIng' )
           ? 'text-success' : 'text-gray-400'
       ]">身份验证</span>
         </div>
@@ -58,14 +58,14 @@
           <div :class="[
         'progress-circle',
         isProfessionalStepCompleted ? 'bg-success text-white' :
-        (currentSection === 'professional' || currentSection === 'editIng' || currentSection === 'authIng')
+        (currentSection === 'professional' ||  currentSection === 'authIng')
           ? 'bg-success text-white' : 'bg-gray-200 text-gray-500'
       ]">3
           </div>
           <span :class="[
         'text-sm font-medium',
         isProfessionalStepCompleted ? 'text-success' :
-        (currentSection === 'professional' || currentSection === 'editIng' || currentSection === 'authIng')
+        (currentSection === 'professional' ||  currentSection === 'authIng')
           ? 'text-success' : 'text-gray-400'
       ]">资质验证</span>
         </div>
@@ -73,13 +73,13 @@
       'progress-line',
       (isPersonalStepCompleted && isIdentityStepCompleted && isProfessionalStepCompleted) ? 'bg-success' : 'bg-gray-200'
     ]"></div>
-        <div class="progress-step" @click="goToEkycView('editIng')">
+        <div class="progress-step" @click="goToEkycView('authIng')">
           <div :class="['progress-circle',
-        (currentSection === 'editIng' || currentSection === 'authIng'||status === '1') ? 'bg-success text-white' : 'bg-gray-200 text-gray-500'
+        ( currentSection === 'authIng'||status === '1') ? 'bg-success text-white' : 'bg-gray-200 text-gray-500'
       ]">4
           </div>
           <span :class="['text-sm font-medium',
-        (currentSection === 'editIng' || currentSection === 'authIng'||status === '1') ? 'text-success' : 'text-gray-400'
+        ( currentSection === 'authIng'||status === '1') ? 'text-success' : 'text-gray-400'
       ]">审核步骤</span>
         </div>
       </div>
@@ -566,7 +566,7 @@
         </div>
 
         <!-- 认证中 -->
-        <div v-show="currentSection === 'editIng' && (!status || status === '0' ||  status==='3')" class="form-section">
+        <div v-show="currentSection === 'authIng' && (!status || status === '0')" class="form-section">
           <div class="text-center py-12">
             <div class="w-20 h-20 bg-inherit/10 rounded-full flex items-center justify-center mx-auto mb-6">
               <i class="fa fa-check text-3xl text-success"></i>
@@ -626,6 +626,78 @@
                     class="px-6 py-2 bg-primary text-white rounded-lg hover:bg-primary/90 transition-custom">
               提交审核
             </button>
+          </div>
+        </div>
+
+        <!-- 成功审核 -->
+        <div v-show="currentSection === 'authIng' && status === '2'" class="form-section">
+          <div class="text-center py-12">
+            <div class="w-20 h-20 bg-success/10 rounded-full flex items-center justify-center mx-auto mb-6">
+              <i class="fa fa-check text-3xl text-success"></i>
+            </div>
+            <h2 class="text-xl font-semibold text-dark mb-3">认证申请已提交成功</h2>
+            <p class="text-dark-3 mb-8">我们已收到您的认证申请，将在1-3个工作日内完成审核</p>
+            <div class="bg-light-2/50 p-4 rounded-lg max-w-md mx-auto mb-8">
+              <div class="flex items-start">
+                <div class="bg-primary/10 p-2 rounded-full mr-3">
+                  <i class="fa fa-info-circle text-primary"></i>
+                </div>
+                <div class="text-left">
+                  <h3 class="font-medium text-dark mb-1">审核进度通知</h3>
+                  <p class="text-sm text-dark-3">我们将通过短信和系统消息通知您审核结果</p>
+                  <p class="text-sm text-dark-3 mt-1">您也可以在"个人信息"页面查看审核状态</p>
+                </div>
+              </div>
+            </div>
+            <button type="button" @click="backToProfessional"
+                    class="px-6 py-2 bg-light-2 text-dark-2 rounded-lg hover:bg-light-1 transition-custom">
+              <i class="fa fa-arrow-left mr-2"></i>
+              上一步
+            </button>
+            <button type="button" @click="submitAuth"
+                    class="px-6 py-2 bg-primary text-white rounded-lg hover:bg-primary/90 transition-custom">
+              提交审核
+            </button>
+          </div>
+        </div>
+
+        <!-- 审核失败 -->
+        <!-- 审核失败 -->
+        <div v-show="currentSection === 'authIng' && status === '-1'" class="form-section">
+          <div class="text-center py-8">
+            <div class="w-20 h-20 bg-red-500/10 rounded-full flex items-center justify-center mx-auto mb-6">
+              <i class="fa fa-times text-3xl text-red-500"></i>
+            </div>
+            <h2 class="text-xl font-semibold text-dark mb-3">审核失败</h2>
+            <p class="text-dark-3 mb-8">您的EKYC审核未通过，请根据以下备注提示信息修改后重新提交</p>
+
+            <!-- 审核备注展示 -->
+            <div v-if="form.auditInfoRespList && form.auditInfoRespList.length > 0"
+                 class="bg-red-500/5 border border-red-500/20 rounded-lg p-4 max-w-2xl mx-auto mb-8 text-left">
+              <h3 class="font-medium text-dark mb-3 flex items-center">
+                <i class="fa fa-info-circle text-red-500 mr-2"></i>审核备注
+              </h3>
+              <ul class="space-y-2">
+                <li v-for="(item, index) in form.auditInfoRespList"
+                    :key="index"
+                    class="flex items-start">
+                  <i v-if="item.remark" class="fa fa-circle text-red-500 text-xs mt-1.5 mr-2 flex-shrink-0"></i>
+                  <span  v-if="item.remark" class="text-dark-3 text-sm">{{ item.remark }}</span>
+                </li>
+              </ul>
+            </div>
+
+            <div class="flex justify-center gap-4">
+              <button type="button" @click="backToProfessional"
+                      class="px-6 py-2 bg-light-2 text-dark-2 rounded-lg hover:bg-light-1 transition-custom">
+                <i class="fa fa-arrow-left mr-2"></i>
+                上一步
+              </button>
+              <button type="button" @click="submitAuth"
+                      class="px-6 py-2 bg-primary text-white rounded-lg hover:bg-primary/90 transition-custom">
+                重新提交审核
+              </button>
+            </div>
           </div>
         </div>
       </div>
@@ -722,17 +794,9 @@ if (currentSection.value === '' && status.value !== '2') {
 
 
 const goToEkycView = (step) => {
-  // 允许在特定状态下导航到不同步骤
-  if ('editIng' === step && (status.value === '0' || status.value === '3')) {
-    currentSection.value = step;
-  } else if (status.value !== '1' && status.value !== '2') {
-    currentSection.value = step;
-  } else if ('editIng' === step && status.value === '1') {
-    step = 'authIng';
-    currentSection.value = step;
-  } else {
-    currentSection.value = step;
-  }
+
+  currentSection.value = step;
+
 };
 
 
@@ -760,7 +824,7 @@ const authStatusInfo = computed(() => {
       textClass: 'text-success',
       icon: 'fa fa-check-circle'
     };
-  } else if (status.value === '3') {
+  } else if (status.value === '-1') {
     result = {
       text: '审核失败',
       bgClass: 'bg-red-500/10',
@@ -879,6 +943,11 @@ const populateFormData = (data) => {
 
   if (data.professionalExperience !== null) form.professionalExperience = data.professionalExperience;
 
+  if (data.auditInfoRespList !== null){
+    form.auditInfoRespList = data.auditInfoRespList;
+  }
+
+
   // 更新状态值（只在data.status不为null时更新）
   if (data.status !== undefined && data.status !== null) {
     status.value = data.status.toString();  // 确保转换为字符串
@@ -933,7 +1002,8 @@ const form = reactive({
   phoneNumber: '',
   email: '',
   manager: '',
-  address: ''
+  address: '',
+  auditInfoRespList: []
 });
 
 // 添加新的认证类型
@@ -978,16 +1048,7 @@ const goToAuth = () => {
   if (validateProfessionalForm()) {
     // 调转审核页面
     console.log('提交表单数据:', form);
-    if(!status.value || status.value === '0'|| status.value === '3'){
-      // 更新状态为准备提交审核页面
-      currentSection.value = 'editIng';
-    }
-
-    if(status.value && status.value === '1'){
-      // 更新状态为准备提交审核页面
-      currentSection.value = 'authIng';
-    }
-
+    currentSection.value = 'authIng';
   }
 };
 
@@ -1145,7 +1206,7 @@ const isProfessionalStepCompleted = computed(() => {
 
 const isEditingAllowed = computed(() => {
   // 只有在认证中(0)和认证失败(3)状态下才允许编辑
-  return !status.value || status.value === '0' || status.value === '3';
+  return !status.value || status.value === '0' || status.value === '-1';
   // return true;
 });
 
