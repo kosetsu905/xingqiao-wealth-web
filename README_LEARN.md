@@ -13,3 +13,10 @@ npm cache verify
 
 #打包
 npm run build   # 或 yarn build
+
+
+#环境依赖
+node 版本
+v22.17.0
+
+

@@ -101,7 +101,8 @@ const navItems = ref([
   { label: '风险评估', activeIndex: 4, handler: toggleRiskAssessment },
   { label: '投资分析', activeIndex: 5, handler: goToAnalysis },
   { label: '交易记录', activeIndex: 6, handler: goToTransaction },
-  { label: '退出', activeIndex: 7, handler: goToLogin }
+  { label: 'ekyc认证', activeIndex: 7, handler: goToEkyc },
+  { label: '退出', activeIndex: 8, handler: goToLogin }
 ]);
 
 
@@ -126,7 +127,13 @@ watch(() => route.path, (newPath) => {
   }
 }, { immediate: true })
 
-
+function goToEkyc () {
+  console.log('ekyc认证')
+  currentTabActive.value =2;
+  router.push({
+    path: '/client/ekycClientIndex'
+  })
+}
 
 function goToIndex () {
   console.log('首页')
