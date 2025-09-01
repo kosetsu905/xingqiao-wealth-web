@@ -107,7 +107,14 @@
         </div>
       </div>
     </div>
+    <button type="button" @click="test1()" class="px-8 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 font-medium">
+      <i class="fas fa-calculator mr-2"></i>
+      调转测试页面1
+    </button>
+
+
   </div>
+
 
   <footer class="bg-white border-t border-gray-200 py-4">
     <div class="container mx-auto px-4">
@@ -133,6 +140,7 @@
 
 
 <script setup>
+
 import Header from '@/components/client/Header.vue'
 import { useRouter } from 'vue-router'
 import {ref,onMounted,onBeforeUnmount } from "vue";
@@ -216,27 +224,11 @@ onBeforeUnmount(() => {
     chart.destroy();
   }
 });
-
-
-const toggleRiskAssessment  = () =>{
+const test1 = () => {
+  console.log('测试页面1')
   router.push({
-    path: '/client/risk'
+    path: '/client/test1'
   })
-}
-
-const goToPersonalInfo  = () =>{
-  console.log('个人信息页')
-  router.push('/client/userInfo');
-}
-
-const goToAccountManagement = () => {
-  console.log('账户设置')
-  router.push('/client/account');
-}
-
-// 添加产品管理跳转方法
-const goToProductManagement= () => {
-  router.push('/client/product');
 }
 
 </script>
