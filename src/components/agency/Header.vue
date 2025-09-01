@@ -157,7 +157,7 @@ function handleNavClick(item) {
   localCurrentTabActive.value = item.activeIndex
   //判断是包含/logout
   if(item.path.includes('/logout')){
-    localStorage.removeItem('agency-token')
+    localStorage.removeItem('access_token')
     router.push('/login')
     return;
   }

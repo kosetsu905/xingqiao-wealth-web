@@ -287,7 +287,7 @@ const handleSubmit = async () => {
       console.log('登录成功')
       console.log(res.data.access_token)
       setToken(res.data.access_token)
-      localStorage.setItem('agency-token', res.data.access_token)
+      localStorage.setItem('access_token', res.data.access_token)
       localStorage.setItem('avatar', res.data.avatar)
       localStorage.setItem('userName', res.data.userName)
       if(props.loginObject.userType === '02'){

@@ -277,62 +277,6 @@
               </div>
             </div>
 
-            <!-- 安全设置 -->
-            <div class="bg-white rounded-xl shadow-sm p-5 mb-6">
-              <h3 class="font-semibold text-gray-800 mb-4">安全设置</h3>
-
-              <div class="space-y-4">
-                <div class="flex flex-col md:flex-row justify-between items-start md:items-center p-4 border border-gray-200 rounded-lg hover:border-primary/50 transition-colors">
-                  <div>
-                    <h4 class="font-medium text-gray-800">登录密码</h4>
-                    <p class="text-sm text-gray-500 mt-1">最后修改: 2025-05-20</p>
-                  </div>
-                  <button class="mt-2 md:mt-0 px-4 py-1.5 text-sm rounded-lg border border-gray-300 text-gray-700 hover:bg-gray-50 transition-colors">
-                    修改密码
-                  </button>
-                </div>
-
-                <div class="flex flex-col md:flex-row justify-between items-start md:items-center p-4 border border-gray-200 rounded-lg hover:border-primary/50 transition-colors">
-                  <div>
-                    <h4 class="font-medium text-gray-800">支付密码</h4>
-                    <p class="text-sm text-gray-500 mt-1">已设置 · 最后修改: 2025-05-20</p>
-                  </div>
-                  <button class="mt-2 md:mt-0 px-4 py-1.5 text-sm rounded-lg border border-gray-300 text-gray-700 hover:bg-gray-50 transition-colors">
-                    修改支付密码
-                  </button>
-                </div>
-
-                <div class="flex flex-col md:flex-row justify-between items-start md:items-center p-4 border border-gray-200 rounded-lg hover:border-primary/50 transition-colors">
-                  <div>
-                    <h4 class="font-medium text-gray-800">绑定手机号</h4>
-                    <p class="text-sm text-gray-500 mt-1">已绑定: 138****6789</p>
-                  </div>
-                  <button class="mt-2 md:mt-0 px-4 py-1.5 text-sm rounded-lg border border-gray-300 text-gray-700 hover:bg-gray-50 transition-colors">
-                    更换手机号
-                  </button>
-                </div>
-
-                <div class="flex flex-col md:flex-row justify-between items-start md:items-center p-4 border border-gray-200 rounded-lg hover:border-primary/50 transition-colors">
-                  <div>
-                    <h4 class="font-medium text-gray-800">邮箱验证</h4>
-                    <p class="text-sm text-gray-500 mt-1">已验证: example@email.com</p>
-                  </div>
-                  <button class="mt-2 md:mt-0 px-4 py-1.5 text-sm rounded-lg border border-gray-300 text-gray-700 hover:bg-gray-50 transition-colors">
-                    更换邮箱
-                  </button>
-                </div>
-
-                <div class="flex flex-col md:flex-row justify-between items-start md:items-center p-4 border border-gray-200 rounded-lg hover:border-primary/50 transition-colors">
-                  <div>
-                    <h4 class="font-medium text-gray-800">实名认证</h4>
-                    <p class="text-sm text-gray-500 mt-1">已认证 · 姓名: 张先生 · 身份证: 310************123</p>
-                  </div>
-                  <button class="mt-2 md:mt-0 px-4 py-1.5 text-sm rounded-lg border border-gray-300 text-gray-700 hover:bg-gray-50 transition-colors">
-                    查看详情
-                  </button>
-                </div>
-              </div>
-            </div>
           </div>
         </div>
       </main>

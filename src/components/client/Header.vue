@@ -18,7 +18,7 @@
             <a
                 v-for="item in navItems"
                 :key="item.activeIndex"
-                @click="item.handler"
+                @click.prevent="handleNavClick(item)"
                 :class="[
         'py-2 rounded-md text-sm font-medium transition-custom',
         currentTabActive === item.activeIndex
@@ -62,7 +62,7 @@
           <a
               v-for="item in navItems"
               :key="item.activeIndex"
-              @click.stop.prevent="item.handler"
+              @click.prevent="handleNavClick(item)"
               :class="[
               'py-2 rounded-md text-base font-medium',
               currentTabActive === item.activeIndex
@@ -85,55 +85,71 @@ import { useRouter,useRoute } from 'vue-router'
 const router = useRouter()
 const route = useRoute()
 // 响应式状态控制
-import {onBeforeUnmount, onMounted, ref, watch} from "vue";
-
+import {computed, onBeforeUnmount, onMounted, ref, watch} from "vue";
+const localCurrentTabActive = ref(0)
 const isMenuOpen = ref(false)
 const dropdownRef = ref(null)
-const currentTabActive = ref(0)
 
+const props = defineProps({
+  from: {
+    type: String,
+    default: ''
+  },
+  currentTabActive: {
+    type: Number,
+    default: null
+  }
+})
 
 // 在脚本部分添加导航配置
 const navItems = ref([
-  { label: '首页', activeIndex: 0, handler: goToIndex },
-  { label: '个人信息', activeIndex: 1, handler: goToPersonalInfo },
-  { label: '账户设置', activeIndex: 2, handler: goToAccountManagement },
-  { label: '投资产品', activeIndex: 3, handler: goToProductManagement },
-  { label: '风险评估', activeIndex: 4, handler: toggleRiskAssessment },
-  { label: '投资分析', activeIndex: 5, handler: goToAnalysis },
-  { label: '交易记录', activeIndex: 6, handler: goToTransaction },
-  { label: 'ekyc认证', activeIndex: 7, handler: goToEkyc },
-  { label: '退出', activeIndex: 8, handler: goToLogin }
+  { label: '首页', activeIndex: 0, path: '/client/index' },
+  { label: '个人信息', activeIndex: 1, path: '/client/userInfo'},
+  { label: 'KYC认证', activeIndex: 2, path: '/client/ekycClientIndex'},
+  { label: '退出', activeIndex: 3, path: '/logout' }
 ]);
 
 
-// 改进后的路由监听
-const routeMapping = [
-  { path: '/client/index', index: 0 },
-  { path: '/client/userInfo', index: 1 },
-  { path: '/client/account', index: 2 },
-  { path: '/client/product', index: 3 },
-  { path: '/client/risk', index: 4 },
-  { path: '/client/analysis', index: 5 }, // 新增投资分析路由
-  { path: '/client/transaction', index: 6}, // 新增交易记录路由
-  { path: '/logout', index: 7 }
-];
-
-watch(() => route.path, (newPath) => {
-  console.log('路由变化:', newPath)
-  // 通过遍历映射表简化判断逻辑
-  const matchedRoute = routeMapping.find(r => newPath.startsWith(r.path))
-  if (matchedRoute) {
-    currentTabActive.value = matchedRoute.index
+// 处理菜单点击事件
+function handleNavClick(item) {
+  // 更新本地状态
+  localCurrentTabActive.value = item.activeIndex
+  //判断是包含/logout
+  if(item.path.includes('/logout')){
+    localStorage.removeItem('access_token')
+    router.push('/login')
+    return;
   }
-}, { immediate: true })
 
-function goToEkyc () {
-  console.log('ekyc认证')
-  currentTabActive.value =2;
-  router.push({
-    path: '/client/ekycClientIndex'
-  })
+  if (item.path) {
+    router.push(item.path)
+  }
 }
+
+
+// 计算当前激活的tab，优先使用传入的props，否则使用本地状态
+const currentTabActive = computed(() => {
+  return props.currentTabActive !== null ? props.currentTabActive : localCurrentTabActive.value
+})
+
+
+// 监听路由变化，更新当前激活的菜单项（仅在没有传入currentTabActive时）
+watch(
+    () => route.path,
+    (newPath) => {
+      // 只有在没有通过props指定currentTabActive时才自动更新
+      if (props.currentTabActive === null) {
+        const activeItem = navItems.value.find(item =>
+            item.path && newPath.startsWith(item.path)
+        )
+        if (activeItem) {
+          localCurrentTabActive.value = activeItem.activeIndex
+        }
+      }
+    },
+    { immediate: true }
+)
+
 
 function goToIndex () {
   console.log('首页')
@@ -143,77 +159,12 @@ function goToIndex () {
   })
 }
 
-function goToLogin () {
-  console.log('登录页')
-  currentTabActive.value =0;
-  localStorage.removeItem('client-token')
-  router.push({
-    path: '/login'
-  })
-}
-
-
-function goToPersonalInfo () {
-  console.log('个人信息')
-  currentTabActive.value =1;
-  router.push({
-    path: '/client/userInfo'
-  })
-}
 
 
 function toggleMessage () {
   console.log('消息页')
   router.push({
     path: '/client/message'
-  })
-}
-
-
-function goToAnalysis () {
-  currentTabActive.value =5;
-  router.push({
-    path: '/client/analysis'
-  })
-}
-
-
-function goToTransaction () {
-  currentTabActive.value =6;
-  router.push({
-    path: '/client/transaction'
-  })
-}
-
-function goToAccountManagement () {
-  console.log('账户设置')
-  currentTabActive.value =2;
-  router.push({
-    path: '/client/account'
-  })
-}
-
-function goToProductManagement () {
-  console.log('投资产品')
-  currentTabActive.value =3;
-  router.push({
-    path: '/client/product'
-  })
-}
-
-function toggleRiskAssessment () {
-  console.log('风险评估管理')
-  currentTabActive.value =4;
-  router.push({
-    path: '/client/risk'
-  })
-}
-
-function logout () {
-  console.log('logout')
-  currentTabActive.value =7;
-  router.push({
-    path: '/client/login'
   })
 }
 

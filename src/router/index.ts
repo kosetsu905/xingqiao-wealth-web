@@ -21,7 +21,7 @@ import Insurance from '../views/agency/Insurance.vue'
 import Globalinvestmentfund from '../views/agency/Globalinvestmentfund.vue'
 import Digitalcurrency from '../views/agency/Digitalcurrency.vue'
 import EkycIndex from '../views/agency/EkycIndex.vue'
-import EkycClientIndex from '../views/client/EkycIndex.vue'
+import EkycClientIndex from '../views/client/EkycIndexDemo.vue'
 import AgencyUserInfo from '../views/agency/UserInfo.vue'
 import CustomerInfo from '../views/agency/CustomerInfo.vue'
 import CustomerList from '../views/agency/CustomerList.vue'
@@ -122,12 +122,8 @@ export const router = createRouter({
 router.beforeEach(async (to, _from, next) => {
   console.log('路由守卫触发:', to.path)
 
-  // 获取 token（假设存在 localStorage 中）
-  const clientToken = localStorage.getItem('client-token')
-  console.log("clientToken:"+clientToken)
-
-  const agencyToken = localStorage.getItem('agency-token')
-  console.log("agencyToken:"+agencyToken)
+  const accessToken = localStorage.getItem('access_token')
+  console.log("accessToken:"+accessToken)
 
   // 判断是否需要登录权限的路由
   const requiresAuth = to.matched.some(record => record.meta?.requiresAuth)
@@ -135,11 +131,11 @@ router.beforeEach(async (to, _from, next) => {
 
   // 校验 token 合法性
   if (requiresAuth) {
-    if (to.path.startsWith('/agency')&&!agencyToken) {
+    if (to.path.startsWith('/agency')&&!accessToken) {
       console.log("校验agency token")
       // token 不存在，跳转到登录页
       next({ path: '/login' })
-    }if (to.path.startsWith('/client')&&!clientToken) {
+    }if (to.path.startsWith('/client')&&!accessToken) {
       console.log("校验client token")
       // token 不存在，跳转到登录页
       next({ path: '/login' })
