@@ -28,38 +28,73 @@ type StockPoint = {
   close: number;
 };
 
-// 获取股票数据
-import { getStockData } from '@/api/coin'
+const stockInfo = ref({
+  symbol: "",
+  name: "",
+  lastPrice: 0,
+  lastPriceUp: true,
+  change: 0,
+  changePercent: 0,
+  high: 0,
+  highUp: true,
+  low: 0,
+  lowUp: true,
+  volume: 0,
+  turnover: 0,
+  lastUpdated: "",
+  preMarketPrice: 0,
+  preMarketPriceUp: true,
+  preMarketChange: 0,
+  preMarketChangePercent: 0,
+  preMarketHigh: 0,
+  preMarketLow: 0,
+  preMarketVolume: 0,
+  preMarketTurnover: 0
+});
 
-async function fetchStockData(symbol: string, interval: string): Promise<StockPoint[]> {
+// 获取股票数据
+import { getStockData } from "@/api/coin";
+
+// 获取股票行情和公司名
+async function fetchStockInfo(symbol: string, interval: string) {
   try {
-    const result = await getStockData(symbol, interval)
-    if (!result?.data || !Array.isArray(result.data)) return []
-    return result.data.map((d: any) => ({
+    const result = await getStockData(symbol, interval);
+    const stockArray = result?.data?.data;
+    if (!stockArray || !Array.isArray(stockArray)) return null;
+
+    const data = stockArray.map((d: any) => ({
       time: Math.floor(new Date(d.time).getTime() / 1000),
       value: parseFloat(d.close),
       open: parseFloat(d.open),
       high: parseFloat(d.high),
       low: parseFloat(d.low),
-      close: parseFloat(d.close)
-    }))
+      close: parseFloat(d.close),
+      volume: Number(d.volume) || 0
+    }));
+
+    return {
+      symbol: result.data.symbol,
+      companyName: result.data.companyName,
+      data,
+      preMarketLatest: result.data.preMarketLatest || {}
+    };
   } catch (e) {
-    console.error(e)
-    return []
+    console.error(e);
+    return null;
   }
 }
 
-
-// 更新图表
+// 更新图表和行情
 async function updateChart() {
   if (!chart) return;
 
-  const data = await fetchStockData(stockInput.value, intervalSelect.value);
+  const info = await fetchStockInfo(stockInput.value, intervalSelect.value);
+  if (!info) return;
 
-  // 按时间升序排序
-  data.sort((a, b) => a.time - b.time);
-
+  const data = info.data;
   if (!data.length) return;
+
+  data.sort((a, b) => a.time - b.time);
 
   if (chartType.value === "Line") {
     lineSeries?.setData(data.map((d) => ({ time: d.time, value: d.value })));
@@ -76,6 +111,66 @@ async function updateChart() {
     );
     lineSeries?.setData([]);
   }
+
+  // 最新价和涨跌
+  const latest = data[data.length - 1];
+  const prev = data.length > 1 ? data[data.length - 2] : latest;
+  const change = latest.close - prev.close;
+  const changePercent = prev.close ? (change / prev.close) * 100 : 0;
+
+  const high = Math.max(...data.map((d) => d.high));
+  const low = Math.min(...data.map((d) => d.low));
+  const volume = data.reduce((sum, d) => sum + (d.volume || 0), 0);
+  const turnover = data.reduce(
+    (sum, d) => sum + (d.close || 0) * (d.volume || 0),
+    0
+  );
+
+  const d = new Date(latest.time * 1000);
+  const formattedTime = `${d.toLocaleString("en-US", {
+    month: "short"
+  })} ${d.getDate()} ${d.getFullYear()} ${d.getHours()}:${d.getMinutes()}:${d.getSeconds()} ET`;
+
+  // --- 使用后端返回的 preMarketLatest ---
+  const preMarket = info.preMarketLatest || {};
+
+  stockInfo.value = {
+    symbol: info.symbol,
+    name: info.companyName,
+    lastPrice: latest.close.toFixed(3),
+    lastPriceUp: change >= 0,
+    change: change.toFixed(3),
+    changePercent: changePercent.toFixed(2),
+    high: high.toFixed(3),
+    highUp: high >= latest.close,
+    low: low.toFixed(3),
+    lowUp: low >= latest.close,
+    volume,
+    turnover,
+    lastUpdated: formattedTime,
+    preMarketPrice: preMarket.close?.toFixed(3) || 0,
+    preMarketPriceUp:
+      preMarket.close && preMarket.open
+        ? preMarket.close >= preMarket.open
+        : true,
+    preMarketChange:
+      preMarket.close && preMarket.open
+        ? (preMarket.close - preMarket.open).toFixed(3)
+        : 0,
+    preMarketChangePercent:
+      preMarket.close && preMarket.open
+        ? (((preMarket.close - preMarket.open) / preMarket.open) * 100).toFixed(
+            2
+          )
+        : 0,
+    preMarketHigh: preMarket.high?.toFixed(3) || 0,
+    preMarketLow: preMarket.low?.toFixed(3) || 0,
+    preMarketVolume: preMarket.volume || 0,
+    preMarketTurnover:
+      preMarket.close && preMarket.volume
+        ? preMarket.close * preMarket.volume
+        : 0
+  };
 }
 
 onMounted(() => {
@@ -122,13 +217,6 @@ onMounted(() => {
     candleSeries = null;
   });
 });
-
-onBeforeUnmount(() => {
-  chart?.remove();
-  chart = null;
-  lineSeries = null;
-  candleSeries = null;
-});
 </script>
 
 <template>
@@ -160,6 +248,64 @@ onBeforeUnmount(() => {
       <button style="margin-left: 10px" @click="updateChart">
         Refresh Chart
       </button>
+    </div>
+
+    <!-- 行情信息栏 -->
+    <div
+      id="stock-info"
+      style="padding: 10px; background: #fff; border-bottom: 1px solid #ddd"
+    >
+      <div style="font-size: 18px; font-weight: bold">
+        {{ stockInfo.symbol }} {{ stockInfo.name }}
+      </div>
+      <div style="color: gray; font-size: 12px">
+        {{ stockInfo.marketStatus }} {{ stockInfo.lastUpdated }}
+      </div>
+      <div style="margin-top: 5px; font-size: 20px; font-weight: bold">
+        <span :style="{ color: stockInfo.lastPriceUp ? 'green' : 'red' }">
+          {{ stockInfo.lastPrice }}
+          {{ stockInfo.lastPriceUp ? "↑" : "↓" }}
+        </span>
+      </div>
+      <div style="margin-top: 5px; font-size: 14px">
+        <span :style="{ color: stockInfo.change >= 0 ? 'green' : 'red' }">{{
+          stockInfo.change
+        }}</span>
+        <span :style="{ color: stockInfo.change >= 0 ? 'green' : 'red' }"
+          >({{ stockInfo.changePercent }}%)</span
+        >
+      </div>
+      <div style="margin-top: 5px; font-size: 12px">
+        <span :style="{ color: stockInfo.highUp ? 'green' : 'red' }"
+          >High {{ stockInfo.high }}</span
+        >
+        &nbsp;&nbsp;
+        <span :style="{ color: stockInfo.lowUp ? 'green' : 'red' }"
+          >Low {{ stockInfo.low }}</span
+        >
+        &nbsp;&nbsp; Volume {{ (stockInfo.volume / 1e6).toFixed(2) }}M
+      </div>
+      <div style="margin-top: 5px; font-size: 12px; color: gray">
+        Pre-Mkt
+        <span :style="{ color: stockInfo.preMarketPriceUp ? 'green' : 'red' }">
+          {{ stockInfo.preMarketPrice }} </span
+        >&nbsp;&nbsp;
+        <span
+          :style="{ color: stockInfo.preMarketChange >= 0 ? 'green' : 'red' }"
+        >
+          {{ stockInfo.preMarketChange }} </span
+        >&nbsp;&nbsp;
+        <span
+          :style="{ color: stockInfo.preMarketChange >= 0 ? 'green' : 'red' }"
+        >
+          ({{ stockInfo.preMarketChangePercent }}%)
+        </span>
+        &nbsp;&nbsp; {{ stockInfo.lastUpdated }} &nbsp;&nbsp; High
+        <span style="color: green">{{ stockInfo.preMarketHigh }}</span> Turnover
+        {{ (stockInfo.preMarketTurnover / 1e6).toFixed(2) }}M &nbsp;&nbsp; Low
+        <span style="color: red">{{ stockInfo.preMarketLow }}</span> Volume
+        {{ (stockInfo.preMarketVolume / 1e6).toFixed(2) }}M
+      </div>
     </div>
 
     <!-- 图表容器 -->
