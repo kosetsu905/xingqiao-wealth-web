@@ -269,7 +269,7 @@ import {ref, onMounted, watch} from 'vue'
 import {useRouter, useRoute} from 'vue-router'
 import Header from "@/components/agency/Header.vue"
 import {useToast} from '@/composables/useToast'
-import {saveCustomerInfo, getCustomerInfo, updateCustomerInfo} from '@/api/customer'
+import {saveCustomerInfo, getCustomerInfo, updateCustomerInfo} from '@/api/employee.js'
 const router = useRouter()
 const route = useRoute()
 const {successToast, errorToast} = useToast()

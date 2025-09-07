@@ -1,6 +1,6 @@
 import request from "@/utils/request.js";
 
-export function getEkycReturnUrl(data) {
+export function getEkycReturnUrlDemo(data) {
     return request({
         url: `/system/client/customer/getEkycReturnUrlDemo`,
         method: 'post',

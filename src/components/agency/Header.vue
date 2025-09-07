@@ -46,9 +46,6 @@
                     class="flex items-center space-x-2 focus:outline-none">
               <img v-if="userAvatar" :src="userAvatar" alt="用户头像" class="w-8 h-8 rounded-full object-cover border-2 border-primary/20" />
               <span v-if="userName" class="username">{{ userName }}</span>
-<!--              <img src="https://picsum.photos/id/64/40/40" alt="用户头像"-->
-<!--                   class="w-8 h-8 rounded-full object-cover border-2 border-primary/20">-->
-<!--              <span class="md:inline font-medium">{{userName}}</span>-->
             </button>
           </div>
         </div>

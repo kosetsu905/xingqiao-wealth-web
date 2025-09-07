@@ -272,13 +272,7 @@ const handleSubmit = async () => {
       loginType: formData.value.loginType,
       userType: props.loginObject.userType
     }
-    //
-    // if(props.loginObject.userType === '02'){
-    //   await router.push('/client/index')
-    // }
-    // if(props.loginObject.userType=== '01'){
-    //   await router.push('/agency/index')
-    // }
+
 
     // 调用登录接口
     const res = await login(params)
@@ -290,6 +284,8 @@ const handleSubmit = async () => {
       localStorage.setItem('access_token', res.data.access_token)
       localStorage.setItem('avatar', res.data.avatar)
       localStorage.setItem('userName', res.data.userName)
+      localStorage.setItem('phoneNumber', res.data.phoneNumber)
+      localStorage.setItem('email', res.data.email)
       if(props.loginObject.userType === '02'){
         await router.push('/client/index')
       }

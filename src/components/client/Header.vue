@@ -24,7 +24,7 @@
         currentTabActive === item.activeIndex
           ? 'bg-primary hover:bg-primary/90 text-white px-4'
           : 'text-gray-600 hover:text-primary px-3']"
-                :style="{ cursor: item.handler ? 'pointer' : 'default' }">
+                :style="{ cursor: 'pointer' }">
               {{ item.label }}
             </a>
           </div>
@@ -33,17 +33,17 @@
           <div @click.prevent="toggleMessage" class="relative">
             <button class="p-2 text-gray-500 hover:text-primary hover:bg-gray-100 rounded-full transition-colors relative">
               <i class="fa-solid fa-bell"></i>
-              <span class="absolute top-0 right-0 h-4 w-4 bg-danger bg-red-500 rounded-full flex items-center justify-center text-white text-xs badge-pulse">3</span>
+              <span class="absolute top-0 right-0 h-4 w-4 bg-red-500 rounded-full flex items-center justify-center text-white text-xs badge-pulse">3</span>
             </button>
           </div>
-          <div class="relative">
+          <div
+              @click.prevent="goToUserInfo()"
+              class="relative cursor-pointer">
             <button id="profile-menu-button"
                     class="flex items-center space-x-2 focus:outline-none">
-              <img src="https://picsum.photos/id/64/40/40" alt="用户头像"
-                   class="w-8 h-8 rounded-full object-cover border-2 border-primary/20">
-              <span class="md:inline font-medium">张先生</span>
+              <img v-if="userAvatar" :src="userAvatar" alt="用户头像" class="w-8 h-8 rounded-full object-cover border-2 border-primary/20" />
+              <span v-if="userName" class="username">{{ userName }}</span>
             </button>
-
           </div>
           <div class="md:hidden">
             <button id="menu-toggle"
@@ -69,7 +69,7 @@
                 ? 'bg-primary hover:bg-primary/90 text-white block px-4 text-center'
                 : 'text-gray-600 hover:text-primary block px-3'
             ]"
-              :style="{ cursor: item.handler ? 'pointer' : 'default' }"
+              :style="{ cursor: 'default'  }"
           >
             {{ item.label }}
           </a>
@@ -89,6 +89,9 @@ import {computed, onBeforeUnmount, onMounted, ref, watch} from "vue";
 const localCurrentTabActive = ref(0)
 const isMenuOpen = ref(false)
 const dropdownRef = ref(null)
+const userName = ref('')
+// 定义响应式数据
+const userAvatar = ref('')
 
 const props = defineProps({
   from: {
@@ -106,7 +109,8 @@ const navItems = ref([
   { label: '首页', activeIndex: 0, path: '/client/index' },
   { label: '个人信息', activeIndex: 1, path: '/client/userInfo'},
   { label: 'KYC认证', activeIndex: 2, path: '/client/ekycClientIndex'},
-  { label: '退出', activeIndex: 3, path: '/logout' }
+  { label: '币币交易', activeIndex: 3, path: "/client/transaction" },
+  { label: '退出', activeIndex: 4, path: '/logout' }
 ]);
 
 
@@ -159,7 +163,12 @@ function goToIndex () {
   })
 }
 
-
+function goToUserInfo () {
+  console.log('个人中心')
+  router.push({
+    path: '/client/userInfo'
+  })
+}
 
 function toggleMessage () {
   console.log('消息页')
@@ -191,6 +200,16 @@ onBeforeUnmount(() => {
 
 onMounted(() => {
   document.addEventListener('click', closeMenuOnOutsideClick)
+  const avatar = localStorage.getItem('avatar')
+  const name = localStorage.getItem('userName')
+
+  if (avatar) {
+    userAvatar.value = avatar
+  }
+
+  if (name) {
+    userName.value = name
+  }
 })
 </script>
 

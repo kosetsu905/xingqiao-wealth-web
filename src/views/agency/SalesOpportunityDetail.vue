@@ -152,7 +152,7 @@ import { ref, onMounted } from 'vue'
 import Header from "@/components/agency/Header.vue";
 import { useRouter, useRoute } from "vue-router";
 import { useToast } from '@/composables/useToast'
-import { getSalesOpportunityDetail } from '@/api/customer'
+import { getSalesOpportunityDetail } from '@/api/employee.js'
 
 const router = useRouter();
 const route = useRoute();

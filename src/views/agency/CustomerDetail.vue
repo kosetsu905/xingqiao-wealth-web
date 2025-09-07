@@ -163,7 +163,7 @@ import { ref, onMounted } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import Header from "@/components/agency/Header.vue"
 import { useToast } from '@/composables/useToast'
-import { getCustomerInfo } from '@/api/customer'
+import { getCustomerInfo } from '@/api/employee.js'
 
 const route = useRoute()
 const router = useRouter()

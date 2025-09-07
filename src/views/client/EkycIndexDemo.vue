@@ -22,7 +22,7 @@
 
 <script setup>
 import { ref, onMounted } from 'vue'
-import {getEkycReturnUrl} from "@/api/clientEkyc.js";
+import {getEkycReturnUrlDemo} from "@/api/clientEkyc.js";
 
 // 响应式数据
 const loading = ref(true)
@@ -76,7 +76,6 @@ const getMetaInfo = () => {
   }
 }
 
-// 请求认证业务接口获取 CertifyUrl
 const fetchCertifyUrl = async () => {
   try {
     if (!metaInfo.value) {
@@ -85,7 +84,7 @@ const fetchCertifyUrl = async () => {
 
     console.log('发送认证初始化请求，MetaInfo:', metaInfo.value)
 
-    const response = await getEkycReturnUrl(JSON.stringify(metaInfo.value));
+    const response = await getEkycReturnUrlDemo(JSON.stringify(metaInfo.value));
     if (response.code===200) {
       const data=response.data;
       console.log('认证初始化数据:', data)
@@ -99,6 +98,7 @@ const fetchCertifyUrl = async () => {
     loading.value = false
   }
 }
+// 请求认证业务接口获取 CertifyUrl
 
 // 跳转到认证页面
 const redirectToAuth = () => {

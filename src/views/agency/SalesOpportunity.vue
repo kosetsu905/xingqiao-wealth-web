@@ -218,7 +218,7 @@ import { ref, onMounted } from 'vue'
 import Header from "@/components/agency/Header.vue";
 import { useRouter, useRoute } from "vue-router";
 import { useToast } from '@/composables/useToast'
-import { createSalesOpportunity, getSalesOpportunityDetail, updateSalesOpportunity } from '@/api/customer'
+import { createSalesOpportunity, getSalesOpportunityDetail, updateSalesOpportunity } from '@/api/employee.js'
 
 const router = useRouter();
 const route = useRoute();

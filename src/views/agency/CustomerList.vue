@@ -269,7 +269,7 @@ import { ref, onMounted } from 'vue'
 import Header from "@/components/agency/Header.vue";
 import { useRouter } from 'vue-router';
 import { useToast } from '@/composables/useToast'
-import {deleteCustomerInfo, getCustomerList} from '@/api/customer'
+import {deleteCustomerInfo, getCustomerList} from '@/api/employee.js'
 import {sendInviteMessageBatch} from "@/api/message.js";
 
 const router = useRouter();

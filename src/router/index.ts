@@ -22,7 +22,7 @@ import Insurance from '../views/agency/Insurance.vue'
 import Globalinvestmentfund from '../views/agency/Globalinvestmentfund.vue'
 import Digitalcurrency from '../views/agency/Digitalcurrency.vue'
 import EkycIndex from '../views/agency/EkycIndex.vue'
-import EkycClientIndex from '../views/client/EkycIndexDemo.vue'
+import EkycClientIndex from '../views/client/KycIndex.vue'
 import AgencyUserInfo from '../views/agency/UserInfo.vue'
 import CustomerInfo from '../views/agency/CustomerInfo.vue'
 import CustomerList from '../views/agency/CustomerList.vue'
@@ -43,6 +43,7 @@ import TradingCenter from "@/views/agency/TradingCenter.vue";
 import News from "@/views/agency/News.vue";
 import Academy from "@/views/agency/Academy.vue";
 import Etf from '../views/agency/Etf.vue'
+import FaceRecognitionSuccess from '../views/common/FaceRecognitionSuccess.vue'
 
 const WHITE_LIST: string[] = [
   '/client/auth/login',
@@ -53,6 +54,7 @@ const WHITE_LIST: string[] = [
   '/successRegister',
   '/successEditPwd',
   '/forgetPwdPage',
+  '/faceRecognitionSuccess',
   '/401',
   '/404',
 ];
@@ -103,6 +105,7 @@ const routes = [
   { path: '/agency/academy', component: Academy },
   { path: '/401', component: one,meta:{requiresAuth: false} },
   { path: '/404', component: two,meta:{requiresAuth: false} },
+  { path: '/faceRecognitionSuccess', component: FaceRecognitionSuccess,meta:{requiresAuth: false} },
 ]
 
 // 为路由批量添加 meta 信息
