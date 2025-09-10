@@ -76,7 +76,7 @@
               <input
                   v-model="formData.fullName"
                   type="text"
-                  :disabled="faseAuth"
+                  :disabled="faseAuth==='T'"
                   class="w-full px-4 py-2 border border-neutral-300 rounded-lg focus:ring-2 focus:ring-primary/30 focus:border-primary outline-none transition-all"
                   placeholder="请输入真实姓名">
             </div>
@@ -90,7 +90,7 @@
                       type="radio"
                       name="gender"
                       value="1"
-                      :disabled="faseAuth"
+                      :disabled="faseAuth.value==='T'"
                       class="w-4 h-4 text-primary focus:ring-primary"
                       checked>
                   <span class="ml-2 text-neutral-700">男</span>
@@ -100,7 +100,7 @@
                       v-model="formData.gender"
                       type="radio"
                       name="gender"
-                      :disabled="faseAuth"
+                      :disabled="faseAuth==='T'"
                       value="2"
                       class="w-4 h-4 text-primary focus:ring-primary">
                   <span class="ml-2 text-neutral-700">女</span>
@@ -112,7 +112,7 @@
                   class="text-danger">*</span></label>
               <select
                   v-model="formData.idType"
-                  :disabled="faseAuth"
+                  :disabled="faseAuth==='T'"
                   class="w-full px-4 py-2 border border-neutral-300 rounded-lg focus:ring-2 focus:ring-primary/30 focus:border-primary outline-none transition-all">
                 <option value="id-card">居民身份证</option>
                 <option value="passport">护照</option>
@@ -124,7 +124,7 @@
               <input
                   v-model="formData.idNumber"
                   type="text"
-                  :disabled="faseAuth"
+                  :disabled="faseAuth==='T'"
                   class="w-full px-4 py-2 border border-neutral-300 rounded-lg focus:ring-2 focus:ring-primary/30 focus:border-primary outline-none transition-all"
                   placeholder="请输入证件号码">
             </div>
@@ -134,7 +134,7 @@
               <input
                   v-model="formData.expiryDate"
                   type="date"
-                  :disabled="faseAuth"
+                  :disabled="faseAuth.value==='T'"
                   class="w-full px-4 py-2 border border-neutral-300 rounded-lg focus:ring-2 focus:ring-primary/30 focus:border-primary outline-none transition-all">
             </div>
             <div>
@@ -143,7 +143,7 @@
               <input
                   v-model="formData.birthDay"
                   type="date"
-                  :disabled="faseAuth"
+                  :disabled="faseAuth.value==='T'"
                   class="w-full px-4 py-2 border border-neutral-300 rounded-lg focus:ring-2 focus:ring-primary/30 focus:border-primary outline-none transition-all">
             </div>
 
@@ -164,7 +164,7 @@
                     ref="idFrontInput"
                     @change="handleFrontIdUpload"
                     type="file"
-                    :disabled="faseAuth"
+                    :disabled="faseAuth.value==='T'"
                     class="hidden"
                     id="id-front"
                     accept="image/jpeg,image/png">
@@ -187,7 +187,7 @@
                   <button
                       @click="removeFile('frontIdFileUrl')"
                       type="button"
-                      :disabled="faseAuth"
+                      :disabled="faseAuth.value==='T'"
                       class="absolute top-2 right-2 w-6 h-6 bg-red-500 text-white rounded-full flex items-center justify-center hover:bg-red-600 transition-colors">
                     <i class="fa fa-times text-xs"></i>
                   </button>
@@ -206,7 +206,7 @@
                     ref="idBackInput"
                     @change="handleBackIdUpload"
                     type="file"
-                    :disabled="faseAuth"
+                    :disabled="faseAuth.value==='T'"
                     class="hidden"
                     id="id-back"
                     accept="image/jpeg,image/png">
@@ -229,7 +229,7 @@
                   <button
                       @click="removeFile('backIdFileUrl')"
                       type="button"
-                      :disabled="faseAuth"
+                      :disabled="faseAuth.value==='T'"
                       class="absolute top-2 right-2 w-6 h-6 bg-red-500 text-white rounded-full flex items-center justify-center hover:bg-red-600 transition-colors">
                     <i class="fa fa-times text-xs"></i>
                   </button>
@@ -244,7 +244,7 @@
                   <input
                       v-model="formData.agreeTerms"
                       type="checkbox"
-                      :disabled="faseAuth"
+                      :disabled="faseAuth.value==='T'"
                       class="w-4 h-4 text-primary focus:ring-primary border-neutral-300 rounded"
                       id="agree-terms">
                 </div>
@@ -348,7 +348,7 @@
                           class="bg-primary/10 text-primary px-6 py-2 rounded-lg hover:bg-primary/20 transition-colors flex items-center mx-auto"
                           :disabled="faceRecognitionLoading">
                     <i v-if="faceRecognitionLoading" class="fa fa-spinner fa-spin mr-2"></i>
-                    {{ faceRecognitionLoading ? '启动中...' : faseAuth?"认证成功":'开始人脸识别' }}
+                    {{ faceRecognitionLoading ? '启动中...' : faseAuth&&faseAuth === 'T'?"认证成功":(faseAuth&&faseAuth==='F'?"认证失败":'开始人脸识别')}}
                   </button>
                 </div>
               </div>
@@ -434,7 +434,7 @@ const loading = ref(true)
 const frontIdUploading = ref(false)
 const backIdUploading = ref(false)
 const sdkLoaded = ref(false)
-const faseAuth = ref(false)
+const faseAuth = ref('')
 const error = ref(null)
 const metaInfo = ref(null)
 const router = useRouter();
@@ -473,7 +473,6 @@ const startFaceRecognition = async () => {
     console.info('开始人脸识别');
     // 设置加载状态为true，显示加载提示
     faceRecognitionLoading.value = true;
-    faseAuth.value = false;
     if (!metaInfo.value) {
       metaInfo.value = getMetaInfo();
     }
@@ -562,8 +561,11 @@ const loadStepDataFromDb = async () => {
       if(response.data){
         Object.assign(formData, response.data)
         if(response.data.faceVerifyStatus===2){
-          faseAuth.value=true
+          faseAuth.value='T'
           formData.agreeTerms= true
+        }
+        if(response.data.faceVerifyStatus===3){
+          faseAuth.value='F'
         }
       }
     }
@@ -641,7 +643,7 @@ const handleFrontIdUpload = async (event) => {
       formData.frontIdFileUrl = await uploadFileToOSS(file);
       successToast('证件正面照上传成功');
     } catch (error) {
-      console.error('上传证件正面照失败:', error);
+      console.log('上传证件正面照失败:');
       errorToast('上传证件正面照失败，请重试');
     }finally {
       frontIdUploading.value=false;
@@ -670,12 +672,14 @@ const handleBackIdUpload = async (event) => {
 
 // 上传文件到OSS
 const uploadFileToOSS = async (file) => {
+  console.log('上传文件到OSS')
   try {
     const formData = new FormData();
     formData.append('file', file);
     formData.append('dir', "ekyc");
     // 调用后端上传接口
     const response = await uploadFile(formData);
+    console.log('上传文件到结束')
 
     if (response.code === 200) {
       return response.data; // 假设后端返回OSS文件访问URL
@@ -754,8 +758,6 @@ const nextStep = () => {
 };
 
 const saveOneStep=async () => {
-
-
   const data={
     ...formData,
     phoneNumber:phoneNumberRef.value,
@@ -765,28 +767,30 @@ const saveOneStep=async () => {
   console.log('当前步骤:', currentStep.value);
   // 查询人脸认证结果
   let response0 = await getEkycResult()
-  if (response0.code === 200&&response0.data&&response0.data==='T') {
-    faseAuth.value=true
-    goToStep(2)
-  }else{
+  if (response0.code === 200&&response0.data) {
+    faseAuth.value=response0.data
+  }
+  if (faseAuth.value==='F') {
     console.log('提交数据:', data)
     let response = await saveKycInfo(data)
     if (response.code === 200) {
       successToast('客户信息提交成功')
       goToStep(2)
     } else {
-      errorToast(response.msg || ('提交失败'))
+      goToStep(2)
     }
-
   }
-
 };
 
 
 
 // 上一步
-const prevStep = () => {
+const prevStep = async () => {
   if (currentStep.value > 1) {
+    if (currentStep.value === 2) {
+      // 后台查询已经保存的数据
+      await loadStepDataFromDb()
+    }
     goToStep(currentStep.value - 1);
   }
 };
@@ -825,6 +829,7 @@ onUnmounted(() => {
 
 // 在onMounted中添加FAQ事件监听
 onMounted(async () => {
+  console.log('开始加载...')
   const phoneNumber=localStorage.getItem('phoneNumber');
   const email=localStorage.getItem('email');
   console.info('手机号:', phoneNumber)
@@ -872,8 +877,8 @@ onMounted(async () => {
   if(currentStep.value===2){
     // 查询人脸认证结果
     const  response0=await getEkycResult()
-    if (response0.code === 200&&response0.data&&response0.data==='T') {
-      faseAuth.value=true
+    if (response0.code === 200&&response0.data) {
+      faseAuth.value=response0.data
       formData.faceVerifyStatus=2
     }
   }
