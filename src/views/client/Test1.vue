@@ -6,14 +6,28 @@ import {
   type ISeriesApi,
   type UTCTimestamp,
   LineSeries,
-  CandlestickSeries
+  CandlestickSeries,
+  HistogramSeries
 } from "lightweight-charts";
 
-const container = ref<HTMLDivElement | null>(null);
+const mainContainer = ref<HTMLDivElement | null>(null);
+const volumeContainer = ref<HTMLDivElement | null>(null);
+const kdjContainer = ref<HTMLDivElement | null>(null);
 
-let chart: IChartApi | null = null;
+let mainChart: IChartApi | null = null;
+let volumeChart: IChartApi | null = null;
+let kdjChart: IChartApi | null = null;
+
 let lineSeries: ISeriesApi<"Line"> | null = null;
 let candleSeries: ISeriesApi<"Candlestick"> | null = null;
+let vwapSeries: ISeriesApi<"Line"> | null = null;
+
+let volSeries: ISeriesApi<"Histogram"> | null = null;
+let volRatioSeries: ISeriesApi<"Line"> | null = null;
+
+let kLine: ISeriesApi<"Line"> | null = null;
+let dLine: ISeriesApi<"Line"> | null = null;
+let jLine: ISeriesApi<"Line"> | null = null;
 
 const stockInput = ref("AAPL");
 const intervalSelect = ref("5min");
@@ -26,6 +40,7 @@ type StockPoint = {
   high: number;
   low: number;
   close: number;
+  volume: number;
 };
 
 const stockInfo = ref({
@@ -54,6 +69,71 @@ const stockInfo = ref({
 
 // 获取股票数据
 import { getStockData } from "@/api/coin";
+
+// -------------------- 指标计算函数 --------------------
+function calcVWAP(data: any[]) {
+  let cumulativePV = 0;
+  let cumulativeVol = 0;
+  return data.map((d) => {
+    cumulativePV += d.close * d.volume;
+    cumulativeVol += d.volume;
+    const vwap = cumulativeVol > 0 ? cumulativePV / cumulativeVol : d.close;
+    return { time: d.time, value: vwap };
+  });
+}
+
+function calcVOL(data: any[]) {
+  return data.map((d, i) => {
+    const prevClose = i > 0 ? data[i - 1].close : d.close;
+    const up = d.close >= prevClose;
+    return {
+      time: d.time,
+      value: d.volume,
+      color: up ? "green" : "red"
+    };
+  });
+}
+
+function calcVolRatio(data: any[], period = 5) {
+  return data.map((d, i) => {
+    if (i < period) return { time: d.time, value: 1 };
+    const avg =
+      data.slice(i - period, i).reduce((sum, x) => sum + x.volume, 0) / period;
+    return {
+      time: d.time,
+      value: avg > 0 ? d.volume / avg : 1
+    };
+  });
+}
+
+function calcKDJ(
+  data: any[],
+  period = 9,
+  kSmoothing = 3,
+  dSmoothing = 3
+): { K: any[]; D: any[]; J: any[] } {
+  let K = 50;
+  let D = 50;
+  const result = { K: [] as any[], D: [] as any[], J: [] as any[] };
+
+  data.forEach((d, i) => {
+    const start = Math.max(0, i - period + 1);
+    const slice = data.slice(start, i + 1);
+    const low = Math.min(...slice.map((x) => x.low));
+    const high = Math.max(...slice.map((x) => x.high));
+
+    const RSV = high !== low ? ((d.close - low) / (high - low)) * 100 : 50;
+    K = (2 / 3) * K + (1 / 3) * RSV;
+    D = (2 / 3) * D + (1 / 3) * K;
+    const J = 3 * K - 2 * D;
+
+    result.K.push({ time: d.time, value: K });
+    result.D.push({ time: d.time, value: D });
+    result.J.push({ time: d.time, value: J });
+  });
+
+  return result;
+}
 
 // 获取股票行情和公司名
 async function fetchStockInfo(symbol: string, interval: string) {
@@ -86,7 +166,7 @@ async function fetchStockInfo(symbol: string, interval: string) {
 
 // 更新图表和行情
 async function updateChart() {
-  if (!chart) return;
+  if (!mainChart) return;
 
   const info = await fetchStockInfo(stockInput.value, intervalSelect.value);
   if (!info) return;
@@ -111,6 +191,19 @@ async function updateChart() {
     );
     lineSeries?.setData([]);
   }
+
+  // ===== 指标计算 =====
+  const vwapData = calcVWAP(data);
+  const volData = calcVOL(data);
+  const volRatioData = calcVolRatio(data, 5);
+  const kdjData = calcKDJ(data, 9);
+
+  vwapSeries?.setData(vwapData);
+  volSeries?.setData(volData);
+  volRatioSeries?.setData(volRatioData);
+  kLine?.setData(kdjData.K);
+  dLine?.setData(kdjData.D);
+  jLine?.setData(kdjData.J);
 
   // 最新价和涨跌
   const latest = data[data.length - 1];
@@ -174,47 +267,74 @@ async function updateChart() {
 }
 
 onMounted(() => {
-  if (!container.value) return;
+  if (!mainContainer.value || !volumeContainer.value || !kdjContainer.value)
+    return;
 
-  chart = createChart(container.value, {
-    width: container.value.clientWidth,
-    height: container.value.clientHeight, // 使用容器当前高度
-    layout: {
-      background: { color: "#ffffff" },
-      textColor: "#000000"
-    },
-    rightPriceScale: { borderVisible: false },
-    timeScale: { borderVisible: false }
+  // --- 主图 ---
+  mainChart = createChart(mainContainer.value, {
+    width: mainContainer.value.clientWidth,
+    height: mainContainer.value.clientHeight,
+    layout: { background: { color: "#fff" }, textColor: "#000" }
   });
-
-  lineSeries = chart.addSeries(LineSeries, { color: "blue", lineWidth: 2 });
-  candleSeries = chart.addSeries(CandlestickSeries, {
+  lineSeries = mainChart.addSeries(LineSeries, { color: "blue", lineWidth: 2 });
+  candleSeries = mainChart.addSeries(CandlestickSeries, {
     upColor: "green",
     downColor: "red",
     borderUpColor: "green",
     borderDownColor: "red",
     wickUpColor: "green",
-    wickDownColor: "red",
-    borderVisible: true,
-    wickVisible: true
+    wickDownColor: "red"
   });
+  vwapSeries = mainChart.addSeries(LineSeries, {
+    color: "orange",
+    lineWidth: 1
+  });
+
+  // --- 成交量图 ---
+  volumeChart = createChart(volumeContainer.value, {
+    width: volumeContainer.value.clientWidth,
+    height: volumeContainer.value.clientHeight,
+    layout: { background: { color: "#fff" }, textColor: "#000" }
+  });
+  volSeries = volumeChart.addSeries(HistogramSeries);
+  volRatioSeries = volumeChart.addSeries(LineSeries, { color: "blue" });
+
+  // --- KDJ 图 ---
+  kdjChart = createChart(kdjContainer.value, {
+    width: kdjContainer.value.clientWidth,
+    height: kdjContainer.value.clientHeight,
+    layout: { background: { color: "#fff" }, textColor: "#000" }
+  });
+  kLine = kdjChart.addSeries(LineSeries, { color: "green" });
+  dLine = kdjChart.addSeries(LineSeries, { color: "red" });
+  jLine = kdjChart.addSeries(LineSeries, { color: "purple" });
 
   updateChart();
 
   // --- 自动适应窗口大小 ---
   const handleResize = () => {
-    if (!chart || !container.value) return;
-    chart.resize(container.value.clientWidth, container.value.clientHeight);
+    if (!mainChart || !volumeChart || !kdjChart) return;
+    mainChart.resize(
+      mainContainer.value!.clientWidth,
+      mainContainer.value!.clientHeight
+    );
+    volumeChart.resize(
+      volumeContainer.value!.clientWidth,
+      volumeContainer.value!.clientHeight
+    );
+    kdjChart.resize(
+      kdjContainer.value!.clientWidth,
+      kdjContainer.value!.clientHeight
+    );
   };
   window.addEventListener("resize", handleResize);
 
   // 在组件卸载时移除监听
   onBeforeUnmount(() => {
     window.removeEventListener("resize", handleResize);
-    chart?.remove();
-    chart = null;
-    lineSeries = null;
-    candleSeries = null;
+    mainChart?.remove();
+    volumeChart?.remove();
+    kdjChart?.remove();
   });
 });
 </script>
@@ -259,7 +379,7 @@ onMounted(() => {
         {{ stockInfo.symbol }} {{ stockInfo.name }}
       </div>
       <div style="color: gray; font-size: 12px">
-        {{ stockInfo.marketStatus }} {{ stockInfo.lastUpdated }}
+        {{ stockInfo.lastUpdated }}
       </div>
       <div style="margin-top: 5px; font-size: 20px; font-weight: bold">
         <span :style="{ color: stockInfo.lastPriceUp ? 'green' : 'red' }">
@@ -308,7 +428,44 @@ onMounted(() => {
       </div>
     </div>
 
-    <!-- 图表容器 -->
-    <div ref="container" style="flex: 1"></div>
+    <!-- 上方主图 -->
+    <div style="flex: 3; border-bottom: 1px solid #ddd">
+      <div ref="mainContainer" style="height: 100%"></div>
+    </div>
+
+    <!-- 下方横向容器，放两个副图 -->
+    <div style="flex: 1; display: flex; gap: 8px; padding: 4px">
+      <!-- 左：成交量 -->
+      <div style="flex: 1; border: 1px solid #ddd; border-radius: 6px">
+        <div
+          style="
+            padding: 4px;
+            font-size: 12px;
+            font-weight: bold;
+            background: #fafafa;
+            border-bottom: 1px solid #eee;
+          "
+        >
+          Volume + Volume Ratio
+        </div>
+        <div ref="volumeContainer" style="height: calc(100% - 22px)"></div>
+      </div>
+
+      <!-- 右：KDJ -->
+      <div style="flex: 1; border: 1px solid #ddd; border-radius: 6px">
+        <div
+          style="
+            padding: 4px;
+            font-size: 12px;
+            font-weight: bold;
+            background: #fafafa;
+            border-bottom: 1px solid #eee;
+          "
+        >
+          KDJ Indicator
+        </div>
+        <div ref="kdjContainer" style="height: calc(100% - 22px)"></div>
+      </div>
+    </div>
   </div>
 </template>
