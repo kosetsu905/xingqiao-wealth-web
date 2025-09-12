@@ -765,21 +765,21 @@ const saveOneStep=async () => {
   }
 
   console.log('当前步骤:', currentStep.value);
-  // 查询人脸认证结果
-  let response0 = await getEkycResult()
-  if (response0.code === 200&&response0.data) {
-    faseAuth.value=response0.data
-  }
-  if (faseAuth.value==='F') {
+
+  if (faseAuth.value!=='T') {
+    // 查询人脸认证结果
+    let response0 = await getEkycResult()
+    if (response0.code === 200&&response0.data) {
+      faseAuth.value=response0.data
+    }
+
     console.log('提交数据:', data)
     let response = await saveKycInfo(data)
     if (response.code === 200) {
       successToast('客户信息提交成功')
-      goToStep(2)
-    } else {
-      goToStep(2)
     }
   }
+  goToStep(2)
 };
 
 
