@@ -485,6 +485,9 @@ const handleAvatarUpload = async (event) => {
 // 组件挂载时获取客户信息
 onMounted(() => {
   fetchCustomerInfo()
+  if (localStorage.getItem('avatar')){
+    defaultAvatar.value =localStorage.getItem('avatar')
+  }
 })
 
 </script>

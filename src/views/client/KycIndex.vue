@@ -674,6 +674,13 @@ const handleBackIdUpload = async (event) => {
 const uploadFileToOSS = async (file) => {
   console.log('上传文件到OSS')
   try {
+
+    // 验证文件大小（限制为5MB）
+    if (file.size > 5 * 1024 * 1024) {
+      errorToast('图片大小不能超过5MB')
+      return
+    }
+
     const formData = new FormData();
     formData.append('file', file);
     formData.append('dir', "ekyc");

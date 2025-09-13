@@ -17,7 +17,6 @@
     <!-- 弹框内容 -->
     <div class="p-6">
       <h2 class="text-xl font-bold text-gray-800 mb-6 text-center">验证您的身份</h2>
-
       <!-- Tab导航 -->
       <div class="flex border-b border-gray-200 mb-6">
         <button
@@ -108,7 +107,7 @@
                 placeholder="请输入图形验证码">
             <div class="w-1/3 bg-neutral flex items-center justify-center">
               <img v-if="codeUrl" :src="codeUrl" @click="getCode"
-                   class="w-full h-full object-cover rounded-lg border border-gray-200 bg-white shadow-sm"/>
+                   class="w-full h-full object-cover rounded-lg border border-gray-200 bg-white shadow-sm" alt=""/>
             </div>
           </div>
         </div>
@@ -373,10 +372,7 @@ const goBack = () => {
 </script>
 
 <style scoped>
-.tab-active {
-  border-color: #3b82f6;
-  color: #3b82f6;
-}
+
 
 .input-group {
   display: flex;
