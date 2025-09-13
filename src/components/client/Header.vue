@@ -10,7 +10,7 @@
           <div class="w-8 h-8 bg-primary rounded-lg flex items-center justify-center">
             <i class="fa-solid fa-chart-line text-white text-sm"></i>
           </div>
-          <h1 class="ml-3 text-xl font-bold text-gray-800">财富管理</h1>
+          <h1 class="ml-3 text-xl font-bold text-gray-800">OTC交易平台</h1>
         </div>
         <div class="hidden md:block">
           <!-- 修改后的导航结构 -->
@@ -107,10 +107,14 @@ const props = defineProps({
 // 在脚本部分添加导航配置
 const navItems = ref([
   { label: '首页', activeIndex: 0, path: '/client/index' },
-  { label: '个人信息', activeIndex: 1, path: '/client/userInfo'},
+  { label: '个人中心', activeIndex: 1, path: '/client/userInfo'},
   { label: 'KYC认证', activeIndex: 2, path: '/client/ekycClientIndex'},
-  { label: '币币交易', activeIndex: 3, path: "/client/transaction" },
-  { label: '退出', activeIndex: 4, path: '/logout' }
+  { label: '市场行情', activeIndex: 3, path: "/client/transaction" },
+  { label: '交易', activeIndex: 4, path: "/client/transaction" },
+  { label: '持仓', activeIndex: 5, path: "/client/transaction" },
+  { label: '交易记录', activeIndex: 6, path: "/client/transaction" },
+  { label: '资金管理', activeIndex: 7, path: "/client/transaction" },
+  { label: '退出', activeIndex: 8, path: '/logout' }
 ]);
 
 

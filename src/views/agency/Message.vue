@@ -101,7 +101,7 @@
               <h3 class="font-medium text-gray-900">系统通知</h3>
               <span class="text-xs text-gray-500">1小时前</span>
             </div>
-            <p class="text-gray-700 text-sm mb-2">新版本财富管理系统将于本周六凌晨2点进行维护升级，预计维护时间为4小时，请提前做好准备。</p>
+            <p class="text-gray-700 text-sm mb-2">新版本OTC交易平台系统将于本周六凌晨2点进行维护升级，预计维护时间为4小时，请提前做好准备。</p>
             <div class="flex items-center justify-between">
                             <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-purple-100 text-purple-800">
                                 系统维护
