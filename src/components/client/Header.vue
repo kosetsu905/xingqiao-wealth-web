@@ -109,9 +109,9 @@ const navItems = ref([
   { label: '首页', activeIndex: 0, path: '/client/index' },
   { label: '个人中心', activeIndex: 1, path: '/client/userInfo'},
   { label: 'KYC认证', activeIndex: 2, path: '/client/ekycClientIndex'},
-  { label: '持仓', activeIndex: 3, path: "/client/transaction" },
-  { label: '交易记录', activeIndex: 4, path: "/client/transaction" },
-  { label: '资金管理', activeIndex: 5, path: "/client/transaction" },
+  { label: '交易中心', activeIndex: 3, path: "/client/transaction" },
+  { label: '持仓', activeIndex: 4, path: "/client/transaction2" },
+  { label: '资金管理', activeIndex: 5, path: "/client/transaction3" },
   { label: '退出', activeIndex: 6, path: '/logout' }
 ]);
 

@@ -295,6 +295,7 @@
           <h3 class="text-base md:text-lg font-semibold mb-3 md:mb-4">快速交易</h3>
           <div class="space-y-3 md:space-y-4">
             <button
+                @click="goToTrade()"
                 class="w-full bg-blue-600 hover:bg-blue-700 rounded-lg py-2 md:py-3 flex items-center justify-center">
               <i class="mr-2" data-fa-i2svg="">
                 <svg class="svg-inline--fa fa-money-bill-transfer w-4 h-4" aria-hidden="true" focusable="false"
@@ -307,6 +308,7 @@
               <span class="text-white">买入</span>
             </button>
             <button
+                @click="goToTrade()"
                 class="w-full bg-gray-200 hover:bg-gray-300 rounded-lg py-2 md:py-3 flex items-center justify-center">
               <i class="mr-2" data-fa-i2svg="">
                 <svg class="svg-inline--fa fa-arrow-right-arrow-left w-4 h-4" aria-hidden="true" focusable="false"
@@ -652,6 +654,14 @@ const goToInvestmentProduct = (code) => {
     query: {
       code: code
     }
+  })
+}
+
+// 跳转到投资产品详情页
+const goToTrade = () => {
+  console.log('跳转到交易中心')
+  router.push({
+    path: '/client/transaction'
   })
 }
 

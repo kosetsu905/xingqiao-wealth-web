@@ -8,7 +8,6 @@ import ForgetPwdPage from '../views/login/ForgetPwdPage.vue'
 import RiskTest from '../views/client/RiskTest.vue'
 import Risk from '../views/client/Risk.vue'
 import Analysis from '../views/client/Analysis.vue'
-import TransactionInfo from '../views/client/TransactionInfo.vue'
 import Index from '../views/client/Index.vue'
 import UserInfo from '@/views/client/UserInfo.vue'
 import Account from '../views/client/Account.vue'
@@ -16,6 +15,7 @@ import Message from '../views/client/Message.vue'
 import Product from '../views/client/Product.vue'
 import InvestmentProductList from '../views/client/InvestmentProductList.vue'
 import InvestmentProduct from '../views/client/InvestmentProduct.vue'
+import Transaction from '../views/client/Transaction.vue'
 import one from '../views/common/401.vue'
 import two from '../views/common/404.vue'
 import agencyIndex from '../views/agency/Index.vue'
@@ -78,10 +78,10 @@ const routes = [
   { path: '/client/message', component: Message },
   { path: '/client/product', component: Product },
   { path: '/client/analysis', component: Analysis },
-  { path: '/client/transaction', component: TransactionInfo },
   { path: '/client/ekycClientIndex', component: EkycClientIndex },
   { path: '/client/investmentProductList', component: InvestmentProductList },
   { path: '/client/investmentProduct', component: InvestmentProduct },
+  { path: '/client/transaction', component: Transaction },
   { path: '/agency/index', component: agencyIndex },
   { path: '/agency/insurance', component: Insurance },
   { path: '/agency/globalinvestmentfund', component: Globalinvestmentfund },
