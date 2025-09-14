@@ -160,7 +160,10 @@
         <!-- 股票列表 -->
         <div id="stocks-list" class="bg-white rounded-b-lg divide-y divide-gray-200 border border-gray-200 min-w-[900px]">
           <!-- 动态渲染产品列表 -->
-          <div v-for="(product, index) in products" :key="product.id" class="px-4 py-3 grid grid-cols-12 items-center hover:bg-gray-50">
+          <div v-for="(product, index) in products"
+               :key="product.id"
+               @click="goToInvestmentProduct(product.code)"
+               class="px-4 py-3 grid grid-cols-12 items-center hover:bg-gray-50">
             <div class="col-span-1 flex items-center">
               <input type="checkbox" class="mr-2">
               <span class="text-gray-500 text-sm">{{ index + 1 }}</span>
@@ -461,6 +464,18 @@ const products = ref([
     changePercentClass: 'bg-green-100 text-green-800'
   }
 ])
+
+
+// 跳转到投资产品详情页
+const goToInvestmentProduct = (code) => {
+  console.log('跳转到投资产品详情页')
+  router.push({
+    path: '/client/investmentProduct',
+    query: {
+      code: code
+    }
+  })
+}
 </script>
 
 <style scoped>

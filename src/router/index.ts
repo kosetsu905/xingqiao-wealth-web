@@ -15,6 +15,7 @@ import Account from '../views/client/Account.vue'
 import Message from '../views/client/Message.vue'
 import Product from '../views/client/Product.vue'
 import InvestmentProductList from '../views/client/InvestmentProductList.vue'
+import InvestmentProduct from '../views/client/InvestmentProduct.vue'
 import one from '../views/common/401.vue'
 import two from '../views/common/404.vue'
 import agencyIndex from '../views/agency/Index.vue'
@@ -80,6 +81,7 @@ const routes = [
   { path: '/client/transaction', component: TransactionInfo },
   { path: '/client/ekycClientIndex', component: EkycClientIndex },
   { path: '/client/investmentProductList', component: InvestmentProductList },
+  { path: '/client/investmentProduct', component: InvestmentProduct },
   { path: '/agency/index', component: agencyIndex },
   { path: '/agency/insurance', component: Insurance },
   { path: '/agency/globalinvestmentfund', component: Globalinvestmentfund },

@@ -96,21 +96,34 @@
         </div>
 
         <div class="bg-gray-50 rounded-lg overflow-hidden mb-6 md:mb-8">
-          <div class="grid grid-cols-2 md:grid-cols-4 text-xs md:text-sm">
+          <div class="grid grid-cols-5 text-xs md:text-sm">
+            <div class="p-3 md:p-4 font-medium">名称</div>
+            <div class="p-3 md:p-4 text-right">代码</div>
+            <div class="p-3 md:p-4 text-right">最新价</div>
+            <div class="p-3 md:p-4 text-right">涨跌额</div>
+            <div class="p-3 md:p-4 text-right">涨跌幅</div>
+          </div>
+          <div class="text-xs md:text-sm">
             <template v-for="(market, index) in globalMarkets" :key="index">
-              <div class="p-3 md:p-4 border-b border-gray-200 font-medium">{{ market.name }}</div>
-              <div class="p-3 md:p-4 border-b border-gray-200 text-right">{{ market.value }}</div>
-              <div class="p-3 md:p-4 border-b border-gray-200 text-right" :class="market.changeClass">{{
-                  market.change
-                }}
-              </div>
-              <div class="p-3 md:p-4 border-b border-gray-200 text-right" :class="market.bgClass">{{
-                  market.percent
-                }}
+              <div class="grid grid-cols-5 cursor-pointer hover:bg-gray-100 transition-colors duration-200"
+                   @click="goToInvestmentProduct(market.code)">
+                <div class="p-3 md:p-4 border-b border-gray-200 font-medium">{{ market.name }}</div>
+                <div class="p-3 md:p-4 border-b border-gray-200 text-right text-gray-500">{{ market.code }}</div>
+                <div class="p-3 md:p-4 border-b border-gray-200 text-right">{{ market.value }}</div>
+                <div class="p-3 md:p-4 border-b border-gray-200 text-right" :class="market.changeClass">{{
+                    market.change
+                  }}
+                </div>
+                <div class="p-3 md:p-4 border-b border-gray-200 text-right" :class="market.bgClass">{{
+                    market.percent
+                  }}
+                </div>
               </div>
             </template>
           </div>
         </div>
+
+
 
         <!-- 热门股票 -->
         <div id="hot-stocks" class="mb-6 md:mb-8">
@@ -365,6 +378,7 @@ const marketStatus = ref({
 const globalMarkets = ref([
   {
     name: '纳斯达克',
+    code: 'IXIC.GI',
     value: '21,783.45',
     change: '+42.63',
     percent: '+1.32%',
@@ -373,6 +387,7 @@ const globalMarkets = ref([
   },
   {
     name: '道琼斯',
+    code: 'DJI.GI',
     value: '45,821.57',
     change: '+148.94',
     percent: '+1.40%',
@@ -381,6 +396,7 @@ const globalMarkets = ref([
   },
   {
     name: '标普500',
+    code: 'SPX.GI',
     value: '6,436.15',
     change: '+284.06',
     percent: '+1.48%',
@@ -389,6 +405,7 @@ const globalMarkets = ref([
   },
   {
     name: '港股恒生',
+    code: 'HSI.HI',
     value: '24,512.76',
     change: '+38.42',
     percent: '+0.86%',
@@ -397,6 +414,7 @@ const globalMarkets = ref([
   },
   {
     name: '日经指数',
+    code: 'N225.IX',
     value: '14,265.86',
     change: '+156.34',
     percent: '+1.11%',
@@ -405,6 +423,7 @@ const globalMarkets = ref([
   },
   {
     name: 'BITCOIN',
+    code: 'BTC',
     value: '118,416.98',
     change: '+84.76',
     percent: '+0.24%',
@@ -413,6 +432,7 @@ const globalMarkets = ref([
   },
   {
     name: 'ETHER',
+    code: 'ETH',
     value: '4,686.25',
     change: '-106.29',
     percent: '-0.32%',
@@ -421,6 +441,7 @@ const globalMarkets = ref([
   },
   {
     name: 'SOLANA',
+    code: 'SOL',
     value: '209.42',
     change: '+63.15',
     percent: '+0.40%',
@@ -623,6 +644,16 @@ const goToGlobalMarkets = () => {
   })
 }
 
+// 跳转到投资产品详情页
+const goToInvestmentProduct = (code) => {
+  console.log('跳转到投资产品详情页')
+  router.push({
+    path: '/client/investmentProduct',
+    query: {
+      code: code
+    }
+  })
+}
 
 </script>
 
