@@ -87,3 +87,9 @@ return 403;  # 错误：拦截了前端路由的 /user 路径
 Nginx 匹配规则的核心是“最长前缀优先，正则按序匹配”，而前端路由的优先级依赖于服务器对 index.html 的转发能力。通过合理配置 try_files 和避免规则冲突，可确保前端路由在各种场景下正常工作。
 
 
+
+
+安装npm i @iconify/json @iconify/tailwind -D
+
+
+

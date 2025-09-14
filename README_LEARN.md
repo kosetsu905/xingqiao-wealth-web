@@ -19,4 +19,8 @@ npm run build   # 或 yarn build
 node 版本
 v22.17.0
 
+图标库使用
+npm i @iconify/json @iconify/tailwind -D
+https://yesicon.app/
+
 

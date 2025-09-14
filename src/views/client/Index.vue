@@ -79,16 +79,35 @@
             </h2>
           </div>
         </div>
-
         <!-- 全球市场概览 -->
-        <h3 id="global-markets" class="text-lg md:text-xl font-semibold mb-4">全球市场</h3>
+        <div class="flex justify-between items-center mb-4">
+          <h3 id="global-markets" class="text-lg md:text-xl font-semibold mb-4">全球市场</h3>
+          <span class="text-blue-600 text-sm flex items-center cursor-pointer" @click="goToGlobalMarkets">
+            查看全部
+            <i class="ml-1 text-xs" data-fa-i2svg="">
+              <svg class="svg-inline--fa fa-chevron-right w-3 h-3" aria-hidden="true" focusable="false"
+                   data-prefix="fas" data-icon="chevron-right" role="img" xmlns="http://www.w3.org/2000/svg"
+                   viewBox="0 0 320 512" data-fa-i2svg="">
+                <path fill="currentColor"
+                      d="M310.6 233.4c12.5 12.5 12.5 32.8 0 45.3l-192 192c-12.5 12.5-32.8 12.5-45.3 0s-12.5-32.8 0-45.3L242.7 256 73.4 86.6c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0l192 192z"></path>
+              </svg>
+            </i>
+          </span>
+        </div>
+
         <div class="bg-gray-50 rounded-lg overflow-hidden mb-6 md:mb-8">
           <div class="grid grid-cols-2 md:grid-cols-4 text-xs md:text-sm">
             <template v-for="(market, index) in globalMarkets" :key="index">
               <div class="p-3 md:p-4 border-b border-gray-200 font-medium">{{ market.name }}</div>
               <div class="p-3 md:p-4 border-b border-gray-200 text-right">{{ market.value }}</div>
-              <div class="p-3 md:p-4 border-b border-gray-200 text-right" :class="market.changeClass">{{ market.change }}</div>
-              <div class="p-3 md:p-4 border-b border-gray-200 text-right" :class="market.bgClass">{{ market.percent }}</div>
+              <div class="p-3 md:p-4 border-b border-gray-200 text-right" :class="market.changeClass">{{
+                  market.change
+                }}
+              </div>
+              <div class="p-3 md:p-4 border-b border-gray-200 text-right" :class="market.bgClass">{{
+                  market.percent
+                }}
+              </div>
             </template>
           </div>
         </div>
@@ -123,7 +142,10 @@
                 </div>
                 <div class="text-right">
                   <div class="font-medium text-sm md:text-base">${{ stock.price }}</div>
-                  <div class="text-xs md:text-sm" :class="stock.changeColor">+{{ stock.change }} ({{ stock.percent }})</div>
+                  <div class="text-xs md:text-sm" :class="stock.changeColor">+{{ stock.change }} ({{
+                      stock.percent
+                    }})
+                  </div>
                 </div>
               </div>
               <div class="h-20 md:h-24 w-full mt-2">
@@ -322,22 +344,15 @@ import {
 } from 'chart.js'
 
 const userName = ref('')
+import {useCurrentDate} from '@/composables/composable.js'
+
+const {currentDate} = useCurrentDate()
+
 
 // 注册 Chart.js 组件
 Chart.register(LineController, LineElement, PointElement, LinearScale, CategoryScale, Filler, Tooltip, Legend)
 
 const router = useRouter()
-
-// 计算当前日期和星期
-const currentDate = computed(() => {
-  const now = new Date()
-  const year = now.getFullYear()
-  const month = (now.getMonth() + 1).toString().padStart(2, '0')
-  const day = now.getDate().toString().padStart(2, '0')
-  const weekdays = ['星期日', '星期一', '星期二', '星期三', '星期四', '星期五', '星期六']
-  const weekday = weekdays[now.getDay()]
-  return `${year}年${month}月${day}日 ${weekday}`
-})
 
 
 // 市场状态
@@ -348,14 +363,70 @@ const marketStatus = ref({
 
 // 全球市场数据
 const globalMarkets = ref([
-  { name: '纳斯达克', value: '21,783.45', change: '+42.63', percent: '+1.32%', changeClass: 'text-green-600', bgClass: 'bg-green-100 text-green-800' },
-  { name: '道琼斯', value: '45,821.57', change: '+148.94', percent: '+1.40%', changeClass: 'text-green-600', bgClass: 'bg-green-100 text-green-800' },
-  { name: '标普500', value: '6,436.15', change: '+284.06', percent: '+1.48%', changeClass: 'text-green-600', bgClass: 'bg-green-100 text-green-800' },
-  { name: '港股恒生', value: '24,512.76', change: '+38.42', percent: '+0.86%', changeClass: 'text-green-600', bgClass: 'bg-green-100 text-green-800' },
-  { name: '日经指数', value: '14,265.86', change: '+156.34', percent: '+1.11%', changeClass: 'text-green-600', bgClass: 'bg-green-100 text-green-800' },
-  { name: 'BITCOIN', value: '118,416.98', change: '+84.76', percent: '+0.24%', changeClass: 'text-green-600', bgClass: 'bg-green-100 text-green-800' },
-  { name: 'ETHER', value: '4,686.25', change: '-106.29', percent: '-0.32%', changeClass: 'text-red-600', bgClass: 'bg-red-100 text-red-800' },
-  { name: 'SOLANA', value: '209.42', change: '+63.15', percent: '+0.40%', changeClass: 'text-green-600', bgClass: 'bg-green-100 text-green-800' }
+  {
+    name: '纳斯达克',
+    value: '21,783.45',
+    change: '+42.63',
+    percent: '+1.32%',
+    changeClass: 'text-green-600',
+    bgClass: 'bg-green-100 text-green-800'
+  },
+  {
+    name: '道琼斯',
+    value: '45,821.57',
+    change: '+148.94',
+    percent: '+1.40%',
+    changeClass: 'text-green-600',
+    bgClass: 'bg-green-100 text-green-800'
+  },
+  {
+    name: '标普500',
+    value: '6,436.15',
+    change: '+284.06',
+    percent: '+1.48%',
+    changeClass: 'text-green-600',
+    bgClass: 'bg-green-100 text-green-800'
+  },
+  {
+    name: '港股恒生',
+    value: '24,512.76',
+    change: '+38.42',
+    percent: '+0.86%',
+    changeClass: 'text-green-600',
+    bgClass: 'bg-green-100 text-green-800'
+  },
+  {
+    name: '日经指数',
+    value: '14,265.86',
+    change: '+156.34',
+    percent: '+1.11%',
+    changeClass: 'text-green-600',
+    bgClass: 'bg-green-100 text-green-800'
+  },
+  {
+    name: 'BITCOIN',
+    value: '118,416.98',
+    change: '+84.76',
+    percent: '+0.24%',
+    changeClass: 'text-green-600',
+    bgClass: 'bg-green-100 text-green-800'
+  },
+  {
+    name: 'ETHER',
+    value: '4,686.25',
+    change: '-106.29',
+    percent: '-0.32%',
+    changeClass: 'text-red-600',
+    bgClass: 'bg-red-100 text-red-800'
+  },
+  {
+    name: 'SOLANA',
+    value: '209.42',
+    change: '+63.15',
+    percent: '+0.40%',
+    changeClass: 'text-green-600',
+    bgClass: 'bg-green-100 text-green-800'
+  }
 ])
 
 // 热门股票数据
@@ -423,39 +494,39 @@ const stockData = reactive([
 
 // 热门债券数据
 const bondData = ref([
-  { name: '美国5年期国债', yield: '4.75%', price: '100.32', change: '+0.18%', changeClass: 'text-green-600' },
-  { name: '美国10年期国债', yield: '4.18%', price: '93.74', change: '-0.44%', changeClass: 'text-red-600' },
-  { name: '德国10年期国债', yield: '2.46%', price: '96.85', change: '+0.22%', changeClass: 'text-green-600' },
-  { name: '日本10年期国债', yield: '0.65%', price: '99.43', change: '-0.11%', changeClass: 'text-red-600' },
-  { name: '苹果公司债', yield: '3.45%', price: '101.25', change: '+0.32%', changeClass: 'text-green-600' }
+  {name: '美国5年期国债', yield: '4.75%', price: '100.32', change: '+0.18%', changeClass: 'text-green-600'},
+  {name: '美国10年期国债', yield: '4.18%', price: '93.74', change: '-0.44%', changeClass: 'text-red-600'},
+  {name: '德国10年期国债', yield: '2.46%', price: '96.85', change: '+0.22%', changeClass: 'text-green-600'},
+  {name: '日本10年期国债', yield: '0.65%', price: '99.43', change: '-0.11%', changeClass: 'text-red-600'},
+  {name: '苹果公司债', yield: '3.45%', price: '101.25', change: '+0.32%', changeClass: 'text-green-600'}
 ])
 
 
 // 行业表现数据
 const sectorPerformance = ref([
-  { name: '所有行业', change: '+1.24%', changeClass: 'text-green-600' },
-  { name: '科技', change: '+2.31%', changeClass: 'text-green-600' },
-  { name: '金融', change: '+1.76%', changeClass: 'text-green-600' },
-  { name: '医疗健康', change: '+1.53%', changeClass: 'text-green-600' },
-  { name: '消费品', change: '+0.92%', changeClass: 'text-green-600' },
-  { name: '能源', change: '-0.65%', changeClass: 'text-red-600' },
-  { name: '工业', change: '+0.87%', changeClass: 'text-green-600' }
+  {name: '所有行业', change: '+1.24%', changeClass: 'text-green-600'},
+  {name: '科技', change: '+2.31%', changeClass: 'text-green-600'},
+  {name: '金融', change: '+1.76%', changeClass: 'text-green-600'},
+  {name: '医疗健康', change: '+1.53%', changeClass: 'text-green-600'},
+  {name: '消费品', change: '+0.92%', changeClass: 'text-green-600'},
+  {name: '能源', change: '-0.65%', changeClass: 'text-red-600'},
+  {name: '工业', change: '+0.87%', changeClass: 'text-green-600'}
 ])
 
 // 热门ETF数据
 const etfData = ref([
-  { name: '道琼斯500ETF', code: 'QQQ.DAJ', price: '$1314.27', change: '+1.43%', changeClass: 'text-green-600' },
-  { name: 'SPDR标普500ETF', code: 'SPY.NYSE', price: '$451.89', change: '+1.62%', changeClass: 'text-green-600' },
-  { name: '纳斯达克100ETF', code: 'QQQ.NASDAQ', price: '$451.24', change: '+0.87%', changeClass: 'text-green-600' },
-  { name: '数字货币ETF', code: 'IBIT. Ishare', price: '$392.16', change: '+1.25%', changeClass: 'text-green-600' }
+  {name: '道琼斯500ETF', code: 'QQQ.DAJ', price: '$1314.27', change: '+1.43%', changeClass: 'text-green-600'},
+  {name: 'SPDR标普500ETF', code: 'SPY.NYSE', price: '$451.89', change: '+1.62%', changeClass: 'text-green-600'},
+  {name: '纳斯达克100ETF', code: 'QQQ.NASDAQ', price: '$451.24', change: '+0.87%', changeClass: 'text-green-600'},
+  {name: '数字货币ETF', code: 'IBIT. Ishare', price: '$392.16', change: '+1.25%', changeClass: 'text-green-600'}
 ])
 
 // 热门基金数据
 const fundData = ref([
-  { name: '黑石全球精选基金', code: '005827', price: '$1.4563', change: '+1.28%', changeClass: 'text-green-600' },
-  { name: '富国科技创新基金', code: '008345', price: '$1.9287', change: '+2.16%', changeClass: 'text-green-600' },
-  { name: '富兰克林技术基金', code: '160505', price: '$2.5641', change: '+1.45%', changeClass: 'text-green-600' },
-  { name: '安联500ETF联接', code: '002903', price: '$1.8421', change: '+1.57%', changeClass: 'text-green-600' }
+  {name: '黑石全球精选基金', code: '005827', price: '$1.4563', change: '+1.28%', changeClass: 'text-green-600'},
+  {name: '富国科技创新基金', code: '008345', price: '$1.9287', change: '+2.16%', changeClass: 'text-green-600'},
+  {name: '富兰克林技术基金', code: '160505', price: '$2.5641', change: '+1.45%', changeClass: 'text-green-600'},
+  {name: '安联500ETF联接', code: '002903', price: '$1.8421', change: '+1.57%', changeClass: 'text-green-600'}
 ])
 
 // 图表引用数组
@@ -473,7 +544,7 @@ const createChart = (canvasRef, data, isPositive = true, labels = null) => {
   }
 
   // 如果没有提供标签，则生成默认标签
-  const chartLabels = labels || Array.from({ length: data.length }, (_, i) => `09:${30 + i}`)
+  const chartLabels = labels || Array.from({length: data.length}, (_, i) => `09:${30 + i}`)
 
   // 创建新的图表实例
   canvasRef.chart = new Chart(ctx, {
@@ -545,13 +616,19 @@ onMounted(() => {
   //账号名
   userName.value = localStorage.getItem('userName')
 })
+
+const goToGlobalMarkets = () => {
+  router.push({
+    path: '/client/investmentProductList'
+  })
+}
+
+
 </script>
 
 
 <style scoped>
-.chart-container {
-  width: 100%;
-}
+
 
 .main {
   font-family: 'Inter', sans-serif !important;

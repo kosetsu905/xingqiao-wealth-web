@@ -4,7 +4,7 @@
 
 
   <!-- 主要内容 -->
-  <main  class="container mx-auto px-4 py-8 md:py-12">    <!-- 页面标题 -->
+  <main class="container mx-auto px-4 py-8 md:py-12">    <!-- 页面标题 -->
     <div class="text-center mb-12">
       <h2 class="text-[clamp(1.5rem,3vw,2.5rem)] font-bold text-neutral-800 mb-3">KYC身份认证流程</h2>
       <p class="text-neutral-500 max-w-2xl mx-auto text-balance">
@@ -147,12 +147,12 @@
                   class="w-full px-4 py-2 border border-neutral-300 rounded-lg focus:ring-2 focus:ring-primary/30 focus:border-primary outline-none transition-all">
             </div>
 
-            <div >
+            <div>
               <h3 class=" block text-sm font-medium text-neutral-700 mb-3">证件照片 <span
                   class="text-danger">*</span></h3>
             </div>
-            <div >
-              <h3 > </h3>
+            <div>
+              <h3></h3>
             </div>
             <!-- 证件正面上传区域 -->
             <div>
@@ -170,7 +170,8 @@
                     accept="image/jpeg,image/png">
                 <label for="id-front" class="cursor-pointer">
                   <div v-if="frontIdUploading" class="flex flex-col items-center justify-center">
-                    <div class="w-10 h-10 border-4 border-primary border-t-transparent rounded-full animate-spin mb-2"></div>
+                    <div
+                        class="w-10 h-10 border-4 border-primary border-t-transparent rounded-full animate-spin mb-2"></div>
                     <p class="text-sm text-neutral-500">文件上传中...</p>
                   </div>
                   <div v-else>
@@ -212,7 +213,8 @@
                     accept="image/jpeg,image/png">
                 <label for="id-back" class="cursor-pointer">
                   <div v-if="backIdUploading" class="flex flex-col items-center justify-center">
-                    <div class="w-10 h-10 border-4 border-primary border-t-transparent rounded-full animate-spin mb-2"></div>
+                    <div
+                        class="w-10 h-10 border-4 border-primary border-t-transparent rounded-full animate-spin mb-2"></div>
                     <p class="text-sm text-neutral-500">文件上传中...</p>
                   </div>
                   <div v-else>
@@ -281,7 +283,8 @@
           <!-- 常见问题 -->
           <div class="space-y-4">
             <div class="bg-white rounded-lg shadow-sm overflow-hidden">
-              <button type="button" class="faq-toggle w-full flex justify-between items-center p-5 text-left focus:outline-none">
+              <button type="button"
+                      class="faq-toggle w-full flex justify-between items-center p-5 text-left focus:outline-none">
                 <span class="font-medium">为什么需要进行KYC认证？</span>
                 <i class="fa fa-chevron-down text-neutral-400 transition-transform duration-300"></i>
               </button>
@@ -292,7 +295,8 @@
             </div>
 
             <div class="bg-white rounded-lg shadow-sm overflow-hidden">
-              <button type="button" class="faq-toggle w-full flex justify-between items-center p-5 text-left focus:outline-none">
+              <button type="button"
+                      class="faq-toggle w-full flex justify-between items-center p-5 text-left focus:outline-none">
                 <span class="font-medium">我的个人信息会被安全保护吗？</span>
                 <i class="fa fa-chevron-down text-neutral-400 transition-transform duration-300"></i>
               </button>
@@ -303,7 +307,8 @@
             </div>
 
             <div class="bg-white rounded-lg shadow-sm overflow-hidden">
-              <button type="button" class="faq-toggle w-full flex justify-between items-center p-5 text-left focus:outline-none">
+              <button type="button"
+                      class="faq-toggle w-full flex justify-between items-center p-5 text-left focus:outline-none">
                 <span class="font-medium">审核需要多长时间？</span>
                 <i class="fa fa-chevron-down text-neutral-400 transition-transform duration-300"></i>
               </button>
@@ -314,7 +319,8 @@
             </div>
 
             <div class="bg-white rounded-lg shadow-sm overflow-hidden">
-              <button type="button" class="faq-toggle w-full flex justify-between items-center p-5 text-left focus:outline-none">
+              <button type="button"
+                      class="faq-toggle w-full flex justify-between items-center p-5 text-left focus:outline-none">
                 <span class="font-medium">如果认证失败，我可以重新提交吗？</span>
                 <i class="fa fa-chevron-down text-neutral-400 transition-transform duration-300"></i>
               </button>
@@ -329,7 +335,7 @@
 
         <!-- 步骤2: 人脸验证 -->
         <div id="step2-content" class="bg-white rounded-xl shadow-card p-6 md:p-8 hidden transition-all duration-500">
-          <div >
+          <div>
             <h3 class="text-xl font-bold mb-6 flex items-center">
               <i class="fa fa-map-marker text-primary mr-3"></i>
               人脸验证
@@ -348,7 +354,7 @@
                           class="bg-primary/10 text-primary px-6 py-2 rounded-lg hover:bg-primary/20 transition-colors flex items-center mx-auto"
                           :disabled="faceRecognitionLoading">
                     <i v-if="faceRecognitionLoading" class="fa fa-spinner fa-spin mr-2"></i>
-                    {{ faceRecognitionLoading ? '启动中...' : faseAuth&&faseAuth === 'T'?"认证成功":(faseAuth&&faseAuth==='F'?"认证失败":'开始人脸识别')}}
+                    {{ faceRecognitionLoading ? '启动中...' : faseAuth && faseAuth === 'T' ? "认证成功" : (faseAuth && faseAuth === 'F' ? "认证失败" : '开始人脸识别') }}
                   </button>
                 </div>
               </div>
@@ -535,7 +541,7 @@ const getMetaInfo = () => {
       return info
     } else {
       console.log('getMetaInfo 方法未找到，请检查是否正确加载了阿里云认证 SDK')
-      return  null
+      return null
     }
   } catch (err) {
     error.value = '获取 MetaInfo 失败: ' + err.message
@@ -558,14 +564,14 @@ const loadStepDataFromDb = async () => {
   try {
     const response = await getKycInfo();
     if (response.code === 200) {
-      if(response.data){
+      if (response.data) {
         Object.assign(formData, response.data)
-        if(response.data.faceVerifyStatus===2){
-          faseAuth.value='T'
-          formData.agreeTerms= true
+        if (response.data.faceVerifyStatus === 2) {
+          faseAuth.value = 'T'
+          formData.agreeTerms = true
         }
-        if(response.data.faceVerifyStatus===3){
-          faseAuth.value='F'
+        if (response.data.faceVerifyStatus === 3) {
+          faseAuth.value = 'F'
         }
       }
     }
@@ -573,7 +579,6 @@ const loadStepDataFromDb = async () => {
     console.error('获取数据失败:', error)
   }
 }
-
 
 
 // 更新进度条状态
@@ -594,7 +599,7 @@ const updateProgress = () => {
 
     // 更新进度线
     if (i > 1) {
-      const line = document.getElementById(`line${i-1}`);
+      const line = document.getElementById(`line${i - 1}`);
       if (line) {
         line.classList.remove('progress-line-active', 'progress-line-pending');
         if (i <= currentStep.value) {
@@ -638,15 +643,15 @@ const handleFrontIdUpload = async (event) => {
   const file = event.target.files[0];
   if (file) {
     try {
-      frontIdUploading.value=true;
+      frontIdUploading.value = true;
       // 上传到OSS并获取URL
       formData.frontIdFileUrl = await uploadFileToOSS(file);
       successToast('证件正面照上传成功');
     } catch (error) {
       console.log('上传证件正面照失败:');
       errorToast('上传证件正面照失败，请重试');
-    }finally {
-      frontIdUploading.value=false;
+    } finally {
+      frontIdUploading.value = false;
     }
   }
 };
@@ -657,15 +662,15 @@ const handleBackIdUpload = async (event) => {
   const file = event.target.files[0];
   if (file) {
     try {
-      backIdUploading.value=true;
+      backIdUploading.value = true;
       // 上传到OSS并获取URL
       formData.backIdFileUrl = await uploadFileToOSS(file);
       successToast('证件反面照上传成功');
     } catch (error) {
       console.error('上传证件反面照失败:', error);
       errorToast('上传证件反面照失败，请重试');
-    }finally {
-      backIdUploading.value=false;
+    } finally {
+      backIdUploading.value = false;
     }
   }
 };
@@ -764,20 +769,20 @@ const nextStep = () => {
   }
 };
 
-const saveOneStep=async () => {
-  const data={
+const saveOneStep = async () => {
+  const data = {
     ...formData,
-    phoneNumber:phoneNumberRef.value,
-    email:emailRef.value
+    phoneNumber: phoneNumberRef.value,
+    email: emailRef.value
   }
 
   console.log('当前步骤:', currentStep.value);
 
-  if (faseAuth.value!=='T') {
+  if (faseAuth.value !== 'T') {
     // 查询人脸认证结果
     let response0 = await getEkycResult()
-    if (response0.code === 200&&response0.data) {
-      faseAuth.value=response0.data
+    if (response0.code === 200 && response0.data) {
+      faseAuth.value = response0.data
     }
 
     console.log('提交数据:', data)
@@ -788,7 +793,6 @@ const saveOneStep=async () => {
   }
   goToStep(2)
 };
-
 
 
 // 上一步
@@ -825,7 +829,6 @@ const toggleFaq = (event) => {
 };
 
 
-
 onUnmounted(() => {
   // 移除FAQ事件监听器，防止内存泄漏
   const faqToggles = document.querySelectorAll('.faq-toggle');
@@ -837,12 +840,12 @@ onUnmounted(() => {
 // 在onMounted中添加FAQ事件监听
 onMounted(async () => {
   console.log('开始加载...')
-  const phoneNumber=localStorage.getItem('phoneNumber');
-  const email=localStorage.getItem('email');
+  const phoneNumber = localStorage.getItem('phoneNumber');
+  const email = localStorage.getItem('email');
   console.info('手机号:', phoneNumber)
   // 获取手机号
-  phoneNumberRef.value= phoneNumber
-  emailRef.value= email
+  phoneNumberRef.value = phoneNumber
+  emailRef.value = email
 
   // 添加FAQ事件监听
   const faqToggles = document.querySelectorAll('.faq-toggle');
@@ -875,18 +878,18 @@ onMounted(async () => {
     updateProgress();
   }
 
-  if(currentStep.value===1){
+  if (currentStep.value === 1) {
     // 后台查询已经保存的数据
     await loadStepDataFromDb()
   }
 
   console.log('当前步骤:', currentStep.value);
-  if(currentStep.value===2){
+  if (currentStep.value === 2) {
     // 查询人脸认证结果
-    const  response0=await getEkycResult()
-    if (response0.code === 200&&response0.data) {
-      faseAuth.value=response0.data
-      formData.faceVerifyStatus=2
+    const response0 = await getEkycResult()
+    if (response0.code === 200 && response0.data) {
+      faseAuth.value = response0.data
+      formData.faceVerifyStatus = 2
     }
   }
 

@@ -109,7 +109,6 @@ const navItems = ref([
   { label: '首页', activeIndex: 0, path: '/client/index' },
   { label: '个人中心', activeIndex: 1, path: '/client/userInfo'},
   { label: 'KYC认证', activeIndex: 2, path: '/client/ekycClientIndex'},
-  { label: '市场行情', activeIndex: 3, path: "/client/transaction" },
   { label: '交易', activeIndex: 4, path: "/client/transaction" },
   { label: '持仓', activeIndex: 5, path: "/client/transaction" },
   { label: '交易记录', activeIndex: 6, path: "/client/transaction" },

@@ -14,7 +14,7 @@ import UserInfo from '@/views/client/UserInfo.vue'
 import Account from '../views/client/Account.vue'
 import Message from '../views/client/Message.vue'
 import Product from '../views/client/Product.vue'
-import Test1 from '../views/client/Test1.vue'
+import InvestmentProductList from '../views/client/InvestmentProductList.vue'
 import one from '../views/common/401.vue'
 import two from '../views/common/404.vue'
 import agencyIndex from '../views/agency/Index.vue'
@@ -44,6 +44,8 @@ import News from "@/views/agency/News.vue";
 import Academy from "@/views/agency/Academy.vue";
 import Etf from '../views/agency/Etf.vue'
 import FaceRecognitionSuccess from '../views/common/FaceRecognitionSuccess.vue'
+
+
 
 const WHITE_LIST: string[] = [
   '/client/auth/login',
@@ -77,7 +79,7 @@ const routes = [
   { path: '/client/analysis', component: Analysis },
   { path: '/client/transaction', component: TransactionInfo },
   { path: '/client/ekycClientIndex', component: EkycClientIndex },
-  { path: '/client/test1', component: Test1 },
+  { path: '/client/investmentProductList', component: InvestmentProductList },
   { path: '/agency/index', component: agencyIndex },
   { path: '/agency/insurance', component: Insurance },
   { path: '/agency/globalinvestmentfund', component: Globalinvestmentfund },

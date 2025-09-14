@@ -30,6 +30,8 @@
     "ws": "^8.18.3"
   },
   "devDependencies": {
+    "@iconify/json": "^2.2.383",
+    "@iconify/tailwind": "^1.2.0",
     "@types/node": "^24.0.10",
     "@uni-helper/vite-plugin-uni-tailwind": "^0.15.2",
     "@vitejs/plugin-vue": "^5.2.4",

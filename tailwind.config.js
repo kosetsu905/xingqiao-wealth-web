@@ -1,4 +1,5 @@
 /** @type {import('tailwindcss').Config} */
+const { addDynamicIconSelectors } = require('@iconify/tailwind')
 export default {
   mode: 'jit',
   content: [
@@ -53,5 +54,6 @@ export default {
       }
     },
   },
-  plugins: [],
+  plugins: [addDynamicIconSelectors()],
 }
+
