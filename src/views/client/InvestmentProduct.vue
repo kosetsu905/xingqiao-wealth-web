@@ -3,7 +3,9 @@
   <!-- Header -->
   <Header/>
 
+
   <div class="main bg-white text-black font-sans">
+
     <!-- 头部 -->
     <div class="ml-0 md:ml-16 p-4 md:p-6 bg-white border-b border-gray-200">
       <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
@@ -105,14 +107,71 @@
               </button>
             </div>
             <div class="flex gap-1 md:gap-2">
-              <button class="p-1.5 md:p-2 bg-gray-200 hover:bg-gray-300 rounded text-sm">
-                <i data-fa-i2svg=""><svg class="svg-inline--fa fa-chart-line w-4 h-4" aria-hidden="true" focusable="false" data-prefix="fas" data-icon="chart-line" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" data-fa-i2svg=""><path fill="currentColor" d="M64 64c0-17.7-14.3-32-32-32S0 46.3 0 64V400c0 44.2 35.8 80 80 80H480c17.7 0 32-14.3 32-32s-14.3-32-32-32H80c-8.8 0-16-7.2-16-16V64zm406.6 86.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L320 210.7l-57.4-57.4c-12.5-12.5-32.8-12.5-45.3 0l-112 112c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0L240 221.3l57.4 57.4c12.5 12.5 32.8 12.5 45.3 0l128-128z"></path></svg></i>
+              <button
+                  class="p-1.5 md:p-2 bg-gray-200 hover:bg-gray-300 rounded text-sm"
+                  :class="{ 'bg-blue-100': chartType === 'line' }"
+                  @click="switchChartType('line')"
+              >
+                <i data-fa-i2svg="">
+                  <svg class="svg-inline--fa fa-chart-line w-4 h-4" aria-hidden="true" focusable="false" data-prefix="fas" data-icon="chart-line" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" data-fa-i2svg="">
+                    <path fill="currentColor" d="M64 64c0-17.7-14.3-32-32-32S0 46.3 0 64V400c0 44.2 35.8 80 80 80H480c17.7 0 32-14.3 32-32s-14.3-32-32-32H80c-8.8 0-16-7.2-16-16V64zm406.6 86.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L320 210.7l-57.4-57.4c-12.5-12.5-32.8-12.5-45.3 0l-112 112c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0L240 221.3l57.4 57.4c12.5 12.5 32.8 12.5 45.3 0l128-128z"></path>
+                  </svg>
+                </i>
               </button>
-              <button class="p-1.5 md:p-2 bg-gray-200 hover:bg-gray-300 rounded text-sm">
-                <i data-fa-i2svg=""><svg class="svg-inline--fa fa-chart-bar w-4 h-4" aria-hidden="true" focusable="false" data-prefix="fas" data-icon="chart-bar" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" data-fa-i2svg=""><path fill="currentColor" d="M32 32c17.7 0 32 14.3 32 32V400c0 8.8 7.2 16 16 16H480c17.7 0 32 14.3 32 32s-14.3 32-32 32H80c-44.2 0-80-35.8-80-80V64C0 46.3 14.3 32 32 32zm96 96c0-17.7 14.3-32 32-32l192 0c17.7 0 32 14.3 32 32s-14.3 32-32 32l-192 0c-17.7 0-32-14.3-32-32zm32 64H288c17.7 0 32 14.3 32 32s-14.3 32-32 32H160c-17.7 0-32-14.3-32-32s14.3-32 32-32zm0 96H416c17.7 0 32 14.3 32 32s-14.3 32-32 32H160c-17.7 0-32-14.3-32-32s14.3-32 32-32z"></path></svg></i>
+              <button
+                  class="p-1.5 md:p-2 bg-gray-200 hover:bg-gray-300 rounded text-sm"
+                  :class="{ 'bg-blue-100': chartType === 'candlestick' }"
+                  @click="switchChartType('candlestick')"
+              >
+                <i data-fa-i2svg="">
+                  <svg class="svg-inline--fa fa-chart-bar w-4 h-4" aria-hidden="true" focusable="false" data-prefix="fas" data-icon="chart-bar" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" data-fa-i2svg="">
+                    <path fill="currentColor" d="M32 32c17.7 0 32 14.3 32 32V400c0 8.8 7.2 16 16 16H480c17.7 0 32 14.3 32 32s-14.3 32-32 32H80c-44.2 0-80-35.8-80-80V64C0 46.3 14.3 32 32 32zm96 96c0-17.7 14.3-32 32-32l192 0c17.7 0 32 14.3 32 32s-14.3 32-32 32l-192 0c-17.7 0-32-14.3-32-32zm32 64H288c17.7 0 32 14.3 32 32s-14.3 32-32 32H160c-17.7 0-32-14.3-32-32s14.3-32 32-32zm0 96H416c17.7 0 32 14.3 32 32s-14.3 32-32 32H160c-17.7 0-32-14.3-32-32s14.3-32 32-32z"></path>
+                  </svg>
+                </i>
               </button>
-              <button class="p-1.5 md:p-2 bg-gray-200 hover:bg-gray-300 rounded text-sm">
-                <i data-fa-i2svg=""><svg class="svg-inline--fa fa-chart-candlestick w-4 h-4" aria-hidden="true" focusable="false" data-prefix="fas" data-icon="chart-candlestick" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" data-fa-i2svg=""><g class="missing"><path fill="currentColor" d="M156.5,447.7l-12.6,29.5c-18.7-9.5-35.9-21.2-51.5-34.9l22.7-22.7C127.6,430.5,141.5,440,156.5,447.7z M40.6,272H8.5 c1.4,21.2,5.4,41.7,11.7,61.1L50,321.2C45.1,305.5,41.8,289,40.6,272z M40.6,240c1.4-18.8,5.2-37,11.1-54.1l-29.5-12.6 C14.7,194.3,10,216.7,8.5,240H40.6z M64.3,156.5c7.8-14.9,17.2-28.8,28.1-41.5L69.7,92.3c-13.7,15.6-25.5,32.8-34.9,51.5 L64.3,156.5z M397,419.6c-13.9,12-29.4,22.3-46.1,30.4l11.9,29.8c20.7-9.9,39.8-22.6,56.9-37.6L397,419.6z M115,92.4 c13.9-12,29.4-22.3,46.1-30.4l-11.9-29.8c-20.7,9.9-39.8,22.6-56.8,37.6L115,92.4z M447.7,355.5c-7.8,14.9-17.2,28.8-28.1,41.5 l22.7,22.7c13.7-15.6,25.5-32.9,34.9-51.5L447.7,355.5z M471.4,272c-1.4,18.8-5.2,37-11.1,54.1l29.5,12.6 c7.5-21.1,12.2-43.5,13.6-66.8H471.4z M321.2,462c-15.7,5-32.2,8.2-49.2,9.4v32.1c21.2-1.4,41.7-5.4,61.1-11.7L321.2,462z M240,471.4c-18.8-1.4-37-5.2-54.1-11.1l-12.6,29.5c21.1,7.5,43.5,12.2,66.8,13.6V471.4z M462,190.8c5,15.7,8.2,32.2,9.4,49.2h32.1 c-1.4-21.2-5.4-41.7-11.7-61.1L462,190.8z M92.4,397c-12-13.9-22.3-29.4-30.4-46.1l-29.8,11.9c9.9,20.7,22.6,39.8,37.6,56.9 L92.4,397z M272,40.6c18.8,1.4,36.9,5.2,54.1,11.1l12.6-29.5C317.7,14.7,295.3,10,272,8.5V40.6z M190.8,50 c15.7-5,32.2-8.2,49.2-9.4V8.5c-21.2,1.4-41.7,5.4-61.1,11.7L190.8,50z M442.3,92.3L419.6,115c12,13.9,22.3,29.4,30.5,46.1 l29.8-11.9C470,128.5,457.3,109.4,442.3,92.3z M397,92.4l22.7-22.7c-15.6-13.7-32.8-25.5-51.5-34.9l-12.6,29.5 C370.4,72.1,384.4,81.5,397,92.4z"></path><circle fill="currentColor" cx="256" cy="364" r="28"><animate attributeType="XML" repeatCount="indefinite" dur="2s" attributeName="r" values="28;14;28;28;14;28;"></animate><animate attributeType="XML" repeatCount="indefinite" dur="2s" attributeName="opacity" values="1;0;1;1;0;1;"></animate></circle><path fill="currentColor" opacity="1" d="M263.7,312h-16c-6.6,0-12-5.4-12-12c0-71,77.4-63.9,77.4-107.8c0-20-17.8-40.2-57.4-40.2c-29.1,0-44.3,9.6-59.2,28.7 c-3.9,5-11.1,6-16.2,2.4l-13.1-9.2c-5.6-3.9-6.9-11.8-2.6-17.2c21.2-27.2,46.4-44.7,91.2-44.7c52.3,0,97.4,29.8,97.4,80.2 c0,67.6-77.4,63.5-77.4,107.8C275.7,306.6,270.3,312,263.7,312z"><animate attributeType="XML" repeatCount="indefinite" dur="2s" attributeName="opacity" values="1;0;0;0;0;1;"></animate></path><path fill="currentColor" opacity="0" d="M232.5,134.5l7,168c0.3,6.4,5.6,11.5,12,11.5h9c6.4,0,11.7-5.1,12-11.5l7-168c0.3-6.8-5.2-12.5-12-12.5h-23 C237.7,122,232.2,127.7,232.5,134.5z"><animate attributeType="XML" repeatCount="indefinite" dur="2s" attributeName="opacity" values="0;0;1;1;0;0;"></animate></path></g></svg></i>
+              <button
+                  class="p-1.5 md:p-2 bg-gray-200 hover:bg-gray-300 rounded text-sm"
+                  @click="zoomIn"
+                  title="放大"
+              >
+                <i data-fa-i2svg="">
+                  <svg class="svg-inline--fa fa-magnifying-glass-plus w-4 h-4" aria-hidden="true" focusable="false" data-prefix="fas" data-icon="magnifying-glass-plus" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" data-fa-i2svg="">
+                    <path fill="currentColor" d="M448 32c35.3 0 64 28.7 64 64V320c0 35.3-28.7 64-64 64H352l-32 32-32 32H192l-32-32-32-32H64c-35.3 0-64-28.7-64-64V96c0-35.3 28.7-64 64-64H448zM240 160c-17.7 0-32 14.3-32 32s14.3 32 32 32h16v16c0 17.7 14.3 32 32 32s32-14.3 32-32V224h16c17.7 0 32-14.3 32-32s-14.3-32-32-32H272V144c0-17.7-14.3-32-32-32s-32 14.3-32 32v16H240z"></path>
+                  </svg>
+                </i>
+              </button>
+              <button
+                  class="p-1.5 md:p-2 bg-gray-200 hover:bg-gray-300 rounded text-sm"
+                  @click="zoomOut"
+                  title="缩小"
+              >
+                <i data-fa-i2svg="">
+                  <svg class="svg-inline--fa fa-magnifying-glass-minus w-4 h-4" aria-hidden="true" focusable="false" data-prefix="fas" data-icon="magnifying-glass-minus" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" data-fa-i2svg="">
+                    <path fill="currentColor" d="M448 32c35.3 0 64 28.7 64 64V320c0 35.3-28.7 64-64 64H352l-32 32-32 32H192l-32-32-32-32H64c-35.3 0-64-28.7-64-64V96c0-35.3 28.7-64 64-64H448zM144 224c-17.7 0-32 14.3-32 32s14.3 32 32 32H304c17.7 0 32-14.3 32-32s-14.3-32-32-32H144z"></path>
+                  </svg>
+                </i>
+              </button>
+              <button
+                  class="p-1.5 md:p-2 bg-gray-200 hover:bg-gray-300 rounded text-sm"
+                  @click="scrollLeft"
+                  title="向左滚动"
+              >
+                <i data-fa-i2svg="">
+                  <svg class="svg-inline--fa fa-arrow-left w-4 h-4" aria-hidden="true" focusable="false" data-prefix="fas" data-icon="arrow-left" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" data-fa-i2svg="">
+                    <path fill="currentColor" d="M512 256c0 17.7-14.3 32-32 32H192l41 41c9.4 9.4 9.4 24.6 0 33.9s-24.6 9.4-33.9 0L103 265c-9.4-9.4-9.4-24.6 0-33.9L199 135c9.4-9.4 24.6-9.4 33.9 0s9.4 24.6 0 33.9l-41 41H480c17.7 0 32 14.3 32 32z"></path>
+                  </svg>
+                </i>
+              </button>
+              <button
+                  class="p-1.5 md:p-2 bg-gray-200 hover:bg-gray-300 rounded text-sm"
+                  @click="scrollRight"
+                  title="向右滚动"
+              >
+                <i data-fa-i2svg="">
+                  <svg class="svg-inline--fa fa-arrow-right w-4 h-4" aria-hidden="true" focusable="false" data-prefix="fas" data-icon="arrow-right" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" data-fa-i2svg="">
+                    <path fill="currentColor" d="M0 256c0-17.7 14.3-32 32-32H320l-41-41c-9.4-9.4-9.4-24.6 0-33.9s24.6-9.4 33.9 0L409 247c9.4 9.4 9.4 24.6 0 33.9L313 379c-9.4 9.4-24.6 9.4-33.9 0s-9.4-24.6 0-33.9l41-41H32c-17.7 0-32-14.3-32-32z"></path>
+                  </svg>
+                </i>
               </button>
             </div>
           </div>
@@ -424,8 +483,22 @@
 <script setup>
 import { ref, onMounted, reactive, computed } from 'vue'
 import { useCurrentDate } from '@/composables/composable.js'
+
+// 正确导入 Highcharts 和相关模块
 import * as Highcharts from 'highcharts'
+import HighchartsMore from 'highcharts/highcharts-more'
+import HighchartsStock from 'highcharts/modules/stock'
 import Header from "@/components/client/Header.vue";
+
+// 初始化 Highcharts 模块
+if (HighchartsMore && typeof HighchartsMore === 'function') {
+  HighchartsMore(Highcharts)
+}
+
+if (HighchartsStock && typeof HighchartsStock === 'function') {
+  HighchartsStock(Highcharts)
+}
+
 const { currentDate } = useCurrentDate()
 
 // 产品基本信息
@@ -476,6 +549,60 @@ const chartPeriods = ref([
 const changeChartPeriod = (period) => {
   chartPeriods.value.forEach(p => p.active = false)
   period.active = true
+}
+
+// 图表类型
+const chartType = ref('line')
+
+const switchChartType = (type) => {
+  chartType.value = type
+  // 在实际应用中，这里会重新渲染图表
+  console.log(`切换到${type}图表`)
+}
+
+// 图表实例引用
+const priceChartRef = ref(null)
+const volumeChartRef = ref(null)
+
+// 缩放和滚动功能
+const zoomIn = () => {
+  if (priceChartRef.value) {
+    const chart = priceChartRef.value
+    if (chart && typeof chart.zoomIn === 'function') {
+      chart.zoomIn()
+    }
+  }
+}
+
+const zoomOut = () => {
+  if (priceChartRef.value) {
+    const chart = priceChartRef.value
+    if (chart && typeof chart.zoomOut === 'function') {
+      chart.zoomOut()
+    }
+  }
+}
+
+const scrollLeft = () => {
+  if (priceChartRef.value) {
+    const chart = priceChartRef.value
+    if (chart && chart.xAxis && chart.xAxis[0] && typeof chart.xAxis[0].getExtremes === 'function') {
+      const extremes = chart.xAxis[0].getExtremes()
+      const range = extremes.max - extremes.min
+      chart.xAxis[0].setExtremes(extremes.min - range * 0.2, extremes.max - range * 0.2)
+    }
+  }
+}
+
+const scrollRight = () => {
+  if (priceChartRef.value) {
+    const chart = priceChartRef.value
+    if (chart && chart.xAxis && chart.xAxis[0] && typeof chart.xAxis[0].getExtremes === 'function') {
+      const extremes = chart.xAxis[0].getExtremes()
+      const range = extremes.max - extremes.min
+      chart.xAxis[0].setExtremes(extremes.min + range * 0.2, extremes.max + range * 0.2)
+    }
+  }
 }
 
 // 交易信息
@@ -603,110 +730,199 @@ const performanceChartContainer = ref(null)
 
 // 初始化图表
 const initCharts = () => {
+  // 生成K线图数据
+  const generateOHLCData = () => {
+    const data = []
+    let time = Date.now() - 30 * 24 * 3600 * 1000 // 30天前
+    let open = 320
+
+    for (let i = 0; i < 30; i++) {
+      const change = (Math.random() - 0.5) * 10
+      const close = open + change
+      const high = Math.max(open, close) + Math.random() * 5
+      const low = Math.min(open, close) - Math.random() * 5
+
+      data.push([
+        time + i * 24 * 3600 * 1000, // 时间戳
+        open,  // 开盘价
+        high,  // 最高价
+        low,   // 最低价
+        close  // 收盘价
+      ])
+
+      open = close
+    }
+
+    return data
+  }
+
   // 价格图表
   if (priceChartContainer.value) {
-    const priceChart = new Highcharts.Chart({
-      chart: {
-        renderTo: priceChartContainer.value,
-        type: 'line',
-        height: 300
-      },
-      title: {
-        text: ''
-      },
-      xAxis: {
-        categories: ['9:30', '10:00', '10:30', '11:00', '11:30', '13:00', '13:30', '14:00', '14:30', '15:00', '15:30']
-      },
-      yAxis: {
+    const ohlcData = generateOHLCData()
+
+    try {
+      priceChartRef.value = Highcharts.stockChart({
+        chart: {
+          renderTo: priceChartContainer.value,
+          height: 300,
+          zoomType: 'x',
+          panning: true,
+          panKey: 'shift'
+        },
         title: {
           text: ''
+        },
+        rangeSelector: {
+          enabled: false
+        },
+        navigator: {
+          enabled: true
+        },
+        scrollbar: {
+          enabled: true
+        },
+        xAxis: {
+          type: 'datetime',
+          minRange: 3600 * 1000 // 1小时
+        },
+        yAxis: {
+          title: {
+            text: '价格 (¥)'
+          }
+        },
+        series: [{
+          type: 'line',
+          name: '价格',
+          data: ohlcData.map(point => [point[0], point[4]]), // 使用收盘价
+          color: '#10b981',
+          tooltip: {
+            valueDecimals: 2
+          }
+        }],
+        legend: {
+          enabled: false
+        },
+        credits: {
+          enabled: false
         }
-      },
-      series: [{
-        name: '价格',
-        data: [337, 338, 339, 340, 341, 342, 341, 343, 342, 343, 342.6],
-        color: '#10b981'
-      }],
-      legend: {
-        enabled: false
-      },
-      credits: {
-        enabled: false
-      }
-    })
+      })
+    } catch (e) {
+      console.error('初始化价格图表失败:', e)
+    }
   }
 
   // 交易量图表
   if (volumeChartContainer.value) {
-    const volumeChart = new Highcharts.Chart({
-      chart: {
-        renderTo: volumeChartContainer.value,
-        type: 'column',
-        height: 100
-      },
-      title: {
-        text: ''
-      },
-      xAxis: {
-        categories: ['9:30', '10:00', '10:30', '11:00', '11:30', '13:00', '13:30', '14:00', '14:30', '15:00', '15:30']
-      },
-      yAxis: {
+    const volumeData = []
+    let time = Date.now() - 30 * 24 * 3600 * 1000
+
+    for (let i = 0; i < 30; i++) {
+      volumeData.push([
+        time + i * 24 * 3600 * 1000,
+        Math.floor(Math.random() * 10000000) + 5000000
+      ])
+    }
+
+    try {
+      volumeChartRef.value = Highcharts.stockChart({
+        chart: {
+          renderTo: volumeChartContainer.value,
+          height: 100
+        },
         title: {
           text: ''
+        },
+        rangeSelector: {
+          enabled: false
+        },
+        navigator: {
+          enabled: false
+        },
+        scrollbar: {
+          enabled: false
+        },
+        xAxis: {
+          type: 'datetime'
+          // 不设置minRange，让其自动适应
+        },
+        yAxis: {
+          title: {
+            text: '交易量'
+          }
+        },
+        series: [{
+          type: 'column',
+          name: '交易量',
+          data: volumeData,
+          color: '#3b82f6'
+        }],
+        legend: {
+          enabled: false
+        },
+        credits: {
+          enabled: false
         }
-      },
-      series: [{
-        name: '交易量',
-        data: [20, 35, 42, 38, 25, 45, 50, 60, 55, 48, 42],
-        color: '#3b82f6'
-      }],
-      legend: {
-        enabled: false
-      },
-      credits: {
-        enabled: false
-      }
-    })
+      })
+    } catch (e) {
+      console.error('初始化交易量图表失败:', e)
+    }
   }
 
   // 年度表现图表
   if (performanceChartContainer.value) {
-    const performanceChart = new Highcharts.Chart({
-      chart: {
-        renderTo: performanceChartContainer.value,
-        type: 'area',
-        height: 200
-      },
-      title: {
-        text: ''
-      },
-      xAxis: {
-        categories: ['1月', '2月', '3月', '4月', '5月', '6月', '7月', '8月']
-      },
-      yAxis: {
+    const performanceData = []
+    let time = Date.now() - 365 * 24 * 3600 * 1000
+    let value = 300
+
+    for (let i = 0; i < 12; i++) {
+      const change = (Math.random() - 0.4) * 20
+      value += change
+      performanceData.push([
+        time + i * 30 * 24 * 3600 * 1000,
+        value
+      ])
+    }
+
+    try {
+      const performanceChart = new Highcharts.Chart({
+        chart: {
+          renderTo: performanceChartContainer.value,
+          type: 'area',
+          height: 200
+        },
         title: {
           text: ''
+        },
+        xAxis: {
+          type: 'datetime'
+        },
+        yAxis: {
+          title: {
+            text: ''
+          }
+        },
+        series: [{
+          name: '股价',
+          data: performanceData,
+          color: '#10B981',
+          fillColor: {
+            linearGradient: [0, 0, 0, 300],
+            stops: [
+              [0, 'rgba(16, 185, 129, 0.2)'],
+              [1, 'rgba(16, 185, 129, 0)']
+            ]
+          }
+        }],
+        legend: {
+          enabled: false
+        },
+        credits: {
+          enabled: false
         }
-      },
-      series: [{
-        name: '股价',
-        data: [320, 330, 340, 335, 345, 350, 348, 342.6],
-        color: '#10B981',
-        fillColor: {
-          linearGradient: [0, 0, 0, 300],
-          stops: [
-            [0, 'rgba(16, 185, 129, 0.2)'],
-            [1, 'rgba(16, 185, 129, 0)']
-          ]
-        }
-      }],
-      legend: {
-        enabled: false
-      },
-      credits: {
-        enabled: false
-      }
-    })
+      })
+    } catch (e) {
+      console.error('初始化年度表现图表失败:', e)
+    }
   }
 }
 
