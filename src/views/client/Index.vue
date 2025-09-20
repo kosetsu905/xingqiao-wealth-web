@@ -2,9 +2,9 @@
   <!-- Header -->
   <Header/>
 
-  <div class="main bg-white text-black font-sans">
-    <!-- 头部 -->
-    <header id="header" class="ml-0 md:ml-16 p-4 md:p-6 bg-white border-b border-gray-200">
+  <div class="main bg-white shadow-sm border-b border-gray-200">
+
+    <div  class="ml-0 md:ml-16 p-4 md:p-6 bg-white border-b border-gray-200">
       <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
         <div>
           <h1 class="text-xl md:text-2xl font-semibold flex items-center">
@@ -51,7 +51,7 @@
           </button>
         </div>
       </div>
-    </header>
+    </div>
 
     <!-- 主内容区 -->
     <div id="main-content" class="ml-0 md:ml-16 px-4 md:px-6 pb-6 bg-white text-black flex flex-col md:flex-row">

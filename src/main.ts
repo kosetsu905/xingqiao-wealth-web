@@ -56,6 +56,7 @@ import { createPinia } from 'pinia'
 import { router } from './router'
 
 Chart.register(...registerables);
+import '@klinecharts/pro/dist/klinecharts-pro.css'
 
 
 // 在Vue实例中全局挂载

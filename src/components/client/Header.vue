@@ -2,7 +2,7 @@
 <template>
   <!-- Header -->
   <div id="header" class="bg-white shadow-sm border-b border-gray-200">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="ml-0 md:ml-16 p-4 md:p-6 bg-white border-b border-gray-200">
       <div class="flex justify-between items-center h-16">
         <div
             @click.prevent="goToIndex()"
@@ -112,7 +112,8 @@ const navItems = ref([
   { label: '交易中心', activeIndex: 3, path: "/client/transaction" },
   { label: '持仓', activeIndex: 4, path: "/client/transaction2" },
   { label: '资金管理', activeIndex: 5, path: "/client/transaction3" },
-  { label: '退出', activeIndex: 6, path: '/logout' }
+  { label: '行情Demo', activeIndex: 6, path: "/client/hangingDemo" },
+  { label: '退出', activeIndex: 7, path: '/logout' }
 ]);
 
 

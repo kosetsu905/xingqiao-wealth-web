@@ -24,6 +24,7 @@ import Globalinvestmentfund from '../views/agency/Globalinvestmentfund.vue'
 import Digitalcurrency from '../views/agency/Digitalcurrency.vue'
 import EkycIndex from '../views/agency/EkycIndex.vue'
 import EkycClientIndex from '../views/client/KycIndex.vue'
+import HangqingDemo from '../views/client/HangqingDemo.vue'
 import AgencyUserInfo from '../views/agency/UserInfo.vue'
 import CustomerInfo from '../views/agency/CustomerInfo.vue'
 import CustomerList from '../views/agency/CustomerList.vue'
@@ -40,7 +41,6 @@ import StableCoinMainPage from "@/views/agency/StableCoinMainPage.vue";
 import StableCoinPortfolio from "@/views/agency/StableCoinPortfolio.vue";
 import StableCoinPurchase from "@/views/agency/StableCoinPurchase.vue";
 import CbdcView from "@/views/agency/CbdcView.vue";
-import TradingCenter from "@/views/agency/TradingCenter.vue";
 import News from "@/views/agency/News.vue";
 import Academy from "@/views/agency/Academy.vue";
 import Etf from '../views/agency/Etf.vue'
@@ -82,6 +82,7 @@ const routes = [
   { path: '/client/investmentProductList', component: InvestmentProductList },
   { path: '/client/investmentProduct', component: InvestmentProduct },
   { path: '/client/transaction', component: Transaction },
+  { path: '/client/hangingDemo', component: HangqingDemo },
   { path: '/agency/index', component: agencyIndex },
   { path: '/agency/insurance', component: Insurance },
   { path: '/agency/globalinvestmentfund', component: Globalinvestmentfund },
@@ -104,7 +105,6 @@ const routes = [
   { path: '/agency/stableCoinPortfolio', component: StableCoinPortfolio },
   { path: '/agency/stableCoinPurchase', component: StableCoinPurchase },
   { path: '/agency/cbdc', component: CbdcView },
-  { path: '/agency/tradingCenter', component: TradingCenter },
   { path: '/agency/news', component: News },
   { path: '/agency/academy', component: Academy },
   { path: '/401', component: one,meta:{requiresAuth: false} },
