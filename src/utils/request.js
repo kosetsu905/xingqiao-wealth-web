@@ -1,7 +1,7 @@
 import axios from 'axios'
 import { getToken } from '@/utils/auth'
 import cache from '@/plugins/cache'
-import {useToast} from "@/composables/useToast.js";
+import {useToast} from "@/composables/UseToast.ts";
 const { successToast, errorToast } = useToast()
 
 const service = axios.create({

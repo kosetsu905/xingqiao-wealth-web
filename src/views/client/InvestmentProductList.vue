@@ -6,7 +6,7 @@
     <div class="ml-0 md:ml-16 p-4 md:p-6 bg-white border-b border-gray-200">
       <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
         <div class="flex items-center">
-          <button class="mr-4 p-2 rounded-lg hover:bg-gray-100">
+          <button @click="goBack" class="mr-4 p-2 rounded-lg hover:bg-gray-100">
             <i class="text-gray-600" data-fa-i2svg="">
               <svg class="svg-inline--fa fa-arrow-left w-5 h-5" aria-hidden="true" focusable="false" data-prefix="fas" data-icon="arrow-left" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512" data-fa-i2svg="">
                 <path fill="currentColor" d="M9.4 233.4c-12.5 12.5-12.5 32.8 0 45.3l192 192c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L77.3 256 246.6 86.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0l-192 192z"></path>
@@ -260,7 +260,7 @@
 
 <script setup>
 import { ref } from 'vue'
-import { useCurrentDate } from '@/composables/composable.js'
+import {goBack, useCurrentDate} from '@/composables/Composable.js'
 import Header from '@/components/client/Header.vue'
 import {useRouter} from 'vue-router'
 const router = useRouter()

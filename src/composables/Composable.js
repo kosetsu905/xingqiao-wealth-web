@@ -1,5 +1,6 @@
 import { computed } from 'vue'
 
+//当前日期
 export function useCurrentDate() {
     const currentDate = computed(() => {
         const now = new Date()
@@ -15,3 +16,9 @@ export function useCurrentDate() {
         currentDate
     }
 }
+
+//返回上一页
+export function goBack() {
+    window.history.back()
+}
+

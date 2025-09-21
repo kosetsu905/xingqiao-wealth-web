@@ -300,7 +300,7 @@ import { ref, onMounted, onUnmounted,watch } from 'vue'
 import {getCodeImg, login, sendCode} from '@/api/login'
 import { useRouter } from 'vue-router'
 const router = useRouter()
-import { useToast } from '@/composables/useToast'
+import { useToast } from '@/composables/UseToast.js'
 import {setToken} from "@/utils/auth.js";
 const { successToast, errorToast } = useToast()
 // 当前激活的Tab

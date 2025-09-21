@@ -163,7 +163,7 @@
 import { ref, onMounted, onUnmounted } from 'vue'
 import { useRouter } from 'vue-router' // 新增路由引入
 const router = useRouter()
-import { useToast } from '@/composables/useToast'
+import { useToast } from '@/composables/UseToast.js'
 const { successToast, errorToast } = useToast()
 
 

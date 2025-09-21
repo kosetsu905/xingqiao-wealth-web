@@ -431,7 +431,7 @@ import Header from "@/components/client/Header.vue";
 import {nextTick, onMounted, onUnmounted, reactive, ref} from "vue";
 import {useRoute, useRouter} from 'vue-router';
 import {uploadFile} from "@/api/file.js";
-import {useToast} from "@/composables/useToast.js";
+import {useToast} from "@/composables/UseToast.ts";
 import {getKycInfo, getEkycReturnUrl, saveKycInfo, getEkycResult} from "@/api/customer.js";
 
 const {successToast, errorToast} = useToast()

@@ -160,7 +160,7 @@
 import {ref, defineEmits, watch} from 'vue'
 import { useRouter } from 'vue-router'
 const router = useRouter()
-import { useToast } from '@/composables/useToast'
+import { useToast } from '@/composables/UseToast.js'
 const {  errorToast } = useToast()
 const agreed = ref(false)
 import { register} from '@/api/login'

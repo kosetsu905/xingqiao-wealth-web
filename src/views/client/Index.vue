@@ -359,7 +359,7 @@ import {
 } from 'chart.js'
 
 const userName = ref('')
-import {useCurrentDate} from '@/composables/composable.js'
+import {useCurrentDate} from '@/composables/Composable.js'
 
 const {currentDate} = useCurrentDate()
 

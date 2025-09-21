@@ -482,7 +482,7 @@
 
 <script setup>
 import { ref, onMounted, reactive, computed } from 'vue'
-import { useCurrentDate } from '@/composables/composable.js'
+import { useCurrentDate } from '@/composables/Composable.js'
 
 // 正确导入 Highcharts 和相关模块
 import * as Highcharts from 'highcharts'

@@ -267,7 +267,7 @@
 import Header from '@/components/client/Header.vue'
 import {onMounted, ref} from 'vue'
 import {getClientCustomerInfo, saveClientCustomerInfo} from '@/api/customer.js'
-import {useToast} from '@/composables/useToast.js'
+import {useToast} from '@/composables/UseToast.ts'
 import {uploadFile} from "@/api/file.js";
 import {uploadAvatar} from "@/api/employee.js";
 

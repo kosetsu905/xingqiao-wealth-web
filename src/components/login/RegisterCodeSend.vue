@@ -143,7 +143,7 @@
 <script setup>
 import {ref, onMounted, reactive, defineEmits, watch} from 'vue'
 import {getCodeImg, sendCode} from '@/api/login'
-import {useToast} from '@/composables/useToast'
+import {useToast} from '@/composables/UseToast.js'
 const {successToast, errorToast} = useToast()
 let codeUrl = ref("")
 // 定义 emits
