@@ -45,6 +45,7 @@ import News from "@/views/agency/News.vue";
 import Academy from "@/views/agency/Academy.vue";
 import Etf from '../views/agency/Etf.vue'
 import FaceRecognitionSuccess from '../views/common/FaceRecognitionSuccess.vue'
+import Holdings from "@/views/client/Holdings.vue";
 
 
 
@@ -83,6 +84,7 @@ const routes = [
   { path: '/client/investmentProduct', component: InvestmentProduct },
   { path: '/client/transaction', component: Transaction },
   { path: '/client/hangingDemo', component: HangqingDemo },
+  { path: '/client/holdings', component: Holdings },
   { path: '/agency/index', component: agencyIndex },
   { path: '/agency/insurance', component: Insurance },
   { path: '/agency/globalinvestmentfund', component: Globalinvestmentfund },

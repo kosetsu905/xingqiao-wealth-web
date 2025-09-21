@@ -4,55 +4,44 @@
   <Header/>
 
   <div class="main bg-white text-black font-sans">
-    <!-- 头部 -->
-    <div class="ml-0 md:ml-16 p-4 md:p-6 bg-white border-b border-gray-200">
-      <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
-        <div>
-          <h1 class="text-xl md:text-2xl font-semibold flex items-center">
-            交易中心
-            <i class="text-blue-500 ml-1 text-base md:text-lg inline-flex items-center" data-fa-i2svg="">
-              <svg class="svg-inline--fa fa-circle-check w-4 h-4 md:w-5 md:h-5" aria-hidden="true" focusable="false"
-                   data-prefix="fas"
-                   data-icon="circle-check" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"
-                   data-fa-i2svg="">
-                <path fill="currentColor"
-                      d="M256 512A256 256 0 1 0 256 0a256 256 0 1 0 0 512zM369 209L241 337c-9.4 9.4-24.6 9.4-33.9 0l-64-64c-9.4-9.4-9.4-24.6 0-33.9s24.6-9.4 33.9 0l47 47L335 175c9.4-9.4 24.6-9.4 33.9 0s9.4 24.6 0 33.9z"></path>
-              </svg>
-            </i>
-          </h1>
-          <p class="text-gray-600 text-sm">
-            {{ currentDate }}
-          </p>
-        </div>
-        <div class="flex flex-col md:flex-row items-center gap-2 md:gap-4 w-full md:w-auto">
-          <div class="relative w-full md:w-64">
-            <input type="text" placeholder="搜索股票、债券、基金..."
-                   class="bg-gray-100 border border-gray-300 rounded-lg px-4 py-2 pl-10 w-full focus:outline-none focus:ring-2 focus:ring-blue-500">
-            <i class="absolute left-3 top-3 text-gray-500" data-fa-i2svg="">
-              <svg class="svg-inline--fa fa-magnifying-glass w-4 h-4" aria-hidden="true" focusable="false"
-                   data-prefix="fas"
-                   data-icon="magnifying-glass" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"
-                   data-fa-i2svg="">
-                <path fill="currentColor"
-                      d="M416 208c0 45.9-14.9 88.3-40 122.7L502.6 457.4c12.5 12.5 12.5 32.8 0 45.3s-32.8 12.5-45.3 0L330.7 376c-34.4 25.2-76.8 40-122.7 40C93.1 416 0 322.9 0 208S93.1 0 208 0S416 93.1 416 208zM208 352a144 144 0 1 0 0-288 144 144 0 1 0 0 288z"></path>
-              </svg>
-            </i>
+    <!-- 主内容区 -->
+    <div class="ml-16 flex-1 px-6 pb-6">
+      <header class="p-6 bg-white border-b border-gray-200">
+        <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+          <div class="flex items-center">
+            <button @click="goBack" class="mr-4 p-2 rounded-lg hover:bg-gray-100">
+              <i class="text-gray-600" data-fa-i2svg="">
+                <svg class="svg-inline--fa fa-arrow-left w-5 h-5" aria-hidden="true" focusable="false" data-prefix="fas" data-icon="arrow-left" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512" data-fa-i2svg="">
+                  <path fill="currentColor" d="M9.4 233.4c-12.5 12.5-12.5 32.8 0 45.3l192 192c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L77.3 256 246.6 86.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0l-192 192z"></path>
+                </svg>
+              </i>
+            </button>
+            <div>
+              <h1 class="text-2xl font-semibold">
+                交易中心
+                <i class="text-blue-500 ml-1 fas fa-circle-check"></i>
+              </h1>
+              <p class="text-gray-500">
+                {{ currentDate }}
+              </p>
+            </div>
           </div>
-          <button
-              class="bg-blue-600 hover:bg-blue-700 rounded-lg px-4 py-2 flex items-center w-full md:w-auto justify-center">
-            <i class="mr-2" data-fa-i2svg="">
-              <svg class="svg-inline--fa fa-plus w-4 h-4" aria-hidden="true" focusable="false" data-prefix="fas"
-                   data-icon="plus" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"
-                   data-fa-i2svg="">
-                <path fill="currentColor"
-                      d="M256 80c0-17.7-14.3-32-32-32s-32 14.3-32 32V224H48c-17.7 0-32 14.3-32 32s14.3 32 32 32H192V432c0 17.7 14.3 32 32 32s32-14.3 32-32V288H400c17.7 0 32-14.3 32-32s-14.3-32-32-32H256V80z"></path>
-              </svg>
-            </i>
-            <span class="">搜索</span>
-          </button>
+          <div class="flex items-center">
+            <div class="relative mr-4">
+              <input type="text" placeholder="搜索资产..."
+                     class="bg-white border border-gray-300 rounded-lg px-4 py-2 pl-10 w-64
+                                                      focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+              <i class="absolute left-3 top-3 text-gray-400 fas fa-magnifying-glass"></i>
+            </div>
+            <button class="bg-blue-600 hover:bg-blue-700 rounded-lg px-4 py-2 flex items-center text-white">
+              <i class="mr-2 fas fa-plus"></i>
+              <span>添加资产</span>
+            </button>
+          </div>
         </div>
-      </div>
+      </header>
     </div>
+
     <!-- 主内容区 -->
     <div id="main-content" class="ml-16 px-6 pb-6 bg-gray-50 flex pt-6">
       <!-- 左侧内容 -->
@@ -99,6 +88,7 @@
           </div>
 
           <!-- 热门股票列表 -->
+          <!-- 热门股票列表 -->
           <div id="stock-list" class="bg-white border border-gray-200 rounded-lg overflow-hidden">
             <table class="w-full text-sm">
               <thead>
@@ -111,7 +101,7 @@
               </tr>
               </thead>
               <tbody>
-              <tr v-for="stock in filteredStocks" :key="stock.code" class="border-b border-gray-100 hover:bg-gray-50 cursor-pointer transition-colors" @click="selectStock(stock)">
+              <tr v-for="stock in paginatedStocks" :key="stock.code" class="border-b border-gray-100 hover:bg-gray-50 cursor-pointer transition-colors" @click="selectStock(stock)">
                 <td class="p-4 flex items-center">
                   <div :class="stock.bgColor" class="w-8 h-8 rounded-full flex items-center justify-center mr-2">
                     <span v-if="stock.text" class="text-xs font-bold text-white">{{ stock.text }}</span>
@@ -130,7 +120,43 @@
               </tr>
               </tbody>
             </table>
+
+            <!-- 分页控件 -->
+            <div class="flex justify-between items-center p-4 border-t border-gray-200">
+              <div class="text-sm text-gray-500">
+                显示第 {{ (currentPage - 1) * itemsPerPage + 1 }} - {{ Math.min(currentPage * itemsPerPage, filteredStocks.length) }} 条，
+                共 {{ filteredStocks.length }} 条记录
+              </div>
+              <div class="flex space-x-2">
+                <button
+                    @click="prevPage"
+                    :disabled="currentPage === 1"
+                    class="px-3 py-1 border border-gray-300 rounded-md text-sm"
+                    :class="currentPage === 1 ? 'bg-gray-100 text-gray-400 cursor-not-allowed' : 'bg-white text-gray-700 hover:bg-gray-50'"
+                >
+                  上一页
+                </button>
+                <button
+                    v-for="page in visiblePages"
+                    :key="page"
+                    @click="goToPage(page)"
+                    class="px-3 py-1 text-sm rounded-md"
+                    :class="currentPage === page ? 'bg-blue-500 text-white' : 'border border-gray-300 bg-white text-gray-700 hover:bg-gray-50'"
+                >
+                  {{ page }}
+                </button>
+                <button
+                    @click="nextPage"
+                    :disabled="currentPage === totalPages"
+                    class="px-3 py-1 border border-gray-300 rounded-md text-sm"
+                    :class="currentPage === totalPages ? 'bg-gray-100 text-gray-400 cursor-not-allowed' : 'bg-white text-gray-700 hover:bg-gray-50'"
+                >
+                  下一页
+                </button>
+              </div>
+            </div>
           </div>
+
         </div>
 
         <!-- 交易详情卡片 -->
@@ -204,24 +230,10 @@
                   <input
                       type="number"
                       v-model="limitPrice"
-                      class="flex-1 bg-white border border-gray-300 rounded-l-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-gray-700"
+                      class="flex-1 bg-white border border-gray-300 rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-gray-700"
                       min="0"
                       step="0.01"
                   >
-                  <div class="flex flex-col">
-                    <button
-                        class="px-3 py-1.5 text-gray-400 hover:text-blue-500 border-l border-t border-r border-gray-300 flex items-center justify-center bg-gray-50 hover:bg-gray-100 transition-colors rounded-tr-lg"
-                        @click="limitPrice = (parseFloatFixed(limitPrice) + 0.01)"
-                    >
-                      <i class="fa-solid fa-chevron-up"></i>
-                    </button>
-                    <button
-                        class="px-3 py-1.5 text-gray-400 hover:text-blue-500 border-l border-r border-gray-300 flex items-center justify-center bg-gray-50 hover:bg-gray-100 transition-colors rounded-br-lg"
-                        @click="limitPrice > 0 ? limitPrice = (parseFloatFixed(limitPrice) - 0.01) : null"
-                    >
-                      <i class="fa-solid fa-chevron-down"></i>
-                    </button>
-                  </div>
                 </div>
               </div>
 
@@ -349,8 +361,9 @@
 </template>
 
 <script setup>
+import Header from "@/components/client/Header.vue";
 
-import {useCurrentDate} from "@/composables/Composable.js";
+import {goBack, useCurrentDate} from "@/composables/Composable.js";
 import {computed, onMounted, ref, watch} from 'vue';
 import Highcharts from 'highcharts';
 import {parseFloatFixed} from "@/composables/NumberUtils.js";
@@ -369,6 +382,11 @@ const selectedPeriod = ref('1日');
 const chartPeriods = ['1日', '1周', '1月', '3月', '1年', '5年'];
 // 交易提示
 const tradingTips = ref([]);
+// 分页相关数据
+const currentPage = ref(1);
+const itemsPerPage = ref(5);
+
+
 // 加载状态
 const loading = ref({
   stocks: false,
@@ -376,6 +394,7 @@ const loading = ref({
   account: false,
   chart: false
 });
+
 
 
 
@@ -387,7 +406,6 @@ const loadTradingTips = async () => {
     // const response = await getTradingTips()
 
     // 模拟API延迟
-    await new Promise(resolve => setTimeout(resolve, 300));
 
     // 模拟从服务器获取的数据
     tradingTips.value = [
@@ -510,6 +528,65 @@ const filteredStocks = computed(() => {
         stock.code.toLowerCase().includes(searchQuery.value.toLowerCase());
   });
 });
+
+// 分页计算属性
+const paginatedStocks = computed(() => {
+  const start = (currentPage.value - 1) * itemsPerPage.value;
+  const end = start + itemsPerPage.value;
+  return filteredStocks.value.slice(start, end);
+});
+
+const totalPages = computed(() => {
+  return Math.ceil(filteredStocks.value.length / itemsPerPage.value);
+});
+
+// 计算可见页码（最多显示5个页码按钮）
+const visiblePages = computed(() => {
+  const pages = [];
+  const total = totalPages.value;
+  const current = currentPage.value;
+
+  if (total <= 5) {
+    // 如果总页数小于等于5，显示所有页码
+    for (let i = 1; i <= total; i++) {
+      pages.push(i);
+    }
+  } else {
+    // 如果总页数大于5，显示部分页码
+    if (current <= 3) {
+      // 当前页在前3页内
+      pages.push(1, 2, 3, 4, 5);
+    } else if (current >= total - 2) {
+      // 当前页在后3页内
+      pages.push(total - 4, total - 3, total - 2, total - 1, total);
+    } else {
+      // 当前页在中间
+      pages.push(current - 2, current - 1, current, current + 1, current + 2);
+    }
+  }
+
+  return pages;
+});
+
+// 分页方法
+const prevPage = () => {
+  if (currentPage.value > 1) {
+    currentPage.value--;
+  }
+};
+
+const nextPage = () => {
+  if (currentPage.value < totalPages.value) {
+    currentPage.value++;
+  }
+};
+
+const goToPage = (page) => {
+  if (page >= 1 && page <= totalPages.value) {
+    currentPage.value = page;
+  }
+};
+
 
 const calculatedAmount = computed(() => {
   if (!selectedStock.value) return '$0.00';

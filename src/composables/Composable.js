@@ -1,4 +1,4 @@
-import { computed } from 'vue'
+import {computed, ref} from 'vue'
 
 //当前日期
 export function useCurrentDate() {
@@ -16,6 +16,14 @@ export function useCurrentDate() {
         currentDate
     }
 }
+
+// 当前日期
+export const currentDate = ref(new Date().toLocaleDateString('zh-CN', {
+    year: 'numeric',
+    month: 'long',
+    day: 'numeric',
+    weekday: 'long'
+}));
 
 //返回上一页
 export function goBack() {
