@@ -1,41 +1,42 @@
 <template>
-
   <!-- Header -->
   <Header/>
 
   <div class="main bg-white text-black font-sans">
     <!-- 主内容区 -->
-    <div class="ml-16 flex-1 px-6 pb-6">
-      <header class="p-6 bg-white border-b border-gray-200">
+    <div class="ml-0 md:ml-16 flex-1 px-4 md:px-6 pb-6">
+      <header class="p-4 md:p-6 bg-white border-b border-gray-200">
         <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
           <div class="flex items-center">
-            <button @click="goBack" class="mr-4 p-2 rounded-lg hover:bg-gray-100">
+            <button @click="goBack" class="mr-2 md:mr-4 p-2 rounded-lg hover:bg-gray-100">
               <i class="text-gray-600" data-fa-i2svg="">
-                <svg class="svg-inline--fa fa-arrow-left w-5 h-5" aria-hidden="true" focusable="false" data-prefix="fas" data-icon="arrow-left" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512" data-fa-i2svg="">
-                  <path fill="currentColor" d="M9.4 233.4c-12.5 12.5-12.5 32.8 0 45.3l192 192c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L77.3 256 246.6 86.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0l-192 192z"></path>
+                <svg class="svg-inline--fa fa-arrow-left w-5 h-5" aria-hidden="true" focusable="false" data-prefix="fas"
+                     data-icon="arrow-left" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"
+                     data-fa-i2svg="">
+                  <path fill="currentColor"
+                        d="M9.4 233.4c-12.5 12.5-12.5 32.8 0 45.3l192 192c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L77.3 256 246.6 86.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0l-192 192z"></path>
                 </svg>
               </i>
             </button>
             <div>
-              <h1 class="text-2xl font-semibold">
+              <h1 class="text-xl md:text-2xl font-semibold">
                 交易中心
                 <i class="text-blue-500 ml-1 fas fa-circle-check"></i>
               </h1>
-              <p class="text-gray-500">
+              <p class="text-gray-500 text-sm">
                 {{ currentDate }}
               </p>
             </div>
           </div>
           <div class="flex items-center">
             <div class="relative mr-4">
-              <input type="text" placeholder="搜索资产..."
-                     class="bg-white border border-gray-300 rounded-lg px-4 py-2 pl-10 w-64
-                                                      focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent">
-              <i class="absolute left-3 top-3 text-gray-400 fas fa-magnifying-glass"></i>
+              <input type="text" placeholder="搜索投资产品..."
+                     class="bg-white-800 border border-gray-700 rounded-lg px-4 py-2 pl-10 w-64 focus:outline-none focus:ring-2 focus:ring-blue-500">
+              <i class="fa-solid fa-search absolute left-3 top-3 text-gray-500"></i>
             </div>
-            <button class="bg-blue-600 hover:bg-blue-700 rounded-lg px-4 py-2 flex items-center text-white">
-              <i class="mr-2 fas fa-plus"></i>
-              <span>添加资产</span>
+            <button class="bg-blue-500 hover:bg-blue-700 rounded-lg px-4 py-2 flex items-center text-white">
+              <i class="fa-solid fa-question-circle mr-2"></i>
+              <span>帮助</span>
             </button>
           </div>
         </div>
@@ -43,95 +44,111 @@
     </div>
 
     <!-- 主内容区 -->
-    <div id="main-content" class="ml-16 px-6 pb-6 bg-gray-50 flex pt-6">
+    <div id="main-content" class="ml-0 md:ml-16 px-4 md:px-6 pb-6 bg-gray-50 flex flex-col md:flex-row pt-4 md:pt-6">
       <!-- 左侧内容 -->
-      <div id="left-content" class="w-2/3 pr-6">
+      <div id="left-content" class="w-full md:w-2/3 pr-0 md:pr-6 mb-6 md:mb-0">
         <!-- 交易产品选择卡片 -->
-        <div id="trade-selection" class="card-white rounded-lg p-6 mb-8">
-          <h2 class="text-xl font-semibold mb-6 text-gray-800">选择交易产品</h2>
+        <div id="trade-selection" class="card-white rounded-lg p-4 md:p-6 mb-6 md:mb-8">
+          <h2 class="text-lg md:text-xl font-semibold mb-4 md:mb-6 text-gray-800">选择交易产品</h2>
 
-          <div class="grid grid-cols-4 gap-4 mb-6">
-            <div @click="selectTab('stocks')" :class="{'bg-blue-100 text-blue-700': activeTab === 'stocks', 'bg-gray-100 text-gray-700 hover:bg-gray-200': activeTab !== 'stocks'}" class="p-4 rounded-lg flex flex-col items-center justify-center cursor-pointer transition-colors hover-lift">
-              <i class="fa-solid fa-chart-line text-2xl mb-2"></i>
-              <span class="font-medium">股票</span>
+          <div class="grid grid-cols-2 md:grid-cols-4 gap-2 md:gap-4 mb-4 md:mb-6">
+            <div @click="selectTab('stocks')"
+                 :class="{'bg-blue-100 text-blue-700': activeTab === 'stocks', 'bg-gray-100 text-gray-700 hover:bg-gray-200': activeTab !== 'stocks'}"
+                 class="p-3 md:p-4 rounded-lg flex flex-col items-center justify-center cursor-pointer transition-colors hover-lift">
+              <i class="fa-solid fa-chart-line text-xl md:text-2xl mb-1 md:mb-2"></i>
+              <span class="font-medium text-sm md:text-base">股票</span>
             </div>
-            <div @click="selectTab('bonds')" :class="{'bg-blue-100 text-blue-700': activeTab === 'bonds', 'bg-gray-100 text-gray-700 hover:bg-gray-200': activeTab !== 'bonds'}" class="p-4 rounded-lg flex flex-col items-center justify-center cursor-pointer transition-colors hover-lift">
-              <i class="fa-solid fa-file-contract text-2xl mb-2"></i>
-              <span class="font-medium">债券</span>
+            <div @click="selectTab('bonds')"
+                 :class="{'bg-blue-100 text-blue-700': activeTab === 'bonds', 'bg-gray-100 text-gray-700 hover:bg-gray-200': activeTab !== 'bonds'}"
+                 class="p-3 md:p-4 rounded-lg flex flex-col items-center justify-center cursor-pointer transition-colors hover-lift">
+              <i class="fa-solid fa-file-contract text-xl md:text-2xl mb-1 md:mb-2"></i>
+              <span class="font-medium text-sm md:text-base">债券</span>
             </div>
-            <div @click="selectTab('etfs')" :class="{'bg-blue-100 text-blue-700': activeTab === 'etfs', 'bg-gray-100 text-gray-700 hover:bg-gray-200': activeTab !== 'etfs'}" class="p-4 rounded-lg flex flex-col items-center justify-center cursor-pointer transition-colors hover-lift">
-              <i class="fa-solid fa-layer-group text-2xl mb-2"></i>
-              <span class="font-medium">ETF</span>
+            <div @click="selectTab('etfs')"
+                 :class="{'bg-blue-100 text-blue-700': activeTab === 'etfs', 'bg-gray-100 text-gray-700 hover:bg-gray-200': activeTab !== 'etfs'}"
+                 class="p-3 md:p-4 rounded-lg flex flex-col items-center justify-center cursor-pointer transition-colors hover-lift">
+              <i class="fa-solid fa-layer-group text-xl md:text-2xl mb-1 md:mb-2"></i>
+              <span class="font-medium text-sm md:text-base">ETF</span>
             </div>
-            <div @click="selectTab('funds')" :class="{'bg-blue-100 text-blue-700': activeTab === 'funds', 'bg-gray-100 text-gray-700 hover:bg-gray-200': activeTab !== 'funds'}" class="p-4 rounded-lg flex flex-col items-center justify-center cursor-pointer transition-colors hover-lift">
-              <i class="fa-solid fa-piggy-bank text-2xl mb-2"></i>
-              <span class="font-medium">基金</span>
+            <div @click="selectTab('funds')"
+                 :class="{'bg-blue-100 text-blue-700': activeTab === 'funds', 'bg-gray-100 text-gray-700 hover:bg-gray-200': activeTab !== 'funds'}"
+                 class="p-3 md:p-4 rounded-lg flex flex-col items-center justify-center cursor-pointer transition-colors hover-lift">
+              <i class="fa-solid fa-piggy-bank text-xl md:text-2xl mb-1 md:mb-2"></i>
+              <span class="font-medium text-sm md:text-base">基金</span>
             </div>
           </div>
 
           <!-- 搜索和地区筛选 -->
-          <div class="flex mb-6 space-x-4">
+          <div class="flex flex-col sm:flex-row gap-3 mb-4 md:mb-6">
             <div class="relative flex-1">
-              <input type="text" placeholder="搜索股票代码或名称..." v-model="searchQuery" class="w-full bg-white border border-gray-300 rounded-lg px-4 py-3 pl-10 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
-              <i class="fa-solid fa-search absolute left-3 top-3.5 text-gray-400"></i>
+              <input type="text" placeholder="搜索股票代码或名称..." v-model="searchQuery" class="w-full bg-white border border-gray-300 rounded-lg px-3 py-2 md:px-4 md:py-3 pl-10 md:pl-12 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-sm md:text-base">
+              <i class="fa-solid fa-search absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 text-sm md:text-base"></i>
             </div>
-            <div class="relative w-48">
-              <select v-model="selectedMarket" class="appearance-none w-full bg-white border border-gray-300 rounded-lg px-4 py-3 pr-8 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-gray-700">
+            <div class="relative w-full sm:w-48">
+              <select v-model="selectedMarket" class="appearance-none w-full bg-white border border-gray-300 rounded-lg px-3 py-2 md:px-4 md:py-3 pr-8 md:pr-10 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-gray-700 text-sm md:text-base">
                 <option>全球市场</option>
                 <option>中国市场</option>
                 <option>美国市场</option>
                 <option>香港市场</option>
                 <option>欧洲市场</option>
               </select>
-              <i class="fa-solid fa-chevron-down absolute right-3 top-3.5 text-gray-400 pointer-events-none"></i>
+              <i class="fa-solid fa-chevron-down absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 pointer-events-none text-sm md:text-base"></i>
             </div>
           </div>
-
-          <!-- 热门股票列表 -->
           <!-- 热门股票列表 -->
           <div id="stock-list" class="bg-white border border-gray-200 rounded-lg overflow-hidden">
-            <table class="w-full text-sm">
+            <table class="w-full text-xs md:text-sm">
               <thead>
               <tr class="bg-gray-50">
-                <th class="text-left p-4 font-medium text-muted">名称</th>
-                <th class="text-left p-4 font-medium text-muted">代码</th>
-                <th class="text-right p-4 font-medium text-muted">最新价</th>
-                <th class="text-right p-4 font-medium text-muted">涨跌幅</th>
-                <th class="text-center p-4 font-medium text-muted">操作</th>
+                <th class="text-left p-2 md:p-4 font-medium text-muted">名称</th>
+                <th class="text-left p-2 md:p-4 font-medium text-muted hidden md:table-cell">代码</th>
+                <th class="text-right p-2 md:p-4 font-medium text-muted">最新价</th>
+                <th class="text-right p-2 md:p-4 font-medium text-muted">涨跌幅</th>
+                <th class="text-center p-2 md:p-4 font-medium text-muted">操作</th>
               </tr>
               </thead>
               <tbody>
-              <tr v-for="stock in paginatedStocks" :key="stock.code" class="border-b border-gray-100 hover:bg-gray-50 cursor-pointer transition-colors" @click="selectStock(stock)">
-                <td class="p-4 flex items-center">
-                  <div :class="stock.bgColor" class="w-8 h-8 rounded-full flex items-center justify-center mr-2">
+              <tr v-for="stock in paginatedStocks" :key="stock.code"
+                  class="border-b border-gray-100 hover:bg-gray-50 cursor-pointer transition-colors"
+                  @click="selectStock(stock)">
+                <td class="p-2 md:p-4 flex items-center">
+                  <div :class="stock.bgColor"
+                       class="w-6 h-6 md:w-8 md:h-8 rounded-full flex items-center justify-center mr-1 md:mr-2">
                     <span v-if="stock.text" class="text-xs font-bold text-white">{{ stock.text }}</span>
-                    <i v-if="stock.icon" :class="stock.icon" class="text-white text-sm"></i>
+                    <i v-if="stock.icon" :class="stock.icon" class="text-white text-xs md:text-sm"></i>
                   </div>
-                  <span class="text-gray-800">{{ stock.name }}</span>
+                  <div>
+                    <span class="text-gray-800 block">{{ stock.name }}</span>
+                    <span class="text-muted text-xs md:hidden">{{ stock.code }}</span>
+                  </div>
                 </td>
-                <td class="p-4 text-muted">{{ stock.code }}</td>
-                <td class="p-4 text-right font-medium text-gray-800">{{ stock.price }}</td>
-                <td class="p-4 text-right" :class="stock.change >= 0 ? 'text-green-600' : 'text-red-600'">
+                <td class="p-2 md:p-4 text-muted hidden md:table-cell">{{ stock.code }}</td>
+                <td class="p-2 md:p-4 text-right font-medium text-gray-800">{{ stock.price }}</td>
+                <td class="p-2 md:p-4 text-right" :class="stock.change >= 0 ? 'text-green-600' : 'text-red-600'">
                   {{ stock.change >= 0 ? '+' : '' }}{{ stock.change }}%
                 </td>
-                <td class="p-4 text-center">
-                  <button class="bg-blue-500 hover:bg-blue-600 px-3 py-1 rounded-md text-xs text-white transition-colors" @click.stop="selectStock(stock)">选择</button>
+                <td class="p-2 md:p-4 text-center">
+                  <button
+                      class="bg-blue-500 hover:bg-blue-600 px-2 py-1 md:px-3 md:py-1 rounded-md text-xs text-white transition-colors"
+                      @click.stop="selectStock(stock)">选择
+                  </button>
                 </td>
               </tr>
               </tbody>
             </table>
 
             <!-- 分页控件 -->
-            <div class="flex justify-between items-center p-4 border-t border-gray-200">
-              <div class="text-sm text-gray-500">
-                显示第 {{ (currentPage - 1) * itemsPerPage + 1 }} - {{ Math.min(currentPage * itemsPerPage, filteredStocks.length) }} 条，
+            <div class="flex flex-col md:flex-row justify-between items-center p-2 md:p-4 border-t border-gray-200">
+              <div class="text-xs md:text-sm text-gray-500 mb-2 md:mb-0">
+                显示第 {{ (currentPage - 1) * itemsPerPage + 1 }} -
+                {{ Math.min(currentPage * itemsPerPage, filteredStocks.length) }} 条，
                 共 {{ filteredStocks.length }} 条记录
               </div>
-              <div class="flex space-x-2">
+              <div class="flex space-x-1 md:space-x-2">
                 <button
                     @click="prevPage"
                     :disabled="currentPage === 1"
-                    class="px-3 py-1 border border-gray-300 rounded-md text-sm"
+                    class="px-2 py-1 md:px-3 md:py-1 border border-gray-300 rounded-md text-xs md:text-sm"
                     :class="currentPage === 1 ? 'bg-gray-100 text-gray-400 cursor-not-allowed' : 'bg-white text-gray-700 hover:bg-gray-50'"
                 >
                   上一页
@@ -140,7 +157,7 @@
                     v-for="page in visiblePages"
                     :key="page"
                     @click="goToPage(page)"
-                    class="px-3 py-1 text-sm rounded-md"
+                    class="px-2 py-1 md:px-3 md:py-1 text-xs md:text-sm rounded-md"
                     :class="currentPage === page ? 'bg-blue-500 text-white' : 'border border-gray-300 bg-white text-gray-700 hover:bg-gray-50'"
                 >
                   {{ page }}
@@ -148,7 +165,7 @@
                 <button
                     @click="nextPage"
                     :disabled="currentPage === totalPages"
-                    class="px-3 py-1 border border-gray-300 rounded-md text-sm"
+                    class="px-2 py-1 md:px-3 md:py-1 border border-gray-300 rounded-md text-xs md:text-sm"
                     :class="currentPage === totalPages ? 'bg-gray-100 text-gray-400 cursor-not-allowed' : 'bg-white text-gray-700 hover:bg-gray-50'"
                 >
                   下一页
@@ -156,165 +173,189 @@
               </div>
             </div>
           </div>
-
         </div>
 
         <!-- 交易详情卡片 -->
-        <div id="trade-details" class="card-white rounded-lg p-6 mb-8" v-if="selectedStock">
-          <div class="flex justify-between items-center mb-6">
-            <h2 class="text-xl font-semibold text-gray-800">交易详情</h2>
-            <div class="flex items-center space-x-4">
-              <button :class="{'bg-blue-500 text-white': orderType === 'buy', 'bg-gray-100 text-gray-700': orderType !== 'buy'}" class="px-4 py-2 rounded-lg font-medium transition-colors" @click="orderType = 'buy'">买入</button>
-              <button :class="{'bg-blue-500 text-white': orderType === 'sell', 'bg-gray-100 text-gray-700': orderType !== 'sell'}" class="px-4 py-2 rounded-lg font-medium transition-colors" @click="orderType = 'sell'">卖出</button>
+        <div id="trade-details" class="card-white rounded-lg p-4 md:p-6 mb-6 md:mb-8" v-if="selectedStock">
+          <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-4 md:mb-6">
+            <h2 class="text-lg md:text-xl font-semibold text-gray-800 mb-2 md:mb-0">交易详情</h2>
+            <div class="flex items-center space-x-2 md:space-x-3">
+              <button
+                  :class="{'bg-blue-500 text-white': orderType === 'buy', 'bg-gray-100 text-gray-700': orderType !== 'buy'}"
+                  class="px-3 py-1 md:px-4 md:py-2 rounded-lg font-medium transition-colors text-sm md:text-base"
+                  @click="orderType = 'buy'">买入
+              </button>
+              <button
+                  :class="{'bg-blue-500 text-white': orderType === 'sell', 'bg-gray-100 text-gray-700': orderType !== 'sell'}"
+                  class="px-3 py-1 md:px-4 md:py-2 rounded-lg font-medium transition-colors text-sm md:text-base"
+                  @click="orderType = 'sell'">卖出
+              </button>
             </div>
           </div>
 
           <!-- 选中的股票信息 -->
-          <div class="flex items-center justify-between mb-6">
-            <div class="flex items-center">
-              <div :class="selectedStock.bgColor" class="w-10 h-10 rounded-full flex items-center justify-center mr-3">
+          <div class="flex flex-col md:flex-row items-start md:items-center justify-between mb-4 md:mb-6">
+            <div class="flex items-center mb-2 md:mb-0">
+              <div :class="selectedStock.bgColor"
+                   class="w-8 h-8 md:w-10 md:h-10 rounded-full flex items-center justify-center mr-2 md:mr-3">
                 <span v-if="selectedStock.text" class="text-sm font-bold text-white">{{ selectedStock.text }}</span>
-                <i v-if="selectedStock.icon" :class="selectedStock.icon" class="text-white"></i>
+                <i v-if="selectedStock.icon" :class="selectedStock.icon" class="text-white text-sm md:text-base"></i>
               </div>
               <div>
-                <div class="font-medium text-lg text-gray-800">{{ selectedStock.name }}</div>
-                <div class="text-muted">{{ selectedStock.code }}</div>
+                <div class="font-medium text-base md:text-lg text-gray-800">{{ selectedStock.name }}</div>
+                <div class="text-muted text-sm">{{ selectedStock.code }}</div>
               </div>
             </div>
             <div class="text-right">
-              <div class="font-medium text-lg text-gray-800">{{ selectedStock.price }}</div>
-              <div :class="selectedStock.change >= 0 ? 'text-green-600' : 'text-red-600'">
+              <div class="font-medium text-base md:text-lg text-gray-800">{{ selectedStock.price }}</div>
+              <div :class="selectedStock.change >= 0 ? 'text-green-600' : 'text-red-600'" class="text-sm">
                 {{ selectedStock.change >= 0 ? '+' : '' }}{{ selectedStock.change }}%
               </div>
             </div>
           </div>
 
           <!-- 交易表单 -->
-          <div class="space-y-4">
+          <div class="space-y-3 md:space-y-4">
             <div>
-              <label class="block text-muted mb-2">交易类型</label>
-              <div class="flex space-x-3">
+              <label class="block text-muted mb-1 md:mb-2 text-sm md:text-base">交易类型</label>
+              <div class="flex flex-wrap space-x-2 md:space-x-3">
                 <div class="flex items-center">
-                  <input type="radio" id="market-order" value="market" v-model="orderMode" class="mr-2 text-blue-500">
-                  <label for="market-order" class="text-gray-700">市价单</label>
+                  <input type="radio" id="market-order" value="market" v-model="orderMode"
+                         class="mr-1 md:mr-2 text-blue-500">
+                  <label for="market-order" class="text-gray-700 text-sm md:text-base">市价单</label>
                 </div>
                 <div class="flex items-center">
-                  <input type="radio" id="limit-order" value="limit" v-model="orderMode" class="mr-2 text-blue-500">
-                  <label for="limit-order" class="text-gray-700">限价单</label>
+                  <input type="radio" id="limit-order" value="limit" v-model="orderMode"
+                         class="mr-1 md:mr-2 text-blue-500">
+                  <label for="limit-order" class="text-gray-700 text-sm md:text-base">限价单</label>
                 </div>
                 <div class="flex items-center">
-                  <input type="radio" id="stop-order" value="stop" v-model="orderMode" class="mr-2 text-blue-500">
-                  <label for="stop-order" class="text-gray-700">止损单</label>
+                  <input type="radio" id="stop-order" value="stop" v-model="orderMode"
+                         class="mr-1 md:mr-2 text-blue-500">
+                  <label for="stop-order" class="text-gray-700 text-sm md:text-base">止损单</label>
                 </div>
               </div>
             </div>
 
-            <div class="grid grid-cols-2 gap-4">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-3 md:gap-4">
               <div>
-                <label class="block text-muted mb-2">数量</label>
+                <label class="block text-muted mb-1 md:mb-2 text-sm md:text-base">数量</label>
                 <div class="flex items-center">
                   <input
                       type="number"
                       v-model="quantity"
-                      class="flex-1 bg-white border border-gray-300 rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-gray-700"
+                      class="flex-1 bg-white border border-gray-300 rounded-lg px-3 py-2 md:px-4 md:py-3 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-gray-700 text-sm md:text-base"
                       min="1"
                   >
                 </div>
               </div>
 
-
-
-              <div v-if="orderMode !== 'market'">
-                <label class="block text-muted mb-2">{{ orderMode === 'limit' ? '限价' : '止损价' }}</label>
+              <div v-if="orderMode !== 'market'" class="p-1">
+                <label class="block text-muted mb-1 md:mb-2 text-sm md:text-base">{{
+                    orderMode === 'limit' ? '限价' : '止损价'
+                  }}</label>
                 <div class="flex items-center">
                   <input
                       type="number"
                       v-model="limitPrice"
-                      class="flex-1 bg-white border border-gray-300 rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-gray-700"
+                      class="flex-1 bg-white border border-gray-300 rounded-lg px-3 py-2 md:px-4 md:py-3 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-gray-700 text-sm md:text-base"
                       min="0"
                       step="0.01"
                   >
                 </div>
               </div>
-
             </div>
 
             <div>
-              <label class="block text-muted mb-2">有效期</label>
+              <label class="block text-muted mb-1 md:mb-2 text-sm md:text-base">有效期</label>
               <div class="relative">
-                <select v-model="orderValidity" class="appearance-none w-full bg-white border border-gray-300 rounded-lg px-4 py-3 pr-8 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-gray-700">
+                <select v-model="orderValidity"
+                        class="appearance-none w-full bg-white border border-gray-300 rounded-lg px-3 py-2 md:px-4 md:py-3 pr-6 md:pr-8 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-gray-700 text-sm md:text-base">
                   <option>当日有效</option>
                   <option>撤单前有效</option>
                   <option>指定日期前有效</option>
                 </select>
-                <i class="fa-solid fa-chevron-down absolute right-3 top-3.5 text-gray-400 pointer-events-none"></i>
+                <i class="fa-solid fa-chevron-down absolute right-2 md:right-3 top-2.5 md:top-3.5 text-gray-400 pointer-events-none text-sm md:text-base"></i>
               </div>
             </div>
 
-            <div class="bg-gray-50 rounded-lg p-4 border border-gray-200">
-              <div class="flex justify-between mb-2">
-                <span class="text-muted">预估交易金额</span>
-                <span class="text-gray-800">{{ calculatedAmount }}</span>
+            <div class="bg-gray-50 rounded-lg p-3 md:p-4 border border-gray-200">
+              <div class="flex justify-between mb-1 md:mb-2">
+                <span class="text-muted text-sm md:text-base">预估交易金额</span>
+                <span class="text-gray-800 text-sm md:text-base">{{ calculatedAmount }}</span>
               </div>
-              <div class="flex justify-between mb-2">
-                <span class="text-muted">交易费用</span>
-                <span class="text-gray-800">$4.99</span>
+              <div class="flex justify-between mb-1 md:mb-2">
+                <span class="text-muted text-sm md:text-base">交易费用</span>
+                <span class="text-gray-800 text-sm md:text-base">$4.99</span>
               </div>
-              <div class="flex justify-between font-medium pt-2 border-t border-gray-200">
-                <span class="text-gray-800">预估总额</span>
-                <span class="text-gray-800">{{ calculatedTotal }}</span>
+              <div class="flex justify-between font-medium pt-1 md:pt-2 border-t border-gray-200">
+                <span class="text-gray-800 text-sm md:text-base">预估总额</span>
+                <span class="text-gray-800 text-sm md:text-base">{{ calculatedTotal }}</span>
               </div>
             </div>
           </div>
         </div>
 
         <!-- 交易确认按钮 -->
-        <div class="flex justify-end space-x-4" v-if="selectedStock">
-          <button class="px-6 py-3 bg-gray-100 hover:bg-gray-200 rounded-lg font-medium text-gray-700 transition-colors">取消</button>
-          <button class="px-6 py-3 bg-blue-500 hover:bg-blue-600 rounded-lg font-medium text-white transition-colors">确认交易</button>
+        <div class="flex justify-end space-x-3 md:space-x-4" v-if="selectedStock">
+          <button
+              class="px-4 py-2 md:px-6 md:py-3 bg-gray-100 hover:bg-gray-200 rounded-lg font-medium text-gray-700 transition-colors text-sm md:text-base">
+            取消
+          </button>
+          <button
+              class="px-4 py-2 md:px-6 md:py-3 bg-blue-500 hover:bg-blue-600 rounded-lg font-medium text-white transition-colors text-sm md:text-base">
+            确认交易
+          </button>
         </div>
       </div>
 
       <!-- 右侧内容 -->
-      <div id="right-content" class="w-1/3">
-
+      <div id="right-content" class="w-full md:w-1/3">
         <!-- 账户信息卡片 -->
-        <div id="account-info" class="card-white rounded-lg p-6 mb-8">
-          <h3 class="text-lg font-semibold mb-4 text-gray-800">账户信息</h3>
-          <div class="space-y-4">
-            <div class="flex justify-between items-center pb-3 border-b border-gray-100">
-              <span class="text-muted">可用资金</span>
-              <span class="font-medium text-lg text-gray-800">¥{{ mockAccountInfo.availableFunds.toLocaleString('zh-CN', { minimumFractionDigits: 2 }) }}</span>
+        <div id="account-info" class="card-white rounded-lg p-4 md:p-6 mb-6 md:mb-8">
+          <h3 class="text-base md:text-lg font-semibold mb-3 md:mb-4 text-gray-800">账户信息</h3>
+          <div class="space-y-3 md:space-y-4">
+            <div class="flex justify-between items-center pb-2 md:pb-3 border-b border-gray-100">
+              <span class="text-muted text-sm md:text-base">可用资金</span>
+              <span class="font-medium text-base md:text-lg text-gray-800">¥{{
+                  mockAccountInfo.availableFunds.toLocaleString('zh-CN', {minimumFractionDigits: 2})
+                }}</span>
             </div>
-            <div class="flex justify-between items-center pb-3 border-b border-gray-100">
-              <span class="text-muted">总资产</span>
-              <span class="font-medium text-lg text-gray-800">¥{{ mockAccountInfo.totalAssets.toLocaleString('zh-CN', { minimumFractionDigits: 2 }) }}</span>
+            <div class="flex justify-between items-center pb-2 md:pb-3 border-b border-gray-100">
+              <span class="text-muted text-sm md:text-base">总资产</span>
+              <span class="font-medium text-base md:text-lg text-gray-800">¥{{
+                  mockAccountInfo.totalAssets.toLocaleString('zh-CN', {minimumFractionDigits: 2})
+                }}</span>
             </div>
             <div class="flex justify-between items-center">
-              <span class="text-muted">今日盈亏</span>
-              <span class="font-medium text-lg" :class="mockAccountInfo.todayProfit >= 0 ? 'text-green-600' : 'text-red-600'">
-                {{ mockAccountInfo.todayProfit >= 0 ? '+' : '' }}¥{{ Math.abs(mockAccountInfo.todayProfit).toLocaleString('zh-CN', { minimumFractionDigits: 2 }) }}
+              <span class="text-muted text-sm md:text-base">今日盈亏</span>
+              <span class="font-medium text-base md:text-lg"
+                    :class="mockAccountInfo.todayProfit >= 0 ? 'text-green-600' : 'text-red-600'">
+                {{
+                  mockAccountInfo.todayProfit >= 0 ? '+' : ''
+                }}¥{{ Math.abs(mockAccountInfo.todayProfit).toLocaleString('zh-CN', {minimumFractionDigits: 2}) }}
               </span>
             </div>
           </div>
         </div>
 
         <!-- 股票图表 -->
-        <div id="stock-chart" class="card-white rounded-lg p-6 mb-8" v-if="selectedStock">
-          <div class="flex justify-between items-center mb-4">
-            <h3 class="text-lg font-semibold text-gray-800">{{ selectedStock.name }} ({{ selectedStock.code }})</h3>
-            <div class="text-sm text-muted">
+        <div id="stock-chart" class="card-white rounded-lg p-4 md:p-6 mb-6 md:mb-8" v-if="selectedStock">
+          <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-3 md:mb-4">
+            <h3 class="text-base md:text-lg font-semibold text-gray-800 mb-1 md:mb-0">{{ selectedStock.name }}
+              ({{ selectedStock.code }})</h3>
+            <div class="text-xs md:text-sm text-muted">
               <i class="fa-solid fa-clock mr-1"></i>
               美东时间
             </div>
           </div>
 
-          <div id="price-chart" class="h-64 w-full"></div>
+          <div id="price-chart" class="h-48 md:h-64 w-full"></div>
 
-          <div class="flex justify-between mt-4 text-sm">
+          <div class="flex flex-wrap justify-center mt-3 md:mt-4 text-xs md:text-sm">
             <button v-for="period in chartPeriods" :key="period"
                     :class="{'bg-blue-500 text-white': selectedPeriod === period, 'bg-gray-100 text-gray-700 hover:bg-gray-200': selectedPeriod !== period}"
-                    class="px-3 py-1 rounded-md transition-colors"
+                    class="px-2 py-1 md:px-3 md:py-1 rounded-md transition-colors m-1 md:m-0.5"
                     @click="handlePeriodChange(period)">
               {{ period }}
             </button>
@@ -322,35 +363,36 @@
         </div>
 
         <!-- 交易提示 -->
-        <div id="trading-tips" class="card-white rounded-lg p-6 mb-8">
-          <h3 class="text-lg font-semibold mb-4 text-gray-800">交易提示</h3>
-          <div class="space-y-4 text-sm">
+        <div id="trading-tips" class="card-white rounded-lg p-4 md:p-6 mb-6 md:mb-8">
+          <h3 class="text-base md:text-lg font-semibold mb-3 md:mb-4 text-gray-800">交易提示</h3>
+          <div class="space-y-3 md:space-y-4 text-xs md:text-sm">
             <div v-for="tip in tradingTips" :key="tip.id" class="flex items-start">
-              <i class="fa-solid fa-circle-info text-blue-500 mt-1 mr-2"></i>
+              <i class="fa-solid fa-circle-info text-blue-500 mt-0.5 mr-1 md:mr-2 text-xs md:text-base"></i>
               <p class="text-muted">{{ tip.content }}</p>
             </div>
           </div>
         </div>
 
         <!-- 相关推荐 -->
-        <div id="recommendations" class="card-white rounded-lg p-6">
-          <h3 class="text-lg font-semibold mb-4 text-gray-800">相关推荐</h3>
-          <div class="space-y-3">
+        <div id="recommendations" class="card-white rounded-lg p-4 md:p-6">
+          <h3 class="text-base md:text-lg font-semibold mb-3 md:mb-4 text-gray-800">相关推荐</h3>
+          <div class="space-y-2 md:space-y-3">
             <div v-for="rec in recommendedStocks" :key="rec.code"
-                 class="flex justify-between items-center p-3 bg-gray-50 rounded-lg hover:bg-gray-100 cursor-pointer transition-colors"
+                 class="flex justify-between items-center p-2 md:p-3 bg-gray-50 rounded-lg hover:bg-gray-100 cursor-pointer transition-colors"
                  @click="selectStock(rec)">
               <div class="flex items-center">
-                <div :class="rec.bgColor" class="w-8 h-8 rounded-full flex items-center justify-center mr-2">
+                <div :class="rec.bgColor"
+                     class="w-6 h-6 md:w-8 md:h-8 rounded-full flex items-center justify-center mr-1 md:mr-2">
                   <span class="text-xs font-bold text-white">{{ rec.text }}</span>
                 </div>
                 <div>
-                  <div class="font-medium text-gray-800">{{ rec.name }}</div>
+                  <div class="font-medium text-gray-800 text-sm md:text-base">{{ rec.name }}</div>
                   <div class="text-xs text-muted">{{ rec.code }}</div>
                 </div>
               </div>
               <div class="text-right">
-                <div class="text-gray-800">{{ rec.price }}</div>
-                <div class="text-green-600 text-sm">+{{ rec.change }}%</div>
+                <div class="text-gray-800 text-sm">{{ rec.price }}</div>
+                <div class="text-green-600 text-xs md:text-sm">+{{ rec.change }}%</div>
               </div>
             </div>
           </div>
@@ -367,7 +409,8 @@ import {goBack, useCurrentDate} from "@/composables/Composable.js";
 import {computed, onMounted, ref, watch} from 'vue';
 import Highcharts from 'highcharts';
 import {parseFloatFixed} from "@/composables/NumberUtils.js";
-const { currentDate } = useCurrentDate()
+
+const {currentDate} = useCurrentDate()
 // 状态管理
 const activeTab = ref('stocks');
 const searchQuery = ref('');
@@ -394,8 +437,6 @@ const loading = ref({
   account: false,
   chart: false
 });
-
-
 
 
 // 加载交易提示
@@ -636,7 +677,7 @@ const initChart = () => {
     let timeLabels = [];
 
     // 根据选中的周期设置数据点数量和时间标签
-    switch(selectedPeriod.value) {
+    switch (selectedPeriod.value) {
       case '1日':
         dataPoints = 14;
         timeLabels = ['9:30', '10:00', '10:30', '11:00', '11:30', '12:00', '12:30', '13:00', '13:30', '14:00', '14:30', '15:00', '15:30', '16:00'];
@@ -648,7 +689,7 @@ const initChart = () => {
       case '1月':
         dataPoints = 30;
         // 简化显示，实际应该是30天的数据
-        timeLabels = Array.from({length: 30}, (_, i) => `${i+1}日`);
+        timeLabels = Array.from({length: 30}, (_, i) => `${i + 1}日`);
         break;
       case '3月':
         dataPoints = 12;
@@ -673,7 +714,7 @@ const initChart = () => {
 
     // 对于不同周期使用不同的波动率
     let volatility = 0.02;
-    switch(selectedPeriod.value) {
+    switch (selectedPeriod.value) {
       case '5日':
         volatility = 0.03;
         break;
@@ -700,10 +741,10 @@ const initChart = () => {
       data.push(parseFloat(currentPrice.toFixed(2)));
     }
 
-    return { data, timeLabels };
+    return {data, timeLabels};
   };
 
-  const { data: priceData, timeLabels } = generateMockPriceData();
+  const {data: priceData, timeLabels} = generateMockPriceData();
 
   Highcharts.chart('price-chart', {
     chart: {
@@ -711,7 +752,7 @@ const initChart = () => {
       backgroundColor: 'transparent',
       height: 256
     },
-    title: { text: null },
+    title: {text: null},
     xAxis: {
       categories: timeLabels,
       labels: {
@@ -724,7 +765,7 @@ const initChart = () => {
       tickColor: '#cbd5e1'
     },
     yAxis: {
-      title: { text: null },
+      title: {text: null},
       labels: {
         style: {
           color: '#64748b',
@@ -733,15 +774,15 @@ const initChart = () => {
       },
       gridLineColor: '#e2e8f0'
     },
-    legend: { enabled: false },
-    credits: { enabled: false },
+    legend: {enabled: false},
+    credits: {enabled: false},
     tooltip: {
       backgroundColor: '#ffffff',
       borderColor: '#e2e8f0',
       style: {
         color: '#334155'
       },
-      formatter: function() {
+      formatter: function () {
         return `<b>时间: ${this.x}</b><br/>价格: $${this.y}`;
       }
     },
@@ -755,7 +796,7 @@ const initChart = () => {
         lineWidth: 2,
         lineColor: '#3B82F6',
         fillColor: {
-          linearGradient: { x1: 0, y1: 0, x2: 0, y2: 1 },
+          linearGradient: {x1: 0, y1: 0, x2: 0, y2: 1},
           stops: [
             [0, 'rgba(59, 130, 246, 0.3)'],
             [1, 'rgba(59, 130, 246, 0)']
