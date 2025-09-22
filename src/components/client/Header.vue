@@ -92,7 +92,6 @@ const dropdownRef = ref(null)
 const userName = ref('')
 // 定义响应式数据
 const userAvatar = ref('')
-
 const props = defineProps({
   from: {
     type: String,
@@ -112,7 +111,7 @@ const navItems = ref([
   { label: '交易中心', activeIndex: 3, path: "/client/transaction" },
   { label: '持仓', activeIndex: 4, path: "/client/holdings" },
   { label: '资金管理', activeIndex: 5, path: "/client/transaction3" },
-  { label: '行情Demo', activeIndex: 6, path: "/client/hangingDemo" },
+  { label: '行情', activeIndex: 6, path: "/client/hangingDemo" },
   { label: '退出', activeIndex: 7, path: '/logout' }
 ]);
 

@@ -1,10 +1,7 @@
-<script setup lang="ts">
-import { ref, onMounted, onBeforeUnmount, watch } from "vue";
+<script setup>
+import { ref, onMounted, onBeforeUnmount, watch, nextTick } from "vue";
 import {
   createChart,
-  type IChartApi,
-  type ISeriesApi,
-  type UTCTimestamp,
   LineSeries,
   CandlestickSeries,
   HistogramSeries
@@ -25,31 +22,21 @@ const indicatorTabs = [
 ];
 const activeTab = ref("Volume"); // 默认显示成交量
 
-const mainContainer = ref<HTMLDivElement | null>(null);
-const indicatorContainer = ref<HTMLDivElement | null>(null);
+const mainContainer = ref(null);
+const indicatorContainer = ref(null);
 
-let mainChart: IChartApi | null = null;
-let indicatorChart: IChartApi | null = null;
+let mainChart = null;
+let indicatorChart = null;
 
-let lineSeries: ISeriesApi<"Line"> | null = null;
-let candleSeries: ISeriesApi<"Candlestick"> | null = null;
-let vwapSeries: ISeriesApi<"Line"> | null = null;
+let lineSeries = null;
+let candleSeries = null;
+let vwapSeries = null;
 
-let indicatorSeries: Record<string, ISeriesApi<any>[]> = {};
+let indicatorSeries = {};
 
 const stockInput = ref("AAPL");
 const intervalSelect = ref("5min");
-const chartType = ref<"Line" | "Candlestick">("Line");
-
-type StockPoint = {
-  time: UTCTimestamp;
-  value: number;
-  open: number;
-  high: number;
-  low: number;
-  close: number;
-  volume: number;
-};
+const chartType = ref("Line");
 
 const stockInfo = ref({
   symbol: "",
@@ -79,7 +66,7 @@ const stockInfo = ref({
 import { getStockData } from "@/api/coin";
 
 // -------------------- 指标计算函数 --------------------
-function calcVWAP(data: any[]) {
+function calcVWAP(data) {
   let cumulativePV = 0;
   let cumulativeVol = 0;
   return data.map((d) => {
@@ -90,7 +77,7 @@ function calcVWAP(data: any[]) {
   });
 }
 
-function calcVOL(data: any[]) {
+function calcVOL(data) {
   return data.map((d, i) => {
     const prevClose = i > 0 ? data[i - 1].close : d.close;
     const up = d.close >= prevClose;
@@ -102,7 +89,7 @@ function calcVOL(data: any[]) {
   });
 }
 
-function calcVolRatio(data: any[], period = 5) {
+function calcVolRatio(data, period = 5) {
   return data.map((d, i) => {
     if (i < period) return { time: d.time, value: 1 };
     const avg =
@@ -114,15 +101,10 @@ function calcVolRatio(data: any[], period = 5) {
   });
 }
 
-function calcKDJ(
-    data: any[],
-    period = 9,
-    kSmoothing = 3,
-    dSmoothing = 3
-): { K: any[]; D: any[]; J: any[] } {
+function calcKDJ(data, period = 9) {
   let K = 50;
   let D = 50;
-  const result = { K: [] as any[], D: [] as any[], J: [] as any[] };
+  const result = { K: [], D: [], J: [] };
 
   data.forEach((d, i) => {
     const start = Math.max(0, i - period + 1);
@@ -142,9 +124,10 @@ function calcKDJ(
 
   return result;
 }
+
 // 简单移动平均 (SMA)
-function calcSMA(data: any[], period = 20) {
-  const sma: { time: number; value: number }[] = [];
+function calcSMA(data, period = 20) {
+  const sma = [];
   for (let i = 0; i < data.length; i++) {
     if (i + 1 < period) {
       sma.push({ time: data[i].time, value: null }); // null 可以让图表跳过
@@ -159,7 +142,7 @@ function calcSMA(data: any[], period = 20) {
 }
 
 // 指数移动平均 (EMA)
-function calcEMA(data: any[], period = 14) {
+function calcEMA(data, period = 14) {
   const k = 2 / (period + 1);
   let ema = data[0].close;
   return data.map((d, i) => {
@@ -170,9 +153,9 @@ function calcEMA(data: any[], period = 14) {
 }
 
 // 加权移动平均 (WMA)
-function calcWMA(data: any[], period = 14) {
+function calcWMA(data, period = 14) {
   const denom = (period * (period + 1)) / 2;
-  const result: { time: number; value: number }[] = [];
+  const result = [];
 
   for (let i = period - 1; i < data.length; i++) {
     let num = 0;
@@ -186,20 +169,20 @@ function calcWMA(data: any[], period = 14) {
 }
 
 // MACD (标准: 12,26,9)
-function calcMACD(data: any[], fast = 12, slow = 26, signal = 9) {
+function calcMACD(data, fast = 12, slow = 26, signal = 9) {
   const emaFast = calcEMA(data, fast).map((d) => d.value);
   const emaSlow = calcEMA(data, slow).map((d) => d.value);
-  let macdLine: any[] = [];
+  let macdLine = [];
   for (let i = 0; i < data.length; i++) {
     if (emaFast[i] == null || emaSlow[i] == null) macdLine.push(null);
-    else macdLine.push(emaFast[i]! - emaSlow[i]!);
+    else macdLine.push(emaFast[i] - emaSlow[i]);
   }
   const signalLine = calcEMA(
       macdLine.map((v, i) => ({ time: data[i].time, close: v ?? 0 })),
       signal
   ).map((d) => d.value);
   const histogram = macdLine.map((v, i) =>
-      v != null && signalLine[i] != null ? v - signalLine[i]! : null
+      v != null && signalLine[i] != null ? v - signalLine[i] : null
   );
 
   return {
@@ -210,9 +193,9 @@ function calcMACD(data: any[], fast = 12, slow = 26, signal = 9) {
 }
 
 // 随机指标 Stochastic Oscillator (Stoch)
-function calcStoch(data: any[], kPeriod = 14, dPeriod = 3) {
-  const K: { time: number; value: number }[] = [];
-  const D: { time: number; value: number }[] = [];
+function calcStoch(data, kPeriod = 14, dPeriod = 3) {
+  const K = [];
+  const D = [];
 
   for (let i = kPeriod - 1; i < data.length; i++) {
     const slice = data.slice(i - kPeriod + 1, i + 1);
@@ -236,8 +219,8 @@ function calcStoch(data: any[], kPeriod = 14, dPeriod = 3) {
 }
 
 // 商品通道指数 CCI
-function calcCCI(data: any[], period = 20) {
-  const result: { time: number; value: number }[] = [];
+function calcCCI(data, period = 20) {
+  const result = [];
   for (let i = 0; i < data.length; i++) {
     const slice = data.slice(Math.max(0, i - period + 1), i + 1);
     const typicalPrice = slice.map((x) => (x.high + x.low + x.close) / 3);
@@ -253,11 +236,11 @@ function calcCCI(data: any[], period = 20) {
 }
 
 // 变动率 ROC
-function calcROC(data: any[], period = 12) {
-  const result: { time: number; value: number }[] = [];
+function calcROC(data, period = 12) {
+  const result = [];
   for (let i = 0; i < data.length; i++) {
     const pastIndex = i - period;
-    let roc: number;
+    let roc;
     if (pastIndex >= 0) {
       roc =
           ((data[i].close - data[pastIndex].close) / data[pastIndex].close) * 100;
@@ -269,12 +252,13 @@ function calcROC(data: any[], period = 12) {
   }
   return result;
 }
-async function fetchStockInfo(symbol: string, interval: string) {
+
+async function fetchStockInfo(symbol, interval) {
   try {
     const result = await getStockData(symbol, interval);
     const stockArray = result?.data?.data;
     if (!stockArray || !Array.isArray(stockArray)) return null;
-    const data = stockArray.map((d: any) => ({
+    const data = stockArray.map((d) => ({
       time: Math.floor(new Date(d.time).getTime() / 1000),
       value: parseFloat(d.close),
       open: parseFloat(d.open),
@@ -296,7 +280,7 @@ async function fetchStockInfo(symbol: string, interval: string) {
 }
 
 // === 副图指标渲染 ===
-function renderIndicator(data: any[]) {
+function renderIndicator(data) {
   if (!indicatorContainer.value) return;
   indicatorChart?.remove();
   indicatorChart = createChart(indicatorContainer.value, {
@@ -448,36 +432,36 @@ async function updateChart() {
   stockInfo.value = {
     symbol: info.symbol,
     name: info.companyName,
-    lastPrice: latest.close.toFixed(3),
+    lastPrice: parseFloat(latest.close.toFixed(3)),
     lastPriceUp: change >= 0,
-    change: change.toFixed(3),
-    changePercent: changePercent.toFixed(2),
-    high: high.toFixed(3),
+    change: parseFloat(change.toFixed(3)),
+    changePercent: parseFloat(changePercent.toFixed(2)),
+    high: parseFloat(high.toFixed(3)),
     highUp: high >= latest.close,
-    low: low.toFixed(3),
+    low: parseFloat(low.toFixed(3)),
     lowUp: low >= latest.close,
     volume,
     turnover,
     lastUpdated: formattedTime,
-    preMarketPrice: info.preMarketLatest.close?.toFixed(3) || 0,
+    preMarketPrice: info.preMarketLatest.close ? parseFloat(info.preMarketLatest.close.toFixed(3)) : 0,
     preMarketPriceUp:
         info.preMarketLatest.close && info.preMarketLatest.open
             ? info.preMarketLatest.close >= info.preMarketLatest.open
             : true,
     preMarketChange:
         info.preMarketLatest.close && info.preMarketLatest.open
-            ? (info.preMarketLatest.close - info.preMarketLatest.open).toFixed(3)
+            ? parseFloat((info.preMarketLatest.close - info.preMarketLatest.open).toFixed(3))
             : 0,
     preMarketChangePercent:
         info.preMarketLatest.close && info.preMarketLatest.open
-            ? (
+            ? parseFloat((
                 ((info.preMarketLatest.close - info.preMarketLatest.open) /
                     info.preMarketLatest.open) *
                 100
-            ).toFixed(2)
+            ).toFixed(2))
             : 0,
-    preMarketHigh: info.preMarketLatest.high?.toFixed(3) || 0,
-    preMarketLow: info.preMarketLatest.low?.toFixed(3) || 0,
+    preMarketHigh: info.preMarketLatest.high ? parseFloat(info.preMarketLatest.high.toFixed(3)) : 0,
+    preMarketLow: info.preMarketLatest.low ? parseFloat(info.preMarketLatest.low.toFixed(3)) : 0,
     preMarketVolume: info.preMarketLatest.volume || 0,
     preMarketTurnover:
         info.preMarketLatest.close && info.preMarketLatest.volume
@@ -519,12 +503,12 @@ onMounted(async () => {
   // 自动适应窗口
   const handleResize = () => {
     mainChart?.resize(
-        mainContainer.value!.clientWidth,
-        mainContainer.value!.clientHeight
+        mainContainer.value.clientWidth,
+        mainContainer.value.clientHeight
     );
     indicatorChart?.resize(
-        indicatorContainer.value!.clientWidth,
-        indicatorContainer.value!.clientHeight
+        indicatorContainer.value.clientWidth,
+        indicatorContainer.value.clientHeight
     );
   };
   window.addEventListener("resize", handleResize);
