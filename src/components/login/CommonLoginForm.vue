@@ -10,8 +10,8 @@
           <div class="relative">
             <div class="cli-icon">
               <!-- 账号登录时显示图标 -->
-              <i  v-if="loginObject.loginType === '0'"
-                  class="text-gray-400 fa-regular fa-user-circle"></i>
+              <i v-if="loginObject.loginType === '0'"
+                 class="text-gray-400 fa-regular fa-user-circle"></i>
               <i
                   v-if="loginObject.loginType === '1'"
                   class="text-gray-400 fa-regular fa-envelope"
@@ -36,7 +36,7 @@
           </div>
         </div>
         <!-- 账号密码登录区域 -->
-        <div v-if="props.loginObject.loginType === '0'"  class="mb-6">
+        <div v-if="props.loginObject.loginType === '0'" class="mb-6">
           <div class="broker-class2">
             <label class="broker-class3" for="broker-password">
               密码<span class="text-red-500">*</span>
@@ -129,7 +129,7 @@
     </div>
 
     <div id="client-new-account" class="client-new-account"
-         v-show="loginObject.userType === '02'" >
+         v-show="loginObject.userType === '02'">
       <div class="flex items-start">
         <div class="flex-shrink-0 mt-0.5">
           <i class="fa-solid fa-gift text-secondary-dark"></i>
@@ -155,7 +155,8 @@
     </div>
 
     <!-- 弹框遮罩层 -->
-    <div v-if="showVerificationModal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+    <div v-if="showVerificationModal"
+         class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
       <div class="bg-white rounded-lg shadow-xl w-full max-w-md">
         <div class="p-6">
           <div class="flex justify-between items-center mb-4">
@@ -296,13 +297,16 @@
 </template>
 
 <script setup>
-import { ref, onMounted, onUnmounted,watch } from 'vue'
+import {ref, onMounted, onUnmounted, watch} from 'vue'
 import {getCodeImg, login, sendCode} from '@/api/login'
-import { useRouter } from 'vue-router'
+import {useRouter} from 'vue-router'
+
 const router = useRouter()
-import { useToast } from '@/composables/UseToast.js'
-import {setToken} from "@/utils/auth.js";
-const { successToast, errorToast } = useToast()
+import {useToast} from '@/composables/UseToast.js'
+import {setToken} from "@/utils/auth.js"
+import tradeWebSocket from '@/plugins/websocket.js'
+
+const {successToast, errorToast} = useToast()
 // 当前激活的Tab
 const activeTab = ref('sms')
 // 自动选择的Tab
@@ -399,7 +403,7 @@ const handleGetCaptcha = async () => {
 
 // 组件卸载时清除定时器
 onUnmounted(() => {
-  if(timer) clearInterval(timer)
+  if (timer) clearInterval(timer)
 })
 
 // 表单数据
@@ -418,7 +422,7 @@ watch(
     (newVal) => {
       formData.value.loginType = newVal
     },
-    { immediate: true } // 立即触发一次同步
+    {immediate: true} // 立即触发一次同步
 )
 
 // 监听 loginObject.userType 变化并同步到 formData
@@ -427,7 +431,7 @@ watch(
     (newVal) => {
       formData.value.userType = newVal
     },
-    { immediate: true } // 立即触发一次同步
+    {immediate: true} // 立即触发一次同步
 )
 
 // 处理表单提交
@@ -455,10 +459,70 @@ const handleSubmit = async () => {
       localStorage.setItem('userName', res.data.userName)
       localStorage.setItem('phoneNumber', res.data.phoneNumber)
       localStorage.setItem('email', res.data.email)
-      if(props.loginObject.userType === '02'){
+      // 从响应数据中提取用户ID或构造用户标识
+      const userId = res.data.userId;
+      // 保存用户ID到localStorage
+      localStorage.setItem('userId', userId);
+
+      // 连接股票WebSocket
+      try {
+        // 确保userId存在，避免连接时出现undefined
+        if (!userId) {
+          console.warn('用户ID不存在，跳过WebSocket连接');
+        } else {
+          console.log('WebSocket认证开始');
+          // 设置WebSocket认证信息
+          const authSuccess = tradeWebSocket.setAuthInfo(res.data.access_token, userId);
+          console.log('WebSocket认证结果:', authSuccess);
+          
+          if (authSuccess) {
+            // 连接WebSocket
+            tradeWebSocket.connect();
+          
+            // 添加WebSocket事件监听
+            tradeWebSocket.onOpen(() => {
+              console.log('股票WebSocket连接成功，等待认证响应');
+              // 这里可以添加连接成功后的初始化逻辑，如订阅默认行情
+            });
+          
+            tradeWebSocket.onMessage((data) => {
+              // 处理认证响应
+              if (data && data.type === 'auth_response') {
+                if (data.success) {
+                  console.log('股票WebSocket认证成功');
+                  // 认证成功后可以执行订阅操作
+                  // 例如：tradeWebSocket.subscribe(['stock1', 'stock2'], 'ticker');
+                } else {
+                  console.error('股票WebSocket认证失败:', data.message || '未知错误');
+                }
+              } else {
+                // 处理其他业务消息
+                console.log('收到WebSocket业务消息:', data);
+              }
+            });
+          
+            tradeWebSocket.onError((error) => {
+              console.error('股票WebSocket连接错误:', error);
+              // 可以添加连接错误的用户提示
+            });
+          
+            tradeWebSocket.onClose((event) => {
+              console.log('股票WebSocket连接已关闭，关闭代码:', event?.code);
+              // 这里可以添加重连机制或用户提示
+            });
+          } else {
+            console.error('WebSocket认证信息设置失败');
+          }
+        }
+      } catch (wsError) {
+        console.error('WebSocket连接失败:', wsError);
+        // WebSocket连接失败不影响登录流程
+      }
+
+      if (props.loginObject.userType === '02') {
         await router.push('/client/index')
       }
-      if(props.loginObject.userType=== '01'){
+      if (props.loginObject.userType === '01') {
         await router.push('/agency/index')
       }
     }
@@ -632,7 +696,7 @@ const sendEmailCode = async () => {
     closeVerificationModal() // 关闭弹框
   } else {
     errorToast(res.msg || "发送失败");
-    getCode() // 刷新验证码
+    await getCode() // 刷新验证码
   }
 }
 
@@ -725,10 +789,11 @@ const startEmailCountdown = () => {
   @apply inline-flex items-center mt-2 text-sm font-medium text-primary hover:text-primary-dark cursor-pointer;
 }
 
-.client-new-account{
+.client-new-account {
   @apply mt-6 p-4 bg-primary-light rounded-lg border border-primary/20;
 }
-.register-class{
+
+.register-class {
   @apply inline-flex items-center mt-2 text-sm font-medium text-primary hover:text-primary-dark cursor-pointer;
 }
 
@@ -736,6 +801,7 @@ const startEmailCountdown = () => {
 button:disabled {
   @apply opacity-50 cursor-not-allowed;
 }
+
 .input-group {
   display: flex;
   align-items: center;

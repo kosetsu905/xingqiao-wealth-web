@@ -104,21 +104,50 @@
             <div class="p-3 md:p-4 text-right">涨跌幅</div>
           </div>
           <div class="text-xs md:text-sm">
-            <template v-for="(market, index) in globalMarkets" :key="index">
-              <div class="grid grid-cols-5 cursor-pointer hover:bg-gray-100 transition-colors duration-200"
-                   @click="goToInvestmentProduct(market.code)">
-                <div class="p-3 md:p-4 border-b border-gray-200 font-medium">{{ market.name }}</div>
-                <div class="p-3 md:p-4 border-b border-gray-200 text-right text-gray-500">{{ market.code }}</div>
-                <div class="p-3 md:p-4 border-b border-gray-200 text-right">{{ market.value }}</div>
-                <div class="p-3 md:p-4 border-b border-gray-200 text-right" :class="market.changeClass">{{
-                    market.change
-                  }}
-                </div>
-                <div class="p-3 md:p-4 border-b border-gray-200 text-right" :class="market.bgClass">{{
-                    market.percent
-                  }}
-                </div>
+            <template v-if="marketsLoading">
+              <div class="grid grid-cols-5 animate-pulse">
+                <div class="p-3 md:p-4 border-b border-gray-200 font-medium bg-gray-200 rounded"></div>
+                <div class="p-3 md:p-4 border-b border-gray-200 text-right text-gray-500 bg-gray-200 rounded"></div>
+                <div class="p-3 md:p-4 border-b border-gray-200 text-right bg-gray-200 rounded"></div>
+                <div class="p-3 md:p-4 border-b border-gray-200 text-right bg-gray-200 rounded"></div>
+                <div class="p-3 md:p-4 border-b border-gray-200 text-right bg-gray-200 rounded"></div>
               </div>
+              <!-- 重复显示几行骨架屏 -->
+              <div class="grid grid-cols-5 animate-pulse">
+                <div class="p-3 md:p-4 border-b border-gray-200 font-medium bg-gray-200 rounded"></div>
+                <div class="p-3 md:p-4 border-b border-gray-200 text-right text-gray-500 bg-gray-200 rounded"></div>
+                <div class="p-3 md:p-4 border-b border-gray-200 text-right bg-gray-200 rounded"></div>
+                <div class="p-3 md:p-4 border-b border-gray-200 text-right bg-gray-200 rounded"></div>
+                <div class="p-3 md:p-4 border-b border-gray-200 text-right bg-gray-200 rounded"></div>
+              </div>
+              <div class="grid grid-cols-5 animate-pulse">
+                <div class="p-3 md:p-4 border-b border-gray-200 font-medium bg-gray-200 rounded"></div>
+                <div class="p-3 md:p-4 border-b border-gray-200 text-right text-gray-500 bg-gray-200 rounded"></div>
+                <div class="p-3 md:p-4 border-b border-gray-200 text-right bg-gray-200 rounded"></div>
+                <div class="p-3 md:p-4 border-b border-gray-200 text-right bg-gray-200 rounded"></div>
+                <div class="p-3 md:p-4 border-b border-gray-200 text-right bg-gray-200 rounded"></div>
+              </div>
+            </template>
+            <template v-else>
+              <template v-for="(market, index) in globalMarkets" :key="index">
+                <div class="grid grid-cols-5 cursor-pointer hover:bg-gray-100 transition-colors duration-200"
+                     @click="goToInvestmentProduct(market.stockCode)">
+                  <div class="p-3 md:p-4 border-b border-gray-200 font-medium">{{ market.stockName }}</div>
+                  <div class="p-3 md:p-4 border-b border-gray-200 text-right text-gray-500">{{ market.stockCode }}</div>
+                  <div class="p-3 md:p-4 border-b border-gray-200 text-right">{{ market.currentPrice }}</div>
+                  <div class="p-3 md:p-4 border-b border-gray-200 text-right" :class="market.changeClass">
+                    {{ market.priceChange }}
+                  </div>
+                  <div class="p-3 md:p-4 border-b border-gray-200 text-right" :class="market.bgClass">
+                    {{ market.priceChangePercent }}
+                  </div>
+                </div>
+              </template>
+              <template v-if="globalMarkets.length === 0">
+                <div class="p-6 text-center text-gray-500">
+                  暂无市场数据
+                </div>
+              </template>
             </template>
           </div>
         </div>
@@ -345,7 +374,7 @@
 <script setup>
 import Header from '@/components/client/Header.vue'
 import {useRouter} from 'vue-router'
-import {computed, onMounted, reactive, ref} from 'vue'
+import {onMounted, onUnmounted, reactive, ref} from 'vue'
 import {
   CategoryScale,
   Chart,
@@ -357,11 +386,13 @@ import {
   PointElement,
   Tooltip
 } from 'chart.js'
+import {useCurrentDate} from '@/composables/Composable.js'
+import tradeWebSocket from "@/plugins/websocket.js";
 
 const userName = ref('')
-import {useCurrentDate} from '@/composables/Composable.js'
 
 const {currentDate} = useCurrentDate()
+
 
 
 // 注册 Chart.js 组件
@@ -369,105 +400,29 @@ Chart.register(LineController, LineElement, PointElement, LinearScale, CategoryS
 
 const router = useRouter()
 
-
-// 市场状态
+// 市场状态数据
 const marketStatus = ref({
-  trend: '今日市场走势看涨',
-  headline: '英国央行调低基准利率0.5个百分点；美股科技股强势反弹，纳斯达克指数创历史新高'
+  headline: '全球市场整体呈现上涨趋势，科技股领涨'
 })
 
 // 全球市场数据
-const globalMarkets = ref([
-  {
-    name: '纳斯达克',
-    code: 'IXIC.GI',
-    value: '21,783.45',
-    change: '+42.63',
-    percent: '+1.32%',
-    changeClass: 'text-green-600',
-    bgClass: 'bg-green-100 text-green-800'
-  },
-  {
-    name: '道琼斯',
-    code: 'DJI.GI',
-    value: '45,821.57',
-    change: '+148.94',
-    percent: '+1.40%',
-    changeClass: 'text-green-600',
-    bgClass: 'bg-green-100 text-green-800'
-  },
-  {
-    name: '标普500',
-    code: 'SPX.GI',
-    value: '6,436.15',
-    change: '+284.06',
-    percent: '+1.48%',
-    changeClass: 'text-green-600',
-    bgClass: 'bg-green-100 text-green-800'
-  },
-  {
-    name: '港股恒生',
-    code: 'HSI.HI',
-    value: '24,512.76',
-    change: '+38.42',
-    percent: '+0.86%',
-    changeClass: 'text-green-600',
-    bgClass: 'bg-green-100 text-green-800'
-  },
-  {
-    name: '日经指数',
-    code: 'N225.IX',
-    value: '14,265.86',
-    change: '+156.34',
-    percent: '+1.11%',
-    changeClass: 'text-green-600',
-    bgClass: 'bg-green-100 text-green-800'
-  },
-  {
-    name: 'BITCOIN',
-    code: 'BTC',
-    value: '118,416.98',
-    change: '+84.76',
-    percent: '+0.24%',
-    changeClass: 'text-green-600',
-    bgClass: 'bg-green-100 text-green-800'
-  },
-  {
-    name: 'ETHER',
-    code: 'ETH',
-    value: '4,686.25',
-    change: '-106.29',
-    percent: '-0.32%',
-    changeClass: 'text-red-600',
-    bgClass: 'bg-red-100 text-red-800'
-  },
-  {
-    name: 'SOLANA',
-    code: 'SOL',
-    value: '209.42',
-    change: '+63.15',
-    percent: '+0.40%',
-    changeClass: 'text-green-600',
-    bgClass: 'bg-green-100 text-green-800'
-  }
-])
+const globalMarkets = ref([])
+const marketsLoading = ref(true)
 
 // 热门股票数据
-// 股票数据,mock数据，todo 需要改成后端数据
 const stockData = reactive([
   {
     name: '阿里巴巴',
-    code: 'BABA.NYSE',
-    price: '92.76',
-    change: '$2.45',
-    percent: '+2.71%',
+    code: 'BABA',
+    price: '74.64',
+    change: '+0.62',
+    percent: '+0.84%',
+    color: 'green',
+    chartData: [73.50, 73.75, 74.20, 74.10, 74.64],
+    timeData: ['09:30', '10:30', '11:30', '13:30', '14:30'],
     initial: '阿',
     bgColor: 'bg-blue-100',
-    textColor: 'text-blue-800',
-    changeColor: 'text-green-600',
-    isPositive: true,
-    data: [90, 89, 91, 90.5, 92, 91.5, 93, 92.5, 94, 93.5],
-    labels: ['09:30', '09:35', '09:40', '09:45', '09:50', '09:55', '10:00', '10:05', '10:10', '10:15']
+    textColor: 'text-blue-600'
   },
   {
     name: '腾讯控股',
@@ -555,9 +510,342 @@ const fundData = ref([
 // 图表引用数组
 const chartRefs = ref([])
 
+// 是否已订阅全球市场数据的标志
+const isSubscribed = ref(false)
+
+// 处理WebSocket消息的回调函数
+const handleWebSocketMessage = (data) => {
+  try {
+    const messageData = typeof data === 'string' ? JSON.parse(data) : data;
+    // 检查是否为全球市场行情数据
+    if (messageData.type === 'global_indices' && Array.isArray(messageData.stockQuotes)) {
+      console.log('stockQuotes消息:', Array.isArray(messageData.stockQuotes))
+      // 转换数据格式为前端需要的结构
+      const formattedData = messageData.stockQuotes.map(quote => {
+        // 处理价格、涨跌幅等数据
+        const currentPrice = quote.currentPrice ? quote.currentPrice.toString() : '0';
+        const priceChange = quote.priceChange ? quote.priceChange.toString() : '0';
+        const priceChangePercent = quote.priceChangePercent ? quote.priceChangePercent.toString() : '0%';
+        
+        // 确定涨跌颜色类
+        const isPositive = priceChange.startsWith('+') || parseFloat(priceChange) > 0;
+        const changeClass = isPositive ? 'text-green-600' : 'text-red-600';
+        
+        // 格式化涨跌幅百分比显示
+        const percent = priceChangePercent.includes('%') ? priceChangePercent : `${priceChangePercent}%`;
+
+        // 添加市场代码前缀到股票代码
+        const fullCode = quote.marketCode && quote.stockCode ? `${quote.stockCode}.${quote.marketCode}` : (quote.stockCode || '');
+
+        return {
+          stockName:  quote.stockName || '未知产品',
+          stockCode: fullCode,
+          currentPrice: formatPrice(currentPrice, quote.marketCode),
+          priceChange: formatPriceChange(priceChange, quote.marketCode),
+          priceChangePercent: percent,
+          changeClass: changeClass,
+          bgClass: changeClass
+        };
+      });
+      
+      // 更新全球市场数据
+      globalMarkets.value = formattedData;
+      marketsLoading.value = false;
+      
+      console.log('成功更新全球市场数据:', formattedData.length, '条');
+    }
+  } catch (error) {
+    console.error('处理WebSocket消息失败:', error);
+  }
+};
+
+// 格式化价格显示，添加适当的货币符号
+const formatPrice = (price, marketCode) => {
+  if (!price) return '0';
+  
+  // 根据市场代码添加货币符号
+  const currencySymbol = getCurrencySymbol(marketCode);
+  // 添加千分位分隔符
+  const formattedPrice = parseFloat(price).toLocaleString('zh-CN', {
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2
+  });
+  
+  return `${currencySymbol}${formattedPrice}`;
+};
+
+// 格式化价格变动显示
+const formatPriceChange = (priceChange, marketCode) => {
+  if (!priceChange) return '+0';
+  
+  // 根据市场代码添加货币符号
+  const currencySymbol = getCurrencySymbol(marketCode);
+  
+  // 确保有正负号
+  const sign = priceChange.startsWith('+') || priceChange.startsWith('-') ? '' : '+';
+  
+  return `${sign}${currencySymbol}${priceChange}`;
+};
+
+// 根据市场代码获取货币符号
+const getCurrencySymbol = (marketCode) => {
+  const currencyMap = {
+    'US': '$',
+    'HK': 'HK$',
+    'CN': '¥',
+    'SH': '¥',
+    'SZ': '¥'
+  };
+  
+  return currencyMap[marketCode] || '';
+};
+
+// 初始化WebSocket连接
+const initWebSocket = () => {
+  try {
+    // 从localStorage获取用户信息和token
+    const userId = localStorage.getItem('userId') || '';
+    const accessToken = localStorage.getItem('access_token') || '';
+    
+    if (!userId || !accessToken) {
+      console.warn('缺少用户ID或访问令牌，无法建立WebSocket连接');
+      return;
+    }
+    
+    // 设置认证信息
+    tradeWebSocket.setAuthInfo(accessToken, userId);
+    
+    // 注册消息回调
+    tradeWebSocket.onMessage(handleWebSocketMessage);
+    
+    // 检查WebSocket是否已经连接
+    if (!tradeWebSocket.isConnected) {
+      // 注册连接成功回调
+      tradeWebSocket.onOpen(() => {
+        console.log('WebSocket连接成功');
+        // 订阅全球市场行情
+        subscribeGlobalIndices(userId);
+      });
+      
+      // 注册连接错误回调
+      tradeWebSocket.onError((error) => {
+        console.error('WebSocket连接错误:', error);
+      });
+      
+      // 连接WebSocket
+      tradeWebSocket.connect();
+    } else {
+      // WebSocket已经连接，直接订阅
+      console.log('WebSocket已连接，直接订阅数据');
+      subscribeGlobalIndices(userId);
+    }
+    
+  } catch (error) {
+    console.error('初始化WebSocket失败:', error);
+  }
+};
+
+
+const queryGlobalStocks  =[
+  {
+    "productCode": "indices",
+    "marketCode": "SH",
+    "stockCode": "000001"
+  },
+  {
+    "productCode": "indices",
+    "marketCode": "SZ",
+    "stockCode": "399001"
+  },
+  {
+    "productCode": "indices",
+    "marketCode": "US",
+    "stockCode": "IBOV"
+  },
+  {
+    "productCode": "indices",
+    "marketCode": "US",
+    "stockCode": "DJI"
+  },
+  {
+    "productCode": "indices",
+    "marketCode": "US",
+    "stockCode": "HSI"
+  },
+  {
+    "productCode": "indices",
+    "marketCode": "US",
+    "stockCode": "N225"
+  },
+  {
+    "productCode": "indices",
+    "marketCode": "US",
+    "stockCode": "INX"
+  },
+  {
+    "productCode": "indices",
+    "marketCode": "US",
+    "stockCode": "COMP"
+  },
+  {
+    "productCode": "indices",
+    "marketCode": "US",
+    "stockCode": "DAX"
+  },
+  {
+    "productCode": "indices",
+    "marketCode": "US",
+    "stockCode": "UKX"
+  },
+  {
+    "productCode": "indices",
+    "marketCode": "US",
+    "stockCode": "PX1"
+  },
+  {
+    "productCode": "indices",
+    "marketCode": "US",
+    "stockCode": "SENSEX"
+  },
+  {
+    "productCode": "indices",
+    "marketCode": "US",
+    "stockCode": "ME00000000"
+  },
+  {
+    "productCode": "indices",
+    "marketCode": "US",
+    "stockCode": "IBXX"
+  },
+  {
+    "productCode": "indices",
+    "marketCode": "US",
+    "stockCode": "IBRA"
+  }
+]
+
+// 订阅全球市场行情数据
+const subscribeGlobalIndices = (userId) => {
+  console.log('开始订阅全球市场行情数据');
+  if (!isSubscribed.value) {
+    try {
+      // 发送订阅全球市场行情的请求
+      const params = {
+        userId: userId,
+        action: 'subscribe',
+        dataType: 'global_indices',
+        params: queryGlobalStocks
+      };
+      tradeWebSocket.send(params);
+      isSubscribed.value = true;
+      console.log('已订阅全球市场行情数据');
+    } catch (error) {
+      console.error('订阅全球市场行情失败:', error);
+    }
+  }
+};
+
+// 备用数据获取方法，当WebSocket连接失败时使用
+const fallbackDataFetch = () => {
+  console.log('请求后端获取市场数据');
+  try {
+    // mock数据
+    globalMarkets.value = getGlobalMarketsData();
+    marketsLoading.value = false;
+  } catch (error) {
+    console.error('备用数据获取失败:', error);
+    marketsLoading.value = false;
+  }
+};
+
+
+// 获取全球市场数据（静态数据，mock数据）
+function getGlobalMarketsData() {
+  return [
+    {
+      stockName: '道琼斯工业平均指数',
+      stockCode: '^DJI',
+      currentPrice: '36,247.87',
+      priceChange: '+184.74',
+      priceChangePercent: '+0.51%',
+      changeClass: 'text-green-600',
+      bgClass: 'text-green-600'
+    },
+    {
+      stockName: '标普500指数',
+      stockCode: '^GSPC',
+      currentPrice: '4,719.55',
+      priceChange: '+21.37',
+      priceChangePercent: '+0.46%',
+      changeClass: 'text-green-600',
+      bgClass: 'text-green-600'
+    },
+    {
+      stockName: '纳斯达克综合指数',
+      stockCode: '^IXIC',
+      currentPrice: '14,813.92',
+      priceChange: '+118.08',
+      priceChangePercent: '+0.80%',
+      changeClass: 'text-green-600',
+      bgClass: 'text-green-600'
+    },
+    {
+      stockName: '日经225指数',
+      stockCode: '^N225',
+      currentPrice: '32,568.71',
+      priceChange: '-318.47',
+      priceChangePercent: '-0.97%',
+      changeClass: 'text-red-600',
+      bgClass: 'text-red-600'
+    },
+    {
+      stockName: '恒生指数',
+      stockCode: '^HSI',
+      currentPrice: '19,517.04',
+      priceChange: '+45.89',
+      priceChangePercent: '+0.24%',
+      changeClass: 'text-green-600',
+      bgClass: 'text-green-600'
+    },
+    {
+      stockName: 'BITCOIN',
+      stockCode: 'BTC-USD',
+      currentPrice: '42,356.72',
+      priceChange: '-1,234.56',
+      priceChangePercent: '-2.83%',
+      changeClass: 'text-red-600',
+      bgClass: 'text-red-600'
+    },
+    {
+      stockName: 'ETHER',
+      stockCode: 'ETH-USD',
+      currentPrice: '2,145.89',
+      priceChange: '+56.78',
+      priceChangePercent: '+2.71%',
+      changeClass: 'text-green-600',
+      bgClass: 'text-green-600'
+    },
+    {
+      stockName: 'SOLANA',
+      stockCode: 'SOL-USD',
+      currentPrice: '107.32',
+      priceChange: '+2.45',
+      priceChangePercent: '+2.33%',
+      changeClass: 'text-green-600',
+      bgClass: 'text-green-600'
+    }
+  ]
+}
+
 // 创建图表的函数
 const createChart = (canvasRef, data, isPositive = true, labels = null) => {
   if (!canvasRef) return
+
+  // 修复：处理可能的undefined数据
+  if (!data || typeof data !== 'object') {
+    console.warn('无效的图表数据:', data);
+    return;
+  }
 
   const ctx = canvasRef.getContext('2d')
 
@@ -566,18 +854,20 @@ const createChart = (canvasRef, data, isPositive = true, labels = null) => {
     canvasRef.chart.destroy()
   }
 
-  // 如果没有提供标签，则生成默认标签
-  const chartLabels = labels || Array.from({length: data.length}, (_, i) => `09:${30 + i}`)
-
+  // 如果没有提供标签，则生成默认标签或使用数组长度生成
+  const chartData = Array.isArray(data) ? data : [];
+  const chartLabels = labels || (Array.isArray(labels) ? labels : 
+    Array.from({length: chartData.length}, (_, i) => `09:${30 + i}`));
+  
   // 创建新的图表实例
   canvasRef.chart = new Chart(ctx, {
     type: 'line',
     data: {
       labels: chartLabels,
       datasets: [{
-        data: data,
+        data: chartData,  // 使用chartData替代直接使用data
         borderColor: isPositive ? '#10B981' : '#EF4444',
-        backgroundColor: isPositive ? 'rgba(16, 185, 129, 0.2)' : 'rgba(239, 68, 68, 0.2)',
+        backgroundColor: isPositive ? 'rgba(16, 185, 129, 0.1)' : 'rgba(239, 68, 68, 0.1)',
         borderWidth: 2,
         pointRadius: 0,
         pointHoverRadius: 4,
@@ -630,16 +920,50 @@ const createChart = (canvasRef, data, isPositive = true, labels = null) => {
   })
 }
 
-// 在组件挂载时初始化图表
+// 在组件挂载时初始化
 onMounted(() => {
   // 为每个股票创建图表
   stockData.forEach((stock, index) => {
-    createChart(chartRefs.value[index], stock.data, stock.isPositive, stock.labels)
-  })
-  //账号名
-  userName.value = localStorage.getItem('userName')
-})
+    // 修复：处理不同的数据结构
+    const chartData = stock.data || stock.chartData || [];
+    const chartLabels = stock.labels || stock.timeData || null;
+    const isPositive = stock.isPositive !== undefined ? stock.isPositive : true;
+    
+    createChart(chartRefs.value[index], chartData, isPositive, chartLabels);
+  });
+  
+  // 设置账号名
+  userName.value = localStorage.getItem('userName') || '用户'
 
+  //初始化全球行情数据，请求后端
+  fallbackDataFetch();
+  // 初始化WebSocket连接，订阅股票行情数据
+  initWebSocket();
+});
+
+// 在组件卸载时取消订阅
+onUnmounted(() => {
+  try {
+    // 仅在已订阅的情况下取消订阅
+    if (isSubscribed.value && tradeWebSocket.isConnected) {
+      // 发送取消订阅消息
+      const unsubscribeMessage = {
+        action: 'unsubscribe',
+        dataType: 'global_indices'
+      };
+      tradeWebSocket.send(JSON.stringify(unsubscribeMessage));
+      isSubscribed.value = false;
+      console.log('已取消订阅全球市场行情数据');
+    }
+    // 不再关闭WebSocket连接，因为登录时已经建立并可能被其他组件使用
+    // 仅移除当前组件的消息处理器
+    tradeWebSocket.removeMessageHandler(handleWebSocketMessage);
+  } catch (error) {
+    console.error('取消订阅或清理WebSocket处理器失败:', error);
+  }
+});
+
+// 跳转到全球市场页面
 const goToGlobalMarkets = () => {
   router.push({
     path: '/client/investmentProductList'
@@ -657,14 +981,13 @@ const goToInvestmentProduct = (code) => {
   })
 }
 
-// 跳转到投资产品详情页
+// 跳转到交易中心
 const goToTrade = () => {
   console.log('跳转到交易中心')
   router.push({
     path: '/client/transaction'
   })
 }
-
 </script>
 
 
