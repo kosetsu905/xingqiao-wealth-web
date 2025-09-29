@@ -534,12 +534,9 @@ const handleWebSocketMessage = (data) => {
         // 格式化涨跌幅百分比显示
         const percent = priceChangePercent.includes('%') ? priceChangePercent : `${priceChangePercent}%`;
 
-        // 添加市场代码前缀到股票代码
-        const fullCode = quote.marketCode && quote.stockCode ? `${quote.stockCode}.${quote.marketCode}` : (quote.stockCode || '');
-
         return {
           stockName:  quote.stockName || '未知产品',
-          stockCode: fullCode,
+          stockCode: quote.stockCode,
           currentPrice: formatPrice(currentPrice, quote.marketCode),
           priceChange: formatPriceChange(priceChange, quote.marketCode),
           priceChangePercent: percent,
@@ -547,11 +544,11 @@ const handleWebSocketMessage = (data) => {
           bgClass: changeClass
         };
       });
-      
+
       // 更新全球市场数据
       globalMarkets.value = formattedData;
       marketsLoading.value = false;
-      
+
       console.log('成功更新全球市场数据:', formattedData.length, '条');
     }
   } catch (error) {
