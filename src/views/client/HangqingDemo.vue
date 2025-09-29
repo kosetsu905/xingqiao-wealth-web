@@ -63,7 +63,7 @@ const stockInfo = ref({
 });
 
 // 获取股票数据
-import { getStockData } from "@/api/coin";
+import { getStockData } from "@/api/order";
 
 // -------------------- 指标计算函数 --------------------
 function calcVWAP(data) {
