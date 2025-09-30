@@ -537,8 +537,8 @@ const handleWebSocketMessage = (data) => {
         return {
           stockName:  quote.stockName || '未知产品',
           stockCode: quote.stockCode,
-          currentPrice: formatPrice(currentPrice, quote.marketCode),
-          priceChange: formatPriceChange(priceChange, quote.marketCode),
+          currentPrice: currentPrice,
+          priceChange: priceChange,
           priceChangePercent: percent,
           changeClass: changeClass,
           bgClass: changeClass
@@ -556,46 +556,7 @@ const handleWebSocketMessage = (data) => {
   }
 };
 
-// 格式化价格显示，添加适当的货币符号
-const formatPrice = (price, marketCode) => {
-  if (!price) return '0';
-  
-  // 根据市场代码添加货币符号
-  const currencySymbol = getCurrencySymbol(marketCode);
-  // 添加千分位分隔符
-  const formattedPrice = parseFloat(price).toLocaleString('zh-CN', {
-    minimumFractionDigits: 2,
-    maximumFractionDigits: 2
-  });
-  
-  return `${currencySymbol}${formattedPrice}`;
-};
 
-// 格式化价格变动显示
-const formatPriceChange = (priceChange, marketCode) => {
-  if (!priceChange) return '+0';
-  
-  // 根据市场代码添加货币符号
-  const currencySymbol = getCurrencySymbol(marketCode);
-  
-  // 确保有正负号
-  const sign = priceChange.startsWith('+') || priceChange.startsWith('-') ? '' : '+';
-  
-  return `${sign}${currencySymbol}${priceChange}`;
-};
-
-// 根据市场代码获取货币符号
-const getCurrencySymbol = (marketCode) => {
-  const currencyMap = {
-    'US': '$',
-    'HK': 'HK$',
-    'CN': '¥',
-    'SH': '¥',
-    'SZ': '¥'
-  };
-  
-  return currencyMap[marketCode] || '';
-};
 
 // 初始化WebSocket连接
 const initWebSocket = () => {
