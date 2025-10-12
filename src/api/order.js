@@ -8,3 +8,36 @@ export function getStockData(symbol, interval) {
         method: 'get'
     })
 }
+
+// 获取可用资金
+export function getAvailableFunds() {
+    return request({
+        url: '/order/client/account/my/available-balance',
+        headers: {
+            isToken: true
+        },
+        method: 'get'
+    })
+}
+
+// 获取总资产
+export function getTotalAssets() {
+    return request({
+        url: '/order/client/account/my/total-balance',
+        headers: {
+            isToken: true
+        },
+        method: 'get'
+    })
+}
+
+// 获取今日盈亏
+export function getTodayProfit() {
+    return request({
+        url: '/order/order/trade/today-profit-loss',
+        headers: {
+            isToken: true
+        },
+        method: 'get'
+    })
+}

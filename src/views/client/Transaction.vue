@@ -318,23 +318,22 @@
             <div class="flex justify-between items-center pb-2 md:pb-3 border-b border-gray-100">
               <span class="text-muted text-sm md:text-base">可用资金</span>
               <span class="font-medium text-base md:text-lg text-gray-800">¥{{
-                  mockAccountInfo.availableFunds.toLocaleString('zh-CN', {minimumFractionDigits: 2})
+                  availableFunds.toLocaleString('zh-CN', {minimumFractionDigits: 2})
                 }}</span>
             </div>
             <div class="flex justify-between items-center pb-2 md:pb-3 border-b border-gray-100">
               <span class="text-muted text-sm md:text-base">总资产</span>
               <span class="font-medium text-base md:text-lg text-gray-800">¥{{
-                  mockAccountInfo.totalAssets.toLocaleString('zh-CN', {minimumFractionDigits: 2})
+                  totalAssets.toLocaleString('zh-CN', {minimumFractionDigits: 2})
                 }}</span>
             </div>
             <div class="flex justify-between items-center">
               <span class="text-muted text-sm md:text-base">今日盈亏</span>
-              <span class="font-medium text-base md:text-lg"
-                    :class="mockAccountInfo.todayProfit >= 0 ? 'text-green-600' : 'text-red-600'">
-                {{
-                  mockAccountInfo.todayProfit >= 0 ? '+' : ''
-                }}¥{{ Math.abs(mockAccountInfo.todayProfit).toLocaleString('zh-CN', {minimumFractionDigits: 2}) }}
-              </span>
+              <span class="font-medium text-base md:text-lg" 
+                :class="todayProfit >= 0 ? 'text-green-600' : 'text-red-600'">
+                {{ 
+                  todayProfit >= 0 ? '+' : '-'
+                }}¥{{ Math.abs(todayProfit).toLocaleString('zh-CN', {minimumFractionDigits: 2}) }}</span>
             </div>
           </div>
         </div>
@@ -409,6 +408,7 @@ import {goBack, useCurrentDate} from "@/composables/Composable.js";
 import {computed, onMounted, ref, watch} from 'vue';
 import Highcharts from 'highcharts';
 import {parseFloatFixed} from "@/composables/NumberUtils.js";
+import {getAvailableFunds, getTotalAssets, getTodayProfit} from "@/api/order.js";
 
 const {currentDate} = useCurrentDate()
 // 状态管理
@@ -429,6 +429,10 @@ const tradingTips = ref([]);
 const currentPage = ref(1);
 const itemsPerPage = ref(5);
 
+// 账户信息 - 使用独立的响应式变量
+const availableFunds = ref(245689.25);
+const totalAssets = ref(1245689.25);
+const todayProfit = ref(-12458.63);
 
 // 加载状态
 const loading = ref({
@@ -815,6 +819,7 @@ const initChart = () => {
 // 生命周期
 onMounted(() => {
   // 默认选择第一个股票
+
   if (stocks.value.length > 0) {
     selectStock(stocks.value[0]);
   }
@@ -842,21 +847,42 @@ watch(selectedStock, () => {
 // 加载账户信息
 const loadAccountInfo = async () => {
   try {
-    loading.account = true;
-    //
+    loading.value.account = true;
+    // 调用API获取可用资金数据
+    const fundsResponse = await getAvailableFunds()
+    console.log('可用资金响应:', fundsResponse);
+    // 假设API返回的格式为 { data: 数值 }
+    if (fundsResponse && fundsResponse.code === 200 && fundsResponse.data) {
+      availableFunds.value = fundsResponse.data || availableFunds.value;
+      console.log('可用资金数据:', fundsResponse.data);
+      console.log('可用资金值:', availableFunds.value);
+    }
+
+    // 调用API获取总资产数据
+    const assetsResponse = await getTotalAssets()
+    console.log('总资产响应:', assetsResponse);
+    // 假设API返回的格式为 { data: 数值 }
+    if (assetsResponse && assetsResponse.code === 200 && assetsResponse.data) {
+      totalAssets.value = assetsResponse.data || totalAssets.value;
+      console.log('总资产数据:', assetsResponse.data);
+      console.log('总资产值:', totalAssets.value);
+    }
+
+    // 调用API获取今日盈亏数据
+    const profitResponse = await getTodayProfit()
+    console.log('今日盈亏响应:', profitResponse);
+    // 假设API返回的格式为 { data: 数值 }
+    if (profitResponse && profitResponse.code === 200 && profitResponse.data) {
+      todayProfit.value = profitResponse.data || todayProfit.value;
+      console.log('今日盈亏数据:', profitResponse.data);
+      console.log('今日盈亏值:', todayProfit.value);
+    }
   } catch (error) {
     console.error('加载账户信息失败:', error);
   } finally {
-    loading.account = false;
+    loading.value.account = false;
   }
 };
-
-// 模拟账户信息
-const mockAccountInfo = {
-  availableFunds: 245689.25,
-  totalAssets: 1245689.25,
-  todayProfit: 12458.63
-}
 
 </script>
 
