@@ -4,7 +4,7 @@
 
   <div class="main bg-white shadow-sm border-b border-gray-200">
 
-    <div  class="ml-0 md:ml-16 p-4 md:p-6 bg-white border-b border-gray-200">
+    <div class="ml-0 md:ml-16 p-4 md:p-6 bg-white border-b border-gray-200">
       <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
         <div>
           <h1 class="text-xl md:text-2xl font-semibold flex items-center">
@@ -151,7 +151,6 @@
             </template>
           </div>
         </div>
-
 
 
         <!-- 热门股票 -->
@@ -394,7 +393,6 @@ const userName = ref('')
 const {currentDate} = useCurrentDate()
 
 
-
 // 注册 Chart.js 组件
 Chart.register(LineController, LineElement, PointElement, LinearScale, CategoryScale, Filler, Tooltip, Legend)
 
@@ -526,16 +524,16 @@ const handleWebSocketMessage = (data) => {
         const currentPrice = quote.currentPrice ? quote.currentPrice.toString() : '0';
         const priceChange = quote.priceChange ? quote.priceChange.toString() : '0';
         const priceChangePercent = quote.priceChangePercent ? quote.priceChangePercent.toString() : '0%';
-        
+
         // 确定涨跌颜色类
         const isPositive = priceChange.startsWith('+') || parseFloat(priceChange) > 0;
         const changeClass = isPositive ? 'text-green-600' : 'text-red-600';
-        
+
         // 格式化涨跌幅百分比显示
         const percent = priceChangePercent.includes('%') ? priceChangePercent : `${priceChangePercent}%`;
 
         return {
-          stockName:  quote.stockName || '未知产品',
+          stockName: quote.stockName || '未知产品',
           stockCode: quote.stockCode,
           currentPrice: currentPrice,
           priceChange: priceChange,
@@ -557,25 +555,24 @@ const handleWebSocketMessage = (data) => {
 };
 
 
-
 // 初始化WebSocket连接
 const initWebSocket = () => {
   try {
     // 从localStorage获取用户信息和token
     const userId = localStorage.getItem('userId') || '';
     const accessToken = localStorage.getItem('access_token') || '';
-    
+
     if (!userId || !accessToken) {
       console.warn('缺少用户ID或访问令牌，无法建立WebSocket连接');
       return;
     }
-    
+
     // 设置认证信息
     tradeWebSocket.setAuthInfo(accessToken, userId);
-    
+
     // 注册消息回调
     tradeWebSocket.onMessage(handleWebSocketMessage);
-    
+
     // 检查WebSocket是否已经连接
     if (!tradeWebSocket.isConnected) {
       // 注册连接成功回调
@@ -584,12 +581,12 @@ const initWebSocket = () => {
         // 订阅全球市场行情
         subscribeGlobalIndices(userId);
       });
-      
+
       // 注册连接错误回调
       tradeWebSocket.onError((error) => {
         console.error('WebSocket连接错误:', error);
       });
-      
+
       // 连接WebSocket
       tradeWebSocket.connect();
     } else {
@@ -597,14 +594,14 @@ const initWebSocket = () => {
       console.log('WebSocket已连接，直接订阅数据');
       subscribeGlobalIndices(userId);
     }
-    
+
   } catch (error) {
     console.error('初始化WebSocket失败:', error);
   }
 };
 
 
-const queryGlobalStocks  =[
+const queryGlobalStocks = [
   {
     "productCode": "indices",
     "marketCode": "SH",
@@ -703,97 +700,6 @@ const subscribeGlobalIndices = (userId) => {
   }
 };
 
-// 备用数据获取方法，当WebSocket连接失败时使用
-const fallbackDataFetch = () => {
-  console.log('请求后端获取市场数据');
-  try {
-    // mock数据
-    globalMarkets.value = getGlobalMarketsData();
-    marketsLoading.value = false;
-  } catch (error) {
-    console.error('备用数据获取失败:', error);
-    marketsLoading.value = false;
-  }
-};
-
-
-// 获取全球市场数据（静态数据，mock数据）
-function getGlobalMarketsData() {
-  return [
-    {
-      stockName: '道琼斯工业平均指数',
-      stockCode: '^DJI',
-      currentPrice: '36,247.87',
-      priceChange: '+184.74',
-      priceChangePercent: '+0.51%',
-      changeClass: 'text-green-600',
-      bgClass: 'text-green-600'
-    },
-    {
-      stockName: '标普500指数',
-      stockCode: '^GSPC',
-      currentPrice: '4,719.55',
-      priceChange: '+21.37',
-      priceChangePercent: '+0.46%',
-      changeClass: 'text-green-600',
-      bgClass: 'text-green-600'
-    },
-    {
-      stockName: '纳斯达克综合指数',
-      stockCode: '^IXIC',
-      currentPrice: '14,813.92',
-      priceChange: '+118.08',
-      priceChangePercent: '+0.80%',
-      changeClass: 'text-green-600',
-      bgClass: 'text-green-600'
-    },
-    {
-      stockName: '日经225指数',
-      stockCode: '^N225',
-      currentPrice: '32,568.71',
-      priceChange: '-318.47',
-      priceChangePercent: '-0.97%',
-      changeClass: 'text-red-600',
-      bgClass: 'text-red-600'
-    },
-    {
-      stockName: '恒生指数',
-      stockCode: '^HSI',
-      currentPrice: '19,517.04',
-      priceChange: '+45.89',
-      priceChangePercent: '+0.24%',
-      changeClass: 'text-green-600',
-      bgClass: 'text-green-600'
-    },
-    {
-      stockName: 'BITCOIN',
-      stockCode: 'BTC-USD',
-      currentPrice: '42,356.72',
-      priceChange: '-1,234.56',
-      priceChangePercent: '-2.83%',
-      changeClass: 'text-red-600',
-      bgClass: 'text-red-600'
-    },
-    {
-      stockName: 'ETHER',
-      stockCode: 'ETH-USD',
-      currentPrice: '2,145.89',
-      priceChange: '+56.78',
-      priceChangePercent: '+2.71%',
-      changeClass: 'text-green-600',
-      bgClass: 'text-green-600'
-    },
-    {
-      stockName: 'SOLANA',
-      stockCode: 'SOL-USD',
-      currentPrice: '107.32',
-      priceChange: '+2.45',
-      priceChangePercent: '+2.33%',
-      changeClass: 'text-green-600',
-      bgClass: 'text-green-600'
-    }
-  ]
-}
 
 // 创建图表的函数
 const createChart = (canvasRef, data, isPositive = true, labels = null) => {
@@ -814,9 +720,9 @@ const createChart = (canvasRef, data, isPositive = true, labels = null) => {
 
   // 如果没有提供标签，则生成默认标签或使用数组长度生成
   const chartData = Array.isArray(data) ? data : [];
-  const chartLabels = labels || (Array.isArray(labels) ? labels : 
-    Array.from({length: chartData.length}, (_, i) => `09:${30 + i}`));
-  
+  const chartLabels = labels || (Array.isArray(labels) ? labels :
+      Array.from({length: chartData.length}, (_, i) => `09:${30 + i}`));
+
   // 创建新的图表实例
   canvasRef.chart = new Chart(ctx, {
     type: 'line',
@@ -886,15 +792,13 @@ onMounted(() => {
     const chartData = stock.data || stock.chartData || [];
     const chartLabels = stock.labels || stock.timeData || null;
     const isPositive = stock.isPositive !== undefined ? stock.isPositive : true;
-    
+
     createChart(chartRefs.value[index], chartData, isPositive, chartLabels);
   });
-  
+
   // 设置账号名
   userName.value = localStorage.getItem('userName') || '用户'
 
-  //初始化全球行情数据，请求后端
-  fallbackDataFetch();
   // 初始化WebSocket连接，订阅股票行情数据
   initWebSocket();
 });
