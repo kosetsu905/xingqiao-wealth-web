@@ -11,3 +11,12 @@ export function getStockData(symbol, interval) {
 }
 
 
+export function getStockQuoteChartList(data) {
+    return request({
+        url: '/order/quote/getStockQuoteChartList',
+        method: 'post',
+        data: data,
+    })
+}
+
+
