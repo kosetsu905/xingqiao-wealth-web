@@ -183,7 +183,7 @@
                 </div>
                 <div class="text-right">
                   <div class="font-medium text-sm md:text-base">${{ stock.currentPrice }}</div>
-                  <div class="text-xs md:text-sm" :class="stock.changeColor">+{{ stock.priceChange }} ({{
+                  <div class="text-xs md:text-sm" :class="stock.changeColor">{{ stock.priceChange }} ({{
                       stock.priceChangePercent
                     }})
                   </div>
@@ -414,8 +414,8 @@ const stockData = ref([
     stockName: '阿里巴巴',
     stockCode: 'BABA',
     initial: '阿',
-    price: '0',
-    change: '0',
+    currentPrice: '0',
+    priceChangePercent: '0',
     percent: '0%',
     isPositive: false,
     changeColor: 'text-gray-500',
@@ -428,8 +428,8 @@ const stockData = ref([
     stockName: '腾讯控股',
     stockCode: '0700',
     initial: '腾',
-    price: '0',
-    change: '0',
+    currentPrice: '0',
+    priceChangePercent: '0',
     percent: '0%',
     isPositive: false,
     changeColor: 'text-gray-500',
@@ -442,9 +442,9 @@ const stockData = ref([
     stockName: '苹果公司',
     stockCode: 'AAPL',
     initial: '苹',
-    price: '0',
-    change: '0',
-    percent: '0%',
+    currentPrice: '0',
+    priceChange: '0',
+    priceChangePercent: '0%',
     isPositive: false,
     changeColor: 'text-gray-500',
     bgColor: 'bg-gray-100',
@@ -456,9 +456,9 @@ const stockData = ref([
     stockName: '微软公司',
     stockCode: 'MSFT',
     initial: '微',
-    price: '0',
-    change: '0',
-    percent: '0%',
+    currentPrice: '0',
+    priceChange: '0',
+    priceChangePercent: '0%',
     isPositive: false,
     changeColor: 'text-gray-500',
     bgColor: 'bg-gray-100',
@@ -495,9 +495,9 @@ const fetchHotStocksData = async () => {
 
           // 更新股票数据
           const stockItem = stockData.value[existingIndex];
-          stockItem.price = quote.currentPrice;
-          stockItem.change =  quote.priceChange;
-          stockItem.percent =  quote.priceChangePercent;
+          stockItem.currentPrice = quote.currentPrice;
+          stockItem.priceChange =  quote.priceChange;
+          stockItem.priceChangePercent =  quote.priceChangePercent;
           stockItem.isPositive = isPositive;
           stockItem.changeColor = isPositive ? 'text-green-600' : 'text-red-600';
           stockItem.bgColor = isPositive ? 'bg-green-100' : 'bg-red-100';
