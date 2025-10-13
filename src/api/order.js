@@ -42,3 +42,12 @@ export function getTodayProfit() {
         method: 'get'
     })
 }
+export function getStockQuoteChartList(data) {
+    return request({
+        url: '/order/quote/getStockQuoteChartList',
+        method: 'post',
+        data: data,
+    })
+}
+
+

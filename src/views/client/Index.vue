@@ -177,14 +177,14 @@
                     <span class="text-xs font-bold" :class="stock.textColor">{{ stock.initial }}</span>
                   </div>
                   <div>
-                    <div class="font-medium text-sm md:text-base">{{ stock.name }}</div>
-                    <div class="text-xs text-gray-500">{{ stock.code }}</div>
+                    <div class="font-medium text-sm md:text-base">{{ stock.stockName }}</div>
+                    <div class="text-xs text-gray-500">{{ stock.stockName }}</div>
                   </div>
                 </div>
                 <div class="text-right">
-                  <div class="font-medium text-sm md:text-base">${{ stock.price }}</div>
-                  <div class="text-xs md:text-sm" :class="stock.changeColor">+{{ stock.change }} ({{
-                      stock.percent
+                  <div class="font-medium text-sm md:text-base">${{ stock.currentPrice }}</div>
+                  <div class="text-xs md:text-sm" :class="stock.changeColor">+{{ stock.priceChange }} ({{
+                      stock.priceChangePercent
                     }})
                   </div>
                 </div>
@@ -196,7 +196,6 @@
           </div>
         </div>
 
-        <!-- 热门债券 -->
         <!-- 热门债券 -->
         <div id="hot-bonds" class="mb-6 md:mb-8">
           <div class="flex justify-between items-center mb-4">
@@ -386,7 +385,9 @@ import {
   Tooltip
 } from 'chart.js'
 import {useCurrentDate} from '@/composables/Composable.js'
-import tradeWebSocket from "@/plugins/websocket.js";
+import tradeWebSocket from "@/plugins/websocket.js"
+import request from '@/utils/request.js';
+import {getStockQuoteChartList} from "@/api/order.js";
 
 const userName = ref('')
 
@@ -408,67 +409,135 @@ const globalMarkets = ref([])
 const marketsLoading = ref(true)
 
 // 热门股票数据
-const stockData = reactive([
+const stockData = ref([
   {
-    name: '阿里巴巴',
-    code: 'BABA',
-    price: '74.64',
-    change: '+0.62',
-    percent: '+0.84%',
-    color: 'green',
-    chartData: [73.50, 73.75, 74.20, 74.10, 74.64],
-    timeData: ['09:30', '10:30', '11:30', '13:30', '14:30'],
+    stockName: '阿里巴巴',
+    stockCode: 'BABA',
     initial: '阿',
-    bgColor: 'bg-blue-100',
-    textColor: 'text-blue-600'
-  },
-  {
-    name: '腾讯控股',
-    code: '0700.HK',
-    price: '342.60',
-    change: '¥6.80',
-    percent: '+2.03%',
-    initial: '腾',
-    bgColor: 'bg-green-100',
-    textColor: 'text-green-800',
-    changeColor: 'text-green-600',
-    isPositive: true,
-    data: [330, 332, 331, 333, 335, 334, 336, 338, 340, 342],
-    labels: ['09:30', '09:35', '09:40', '09:45', '09:50', '09:55', '10:00', '10:05', '10:10', '10:15']
-  },
-  {
-    name: '苹果公司',
-    code: 'AAPL.NASDAQ',
-    price: '182.31',
-    change: '$1.55',
-    percent: '-0.84%',
-    initial: '',
-    icon: 'apple',
-    bgColor: 'bg-red-100',
-    textColor: 'text-red-800',
-    changeColor: 'text-red-600',
+    price: '0',
+    change: '0',
+    percent: '0%',
     isPositive: false,
-    data: [185, 184, 183.5, 184, 183, 182.5, 182, 181.5, 181, 180.5],
-    labels: ['09:30', '09:35', '09:40', '09:45', '09:50', '09:55', '10:00', '10:05', '10:10', '10:15']
+    changeColor: 'text-gray-500',
+    bgColor: 'bg-gray-100',
+    textColor: 'text-gray-800',
+    data: [],
+    labels: []
   },
   {
-    name: '微软公司',
-    code: 'MSFT.NASDAQ',
-    price: '492500',
-    change: '$23.80',
-    percent: '+1.35%',
-    initial: '茅',
-    bgColor: 'bg-blue-100',
-    textColor: 'text-blue-800',
-    changeColor: 'text-green-600',
-    isPositive: true,
-    data: [492000, 492100, 492050, 492200, 492300, 492250, 492400, 492450, 492550, 492500],
-    labels: ['09:30', '09:35', '09:40', '09:45', '09:50', '09:55', '10:00', '10:05', '10:10', '10:15']
+    stockName: '腾讯控股',
+    stockCode: '0700',
+    initial: '腾',
+    price: '0',
+    change: '0',
+    percent: '0%',
+    isPositive: false,
+    changeColor: 'text-gray-500',
+    bgColor: 'bg-gray-100',
+    textColor: 'text-gray-800',
+    data: [],
+    labels: []
+  },
+  {
+    stockName: '苹果公司',
+    stockCode: 'AAPL',
+    initial: '苹',
+    price: '0',
+    change: '0',
+    percent: '0%',
+    isPositive: false,
+    changeColor: 'text-gray-500',
+    bgColor: 'bg-gray-100',
+    textColor: 'text-gray-800',
+    data: [],
+    labels: []
+  },
+  {
+    stockName: '微软公司',
+    stockCode: 'MSFT',
+    initial: '微',
+    price: '0',
+    change: '0',
+    percent: '0%',
+    isPositive: false,
+    changeColor: 'text-gray-500',
+    bgColor: 'bg-gray-100',
+    textColor: 'text-gray-800',
+    data: [],
+    labels: []
   }
 ])
 
+// 获取热门股票数据的函数
+const fetchHotStocksData = async () => {
+  try {
+    const response = await getStockQuoteChartList(queryHotStocks);
 
-// 热门债券数据
+    if (response.data && Array.isArray(response.data)) {
+      // 处理API返回的股票数据
+      response.data.forEach(quote => {
+        // 查找对应的股票索引
+        const existingIndex = stockData.value.findIndex(item =>
+          item.stockCode === quote.stockCode ||
+          (item.stockCode.includes(quote.stockCode) &&
+           (quote.stockCode === 'BABA' || quote.stockCode === '0700' ||
+            quote.stockCode === 'AAPL' || quote.stockCode === 'MSFT'))
+        );
+
+        if (existingIndex !== -1) {
+          // 获取货币符号
+          const currencySymbol = getCurrencySymbol(stockData.value[existingIndex].stockCode);
+          console.log('货币符号:', currencySymbol)
+
+          // 计算涨跌幅和涨跌状态
+          const priceChange = quote.priceChange;
+          const isPositive = parseFloat(priceChange) > 0;
+
+          // 更新股票数据
+          const stockItem = stockData.value[existingIndex];
+          stockItem.price = quote.currentPrice;
+          stockItem.change =  quote.priceChange;
+          stockItem.percent =  quote.priceChangePercent;
+          stockItem.isPositive = isPositive;
+          stockItem.changeColor = isPositive ? 'text-green-600' : 'text-red-600';
+          stockItem.bgColor = isPositive ? 'bg-green-100' : 'bg-red-100';
+          stockItem.textColor = isPositive ? 'text-green-800' : 'text-red-800';
+
+          // 处理图表数据（如果有）
+          let chartData = [];
+          let chartLabels = [];
+
+          if (quote.stockChartQuote && quote.stockChartQuote.prices) {
+            // 使用后端提供的图表数据 - 注意：这里使用openPrices而不是prices
+            chartData = quote.stockChartQuote.prices.map(p => p.toNumber ? p.toNumber() : Number(p));
+            // chartLabels = quote.stockChartQuote.timeStamps ||
+            //   Array.from({length: chartData.length}, (_, i) => {
+            //     const minutes = 30 + i;
+            //     return `09:${minutes < 10 ? '0' + minutes : minutes}`;
+            //   });
+
+            // 更新股票项的数据和标签
+            stockItem.data = chartData;
+            stockItem.labels = chartLabels;
+          }
+
+          // 更新图表
+          if (chartRefs.value && chartRefs.value[existingIndex]) {
+            updateChart(
+              chartRefs.value[existingIndex],
+              chartData.length > 0 ? chartData : stockItem.data || [0, 0, 0, 0, 0],
+              isPositive,
+              chartLabels.length > 0 ? chartLabels : stockItem.labels || ['09:30', '09:35', '09:40', '09:45', '09:50'],
+              currencySymbol
+            );
+          }
+        }
+      })
+    }
+  } catch (error) {
+    console.error('获取热门股票数据失败:', error);
+  }
+}
 const bondData = ref([
   {name: '美国5年期国债', yield: '4.75%', price: '100.32', change: '+0.18%', changeClass: 'text-green-600'},
   {name: '美国10年期国债', yield: '4.18%', price: '93.74', change: '-0.44%', changeClass: 'text-red-600'},
@@ -515,6 +584,7 @@ const isSubscribed = ref(false)
 const handleWebSocketMessage = (data) => {
   try {
     const messageData = typeof data === 'string' ? JSON.parse(data) : data;
+
     // 检查是否为全球市场行情数据
     if (messageData.type === 'global_indices' && Array.isArray(messageData.stockQuotes)) {
       console.log('stockQuotes消息:', Array.isArray(messageData.stockQuotes))
@@ -579,7 +649,7 @@ const initWebSocket = () => {
       tradeWebSocket.onOpen(() => {
         console.log('WebSocket连接成功');
         // 订阅全球市场行情
-        subscribeGlobalIndices(userId);
+        subscribe(userId);
       });
 
       // 注册连接错误回调
@@ -592,7 +662,7 @@ const initWebSocket = () => {
     } else {
       // WebSocket已经连接，直接订阅
       console.log('WebSocket已连接，直接订阅数据');
-      subscribeGlobalIndices(userId);
+      subscribe(userId);
     }
 
   } catch (error) {
@@ -601,6 +671,7 @@ const initWebSocket = () => {
 };
 
 
+// 全球市场指数查询参数
 const queryGlobalStocks = [
   {
     "productCode": "indices",
@@ -679,8 +750,36 @@ const queryGlobalStocks = [
   }
 ]
 
+// 热门股票查询参数
+const queryHotStocks = [
+  {
+    "productCode": "stock",
+    "marketCode": "US",
+    "stockCode": "BABA",
+    "type": "1D1M"
+  },
+  {
+    "productCode": "stock",
+    "marketCode": "HK",
+    "stockCode": "0700",
+    "type": "1D1M"
+  },
+  {
+    "productCode": "stock",
+    "marketCode": "US",
+    "stockCode": "AAPL",
+    "type": "1D1M"
+  },
+  {
+    "productCode": "stock",
+    "marketCode": "US",
+    "stockCode": "MSFT",
+    "type": "1D1M"
+  }
+]
+
 // 订阅全球市场行情数据
-const subscribeGlobalIndices = (userId) => {
+const subscribe = (userId) => {
   console.log('开始订阅全球市场行情数据');
   if (!isSubscribed.value) {
     try {
@@ -692,130 +791,290 @@ const subscribeGlobalIndices = (userId) => {
         params: queryGlobalStocks
       };
       tradeWebSocket.send(params);
+
       isSubscribed.value = true;
       console.log('已订阅全球市场行情数据');
     } catch (error) {
-      console.error('订阅全球市场行情失败:', error);
+      console.error('订阅数据失败:', error);
     }
   }
 };
 
 
 // 创建图表的函数
-const createChart = (canvasRef, data, isPositive = true, labels = null) => {
-  if (!canvasRef) return
-
-  // 修复：处理可能的undefined数据
-  if (!data || typeof data !== 'object') {
-    console.warn('无效的图表数据:', data);
-    return;
+const createChart = (canvasRef, data, isPositive = true, labels = null, currencySymbol = '$') => {
+  // 参数验证
+  if (!canvasRef) {
+    console.warn('图表容器不存在');
+    return null;
   }
 
-  const ctx = canvasRef.getContext('2d')
+  // 数据验证和标准化
+  const chartData = Array.isArray(data) && data.length > 0
+    ? data.map(val => typeof val === 'number' ? val : parseFloat(val) || 0)
+    : [0, 0, 0, 0, 0]; // 默认数据
 
-  // 销毁已存在的图表实例（如果有的话）
-  if (canvasRef.chart) {
-    canvasRef.chart.destroy()
-  }
+  // 标签验证和标准化
+  const chartLabels = Array.isArray(labels) && labels.length > 0
+    ? labels
+    : Array.from({length: chartData.length}, (_, i) => {
+        const minutes = 30 + i;
+        return `09:${minutes < 10 ? '0' + minutes : minutes}`;
+      });
 
-  // 如果没有提供标签，则生成默认标签或使用数组长度生成
-  const chartData = Array.isArray(data) ? data : [];
-  const chartLabels = labels || (Array.isArray(labels) ? labels :
-      Array.from({length: chartData.length}, (_, i) => `09:${30 + i}`));
+  try {
+    const ctx = canvasRef.getContext('2d');
+    if (!ctx) {
+      console.warn('无法获取Canvas上下文');
+      return null;
+    }
 
-  // 创建新的图表实例
-  canvasRef.chart = new Chart(ctx, {
-    type: 'line',
-    data: {
-      labels: chartLabels,
-      datasets: [{
-        data: chartData,  // 使用chartData替代直接使用data
-        borderColor: isPositive ? '#10B981' : '#EF4444',
-        backgroundColor: isPositive ? 'rgba(16, 185, 129, 0.1)' : 'rgba(239, 68, 68, 0.1)',
-        borderWidth: 2,
-        pointRadius: 0,
-        pointHoverRadius: 4,
-        tension: 0.4,
-        fill: true
-      }]
-    },
-    options: {
-      responsive: true,
-      maintainAspectRatio: false,
-      plugins: {
-        legend: {
-          display: false
+    // 增强的图表实例销毁逻辑
+    // 1. 销毁canvasRef上的图表实例
+    if (canvasRef.chart) {
+      console.log('销毁已存在的图表实例');
+      canvasRef.chart.destroy();
+      delete canvasRef.chart; // 确保引用被清除
+    }
+
+    // 2. 使用Chart.getChart获取并销毁可能存在于该canvas上的其他图表实例
+    const existingChart = Chart.getChart(canvasRef);
+    if (existingChart) {
+      console.log('销毁Canvas上的其他图表实例');
+      existingChart.destroy();
+    }
+
+    // 3. 创建新的图表实例前，清除画布内容
+    ctx.clearRect(0, 0, canvasRef.width, canvasRef.height);
+
+    // 创建新的图表实例
+    canvasRef.chart = new Chart(ctx, {
+      type: 'line',
+      data: {
+        labels: chartLabels,
+        datasets: [{
+          data: chartData,
+          borderColor: isPositive ? '#10B981' : '#EF4444',
+          backgroundColor: isPositive ? 'rgba(16, 185, 129, 0.1)' : 'rgba(239, 68, 68, 0.1)',
+          borderWidth: 2,
+          pointRadius: 0,
+          pointHoverRadius: 4,
+          tension: 0.4,
+          fill: true
+        }]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        animation: {
+          duration: 750, // 平滑动画效果
+          easing: 'easeOutQuart'
         },
-        tooltip: {
-          enabled: true,
-          mode: 'index',
-          intersect: false,
-          backgroundColor: 'rgba(0, 0, 0, 0.8)',
-          titleFont: {
-            size: 12
+        plugins: {
+          legend: {
+            display: false
           },
-          bodyFont: {
-            size: 12
-          },
-          callbacks: {
-            title: (tooltipItems) => {
-              return `时间: ${tooltipItems[0].label}`
+          tooltip: {
+            enabled: true,
+            mode: 'index',
+            intersect: false,
+            backgroundColor: 'rgba(0, 0, 0, 0.8)',
+            titleFont: {
+              size: 12
             },
-            label: (context) => {
-              return `价格: $${context.parsed.y.toLocaleString()}`
+            bodyFont: {
+              size: 12
+            },
+            callbacks: {
+              title: (tooltipItems) => {
+                return `时间: ${tooltipItems[0]?.label || ''}`
+              },
+              label: (context) => {
+                const price = context.parsed.y;
+                // 根据不同市场显示不同货币符号
+                const symbol = currencySymbol || '$';
+                return `价格: ${symbol}${price.toLocaleString(undefined, {
+                  minimumFractionDigits: 2,
+                  maximumFractionDigits: 2
+                })}`;
+              }
             }
           }
-        }
-      },
-      scales: {
-        x: {
-          display: false
         },
-        y: {
-          display: false
+        scales: {
+          x: {
+            display: false
+          },
+          y: {
+            display: false,
+            min: (context) => {
+              // 增加健壮性检查
+              if (!context || !context.dataset || !Array.isArray(context.dataset.data)) return 0;
+              const data = context.dataset.data.filter(val => typeof val === 'number' && !isNaN(val));
+              if (data.length === 0) return 0;
+              const min = Math.min(...data);
+              return min * 0.99; // 略微调整最小值以确保数据不紧贴底部
+            },
+            max: (context) => {
+              // 增加健壮性检查
+              if (!context || !context.dataset || !Array.isArray(context.dataset.data)) return 1;
+              const data = context.dataset.data.filter(val => typeof val === 'number' && !isNaN(val));
+              if (data.length === 0) return 1;
+              const max = Math.max(...data);
+              return max * 1.01; // 略微调整最大值以确保数据不紧贴顶部
+            }
+          }
+        },
+        interaction: {
+          mode: 'nearest',
+          axis: 'x',
+          intersect: false
         }
-      },
-      interaction: {
-        mode: 'nearest',
-        axis: 'x',
-        intersect: false
       }
+    });
+
+    return canvasRef.chart;
+  } catch (error) {
+    console.error('创建图表失败:', error);
+    return null;
+  }
+};
+
+// 更新图表数据的函数，避免每次都重建图表
+const updateChart = (canvasRef, newData, isPositive = true, newLabels = null, currencySymbol = '$') => {
+  if (!canvasRef || !canvasRef.chart) {
+    // 如果图表不存在，则创建新图表
+    return createChart(canvasRef, newData, isPositive, newLabels, currencySymbol);
+  }
+
+  try {
+    // 数据验证和标准化
+    const chartData = Array.isArray(newData) && newData.length > 0
+      ? newData.map(val => typeof val === 'number' ? val : parseFloat(val) || 0)
+      : canvasRef.chart.data.datasets[0].data; // 如果没有新数据，保留原有数据
+
+    // 标签验证和标准化
+    const chartLabels = Array.isArray(newLabels) && newLabels.length > 0
+      ? newLabels
+      : canvasRef.chart.data.labels; // 如果没有新标签，保留原有标签
+
+    // 更新数据
+    canvasRef.chart.data.labels = chartLabels;
+    canvasRef.chart.data.datasets[0].data = chartData;
+
+    // 更新线条颜色（如果涨跌状态改变）
+    const isCurrentPositive = canvasRef.chart.data.datasets[0].borderColor === '#10B981';
+    if (isPositive !== isCurrentPositive) {
+      canvasRef.chart.data.datasets[0].borderColor = isPositive ? '#10B981' : '#EF4444';
+      canvasRef.chart.data.datasets[0].backgroundColor = isPositive
+        ? 'rgba(16, 185, 129, 0.1)'
+        : 'rgba(239, 68, 68, 0.1)';
     }
-  })
-}
+
+    // 更新工具提示货币符号（如果需要）
+    canvasRef.chart.options.plugins.tooltip.callbacks.label = (context) => {
+      const price = context.parsed.y;
+      return `价格: ${currencySymbol}${price.toLocaleString(undefined, {
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 2
+      })}`;
+    };
+
+    // 更新Y轴范围
+    canvasRef.chart.options.scales.y.min = chartData.length > 0
+      ? Math.min(...chartData) * 0.99
+      : 0;
+    canvasRef.chart.options.scales.y.max = chartData.length > 0
+      ? Math.max(...chartData) * 1.01
+      : 1;
+
+    // 应用更新
+    canvasRef.chart.update('active');
+
+    return canvasRef.chart;
+  } catch (error) {
+    console.error('更新图表失败:', error);
+    // 如果更新失败，尝试重建图表
+    return createChart(canvasRef, newData, isPositive, newLabels, currencySymbol);
+  }
+};
+
+// 获取货币符号的函数
+const getCurrencySymbol = (stockCode) => {
+  if (stockCode.includes('.HK') || stockCode === '0700') {
+    return 'HK$';
+  } else if (stockCode.includes('.SZ') || stockCode.includes('.SH')) {
+    return '¥';
+  } else {
+    return '$';
+  }
+};
 
 // 在组件挂载时初始化
-onMounted(() => {
-  // 为每个股票创建图表
-  stockData.forEach((stock, index) => {
-    // 修复：处理不同的数据结构
-    const chartData = stock.data || stock.chartData || [];
-    const chartLabels = stock.labels || stock.timeData || null;
-    const isPositive = stock.isPositive !== undefined ? stock.isPositive : true;
-
-    createChart(chartRefs.value[index], chartData, isPositive, chartLabels);
-  });
-
+onMounted(async () => {
   // 设置账号名
-  userName.value = localStorage.getItem('userName') || '用户'
+  userName.value = localStorage.getItem('userName') || '用户';
+
+  // 初始化每个股票的图表
+  const initStockCharts = () => {
+    stockData.value.forEach((stock, index) => {
+      // 确保chartRefs[index]已存在
+      if (chartRefs.value && chartRefs.value[index]) {
+        const currencySymbol = getCurrencySymbol(stock.stockCode);
+        // 使用默认数据初始化图表
+        const defaultData = [0, 0, 0, 0, 0];
+        const defaultLabels = ['09:30', '09:35', '09:40', '09:45', '09:50'];
+
+        createChart(
+          chartRefs.value[index],
+          defaultData,
+          stock.isPositive,
+          defaultLabels,
+          currencySymbol
+        );
+      }
+    });
+  };
+
+  // 延迟初始化图表以确保DOM已完全加载
+  setTimeout(() => {
+    initStockCharts();
+  }, 100);
 
   // 初始化WebSocket连接，订阅股票行情数据
   initWebSocket();
+
+  // 页面加载时获取热门股票数据
+  await fetchHotStocksData();
 });
 
 // 在组件卸载时取消订阅
 onUnmounted(() => {
   try {
+    const userId = localStorage.getItem('userId') || '';
+
     // 仅在已订阅的情况下取消订阅
     if (isSubscribed.value && tradeWebSocket.isConnected) {
-      // 发送取消订阅消息
-      const unsubscribeMessage = {
+      // 发送取消订阅全球市场行情消息
+      const unsubscribeGlobalMessage = {
+        userId: userId,
         action: 'unsubscribe',
-        dataType: 'global_indices'
+        dataType: 'global_indices',
+        params: queryGlobalStocks
       };
-      tradeWebSocket.send(JSON.stringify(unsubscribeMessage));
+      tradeWebSocket.send(unsubscribeGlobalMessage);
+
+      // 发送取消订阅热门股票消息
+      const unsubscribeHotStocksMessage = {
+        userId: userId,
+        action: 'unsubscribe',
+        dataType: 'hot_stocks',
+        params: queryHotStocks
+      };
+      tradeWebSocket.send(unsubscribeHotStocksMessage);
+
       isSubscribed.value = false;
-      console.log('已取消订阅全球市场行情数据');
+      console.log('已取消订阅全球市场行情和热门股票数据');
     }
     // 不再关闭WebSocket连接，因为登录时已经建立并可能被其他组件使用
     // 仅移除当前组件的消息处理器
