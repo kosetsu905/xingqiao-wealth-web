@@ -1,8 +1,13 @@
 import axios from 'axios'
-import { getToken } from '@/utils/auth'
+import { getToken, removeToken, removeExpiresIn } from '@/utils/auth'
 import cache from '@/plugins/cache'
-import {useToast} from "@/composables/UseToast.ts";
+import {useToast} from "@/composables/UseToast.ts"
+import { router } from '@/router'
+import tradeWebSocket from '@/plugins/websocket'
 const { successToast, errorToast } = useToast()
+
+// 防止401重复跳转标志
+let isRefreshing = false
 
 const service = axios.create({
   baseURL: import.meta.env.VITE_API_BASE_URL,
@@ -47,15 +52,37 @@ service.interceptors.request.use(config => {
 // 响应拦截器
 service.interceptors.response.use(
   response => {
+    console.log("响应拦截器");
     const { data } = response
     if (response.config.responseType === 'blob') return data
 
     if (data.code && data.code !== 200) {
       errorToast(data.msg || '请求处理失败')
     }
+
+    if (data.code && data.code === 401 && !isRefreshing) {
+      isRefreshing = true
+      // 显示错误提示
+      errorToast('登录状态已过期，请重新登录')
+      // 断开WebSocket连接
+      tradeWebSocket.close()
+      // 清除token、过期时间和所有缓存
+      removeToken()
+      removeExpiresIn()
+      cache.session.clear()
+      cache.local.clear()
+
+      // 跳转到登录页面
+      router.push({
+        path: '/login'
+      });
+      // 重置刷新状态
+      isRefreshing = false
+    }
     return data
   },
   error => {
+    console.log("错误");
     const status = error.response?.status
     const messageMap = {
       401: '会话过期，请重新登录',
@@ -65,6 +92,29 @@ service.interceptors.response.use(
     }
 
     error.message = messageMap[status] || error.message
+
+    // 处理401未授权错误 - 清除token并跳转到登录页
+    if (status === 401 && !isRefreshing) {
+      isRefreshing = true
+      // 显示错误提示
+      errorToast('登录状态已过期，请重新登录')
+      // 断开WebSocket连接
+      tradeWebSocket.close()
+      // 清除token、过期时间和所有缓存
+      removeToken()
+      removeExpiresIn()
+      cache.session.clear()
+      cache.local.clear()
+
+      // 跳转到登录页面
+      router.push({
+        path: '/login'
+      }).then(r =>  successToast('登录状态已过期，请重新登录'))
+
+      // 重置刷新状态
+      isRefreshing = false
+    }
+
     return Promise.reject(error)
   }
 )
