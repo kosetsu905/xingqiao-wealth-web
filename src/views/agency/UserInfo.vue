@@ -137,7 +137,7 @@ import Header from "@/components/agency/Header.vue"
 import { useToast } from "@/composables/UseToast.ts"
 import {getEmployeeInfo, uploadAvatar} from "@/api/employee.js"
 import {uploadFile} from "@/api/file.js";
-import cache from "@/plugins/cache.js";
+import cache from "@/plugins/Cache.js";
 
 // 头像上传相关
 const avatarInput = ref(null)

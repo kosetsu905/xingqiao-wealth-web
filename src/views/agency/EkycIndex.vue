@@ -776,8 +776,8 @@ import Header from "@/components/agency/Header.vue";
 import {useRouter} from 'vue-router'
 import {useToast} from "@/composables/UseToast.ts";
 import {uploadFile} from "@/api/file.js";
-import {ekycAuthStore} from '@/store/index.ts';
-import cache from "@/plugins/cache.js";
+import {ekycAuthStore} from '@/store/Index.js';
+import cache from "@/plugins/Cache.js";
 import {getEkycData, submitEkycData} from "@/api/ekyc.js";
 // 引入认证状态 store
 const ekycAuth = ekycAuthStore();

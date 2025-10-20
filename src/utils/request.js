@@ -1,6 +1,6 @@
 import axios from 'axios'
 import { getToken, removeToken, removeExpiresIn } from '@/utils/auth'
-import cache from '@/plugins/cache'
+import cache from '@/plugins/cache.js'
 import {useToast} from "@/composables/UseToast.ts"
 import { router } from '@/router'
 import tradeWebSocket from '@/plugins/websocket'
@@ -19,7 +19,6 @@ const service = axios.create({
 
 // 请求拦截器
 service.interceptors.request.use(config => {
-  console.log("请求拦截器")
 
   // Token 处理
   if (getToken() && config.headers.isToken !== false) {
@@ -52,7 +51,6 @@ service.interceptors.request.use(config => {
 // 响应拦截器
 service.interceptors.response.use(
   response => {
-    console.log("响应拦截器");
     const { data } = response
     if (response.config.responseType === 'blob') return data
 
@@ -60,6 +58,7 @@ service.interceptors.response.use(
       errorToast(data.msg || '请求处理失败')
     }
 
+    // 对于成功响应中的401错误也进行处理
     if (data.code && data.code === 401 && !isRefreshing) {
       isRefreshing = true
       // 显示错误提示
@@ -82,7 +81,6 @@ service.interceptors.response.use(
     return data
   },
   error => {
-    console.log("错误");
     const status = error.response?.status
     const messageMap = {
       401: '会话过期，请重新登录',
@@ -92,28 +90,6 @@ service.interceptors.response.use(
     }
 
     error.message = messageMap[status] || error.message
-
-    // 处理401未授权错误 - 清除token并跳转到登录页
-    if (status === 401 && !isRefreshing) {
-      isRefreshing = true
-      // 显示错误提示
-      errorToast('登录状态已过期，请重新登录')
-      // 断开WebSocket连接
-      tradeWebSocket.close()
-      // 清除token、过期时间和所有缓存
-      removeToken()
-      removeExpiresIn()
-      cache.session.clear()
-      cache.local.clear()
-
-      // 跳转到登录页面
-      router.push({
-        path: '/login'
-      }).then(r =>  successToast('登录状态已过期，请重新登录'))
-
-      // 重置刷新状态
-      isRefreshing = false
-    }
 
     return Promise.reject(error)
   }

@@ -277,7 +277,7 @@
 import {ref, onMounted, computed} from 'vue';
 import { useRouter } from 'vue-router';
 import Header from '@/components/agency/Header.vue';
-import { ekycAuthStore } from '@/store/index.js';
+import { ekycAuthStore } from '@/store/Index.js';
 import {useToast} from '@/composables/UseToast.js'
 const {successToast, errorToast} = useToast()
 // 引入路由实例
