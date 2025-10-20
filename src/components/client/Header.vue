@@ -112,8 +112,8 @@ const navItems = ref([
   { label: '持仓', activeIndex: 4, path: "/client/holdings" },
   { label: '资金管理', activeIndex: 5, path: "/client/transaction3" },
   { label: '行情', activeIndex: 6, path: "/client/hangingDemo" },
-  { label: '仪表盘', activeIndex: 6, path: "/client/dashboard" },
-  { label: '退出', activeIndex: 7, path: '/logout' }
+  { label: '仪表盘', activeIndex: 7, path: "/client/dashboard" },
+  { label: '退出', activeIndex: 8, path: '/logout' }
 ]);
 
 

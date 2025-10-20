@@ -1,4 +1,4 @@
-// src/router/index.ts
+// src/router/index.js
 import { createRouter, createWebHistory } from 'vue-router'
 import LoginPage from '../views/login/LoginPage.vue'
 import RegisterPage from '../views/login/RegisterPage.vue'
@@ -39,19 +39,17 @@ import CommissionHistory from '../views/agency/CommissionHistory.vue'
 import SalesOpportunity from '../views/agency/SalesOpportunity.vue'
 import SalesOpportunityList from '../views/agency/SalesOpportunityList.vue'
 import SalesOpportunityDetail from '../views/agency/SalesOpportunityDetail.vue'
-import StableCoinMainPage from "@/views/agency/StableCoinMainPage.vue";
-import StableCoinPortfolio from "@/views/agency/StableCoinPortfolio.vue";
-import StableCoinPurchase from "@/views/agency/StableCoinPurchase.vue";
-import CbdcView from "@/views/agency/CbdcView.vue";
-import News from "@/views/agency/News.vue";
-import Academy from "@/views/agency/Academy.vue";
+import StableCoinMainPage from "@/views/agency/StableCoinMainPage.vue"
+import StableCoinPortfolio from "@/views/agency/StableCoinPortfolio.vue"
+import StableCoinPurchase from "@/views/agency/StableCoinPurchase.vue"
+import CbdcView from "@/views/agency/CbdcView.vue"
+import News from "@/views/agency/News.vue"
+import Academy from "@/views/agency/Academy.vue"
 import Etf from '../views/agency/Etf.vue'
 import FaceRecognitionSuccess from '../views/common/FaceRecognitionSuccess.vue'
-import Holdings from "@/views/client/Holdings.vue";
+import Holdings from "@/views/client/Holdings.vue"
 
-
-
-const WHITE_LIST: string[] = [
+const WHITE_LIST = [
   '/client/auth/login',
   '/client/auth/register',
   '/message/sendCode',
@@ -63,7 +61,7 @@ const WHITE_LIST: string[] = [
   '/faceRecognitionSuccess',
   '/401',
   '/404',
-];
+]
 
 // 定义路由配置
 const routes = [
@@ -113,9 +111,9 @@ const routes = [
   { path: '/agency/cbdc', component: CbdcView },
   { path: '/agency/news', component: News },
   { path: '/agency/academy', component: Academy },
-  { path: '/401', component: one,meta:{requiresAuth: false} },
-  { path: '/404', component: two,meta:{requiresAuth: false} },
-  { path: '/faceRecognitionSuccess', component: FaceRecognitionSuccess,meta:{requiresAuth: false} },
+  { path: '/401', component: one, meta: { requiresAuth: false } },
+  { path: '/404', component: two, meta: { requiresAuth: false } },
+  { path: '/faceRecognitionSuccess', component: FaceRecognitionSuccess, meta: { requiresAuth: false } },
 ]
 
 // 为路由批量添加 meta 信息
@@ -138,23 +136,23 @@ router.beforeEach(async (to, _from, next) => {
   console.log('路由守卫触发:', to.path)
 
   const accessToken = localStorage.getItem('access_token')
-  console.log("accessToken:"+accessToken)
+  console.log("accessToken:" + accessToken)
 
   // 判断是否需要登录权限的路由
   const requiresAuth = to.matched.some(record => record.meta?.requiresAuth)
-  console.log("requiresAuth:"+requiresAuth)
+  console.log("requiresAuth:" + requiresAuth)
 
   // 校验 token 合法性
   if (requiresAuth) {
-    if (to.path.startsWith('/agency')&&!accessToken) {
+    if (to.path.startsWith('/agency') && !accessToken) {
       console.log("校验agency token")
       // token 不存在，跳转到登录页
       next({ path: '/login' })
-    }if (to.path.startsWith('/client')&&!accessToken) {
+    } else if (to.path.startsWith('/client') && !accessToken) {
       console.log("校验client token")
       // token 不存在，跳转到登录页
       next({ path: '/login' })
-    }  else {
+    } else {
       next()
     }
   } else {
