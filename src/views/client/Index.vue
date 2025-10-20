@@ -183,7 +183,7 @@
                 </div>
                 <div class="text-right">
                   <div class="font-medium text-sm md:text-base">${{ stock.currentPrice }}</div>
-                  <div class="text-xs md:text-sm" :class="stock.changeColor">{{ stock.priceChange }} ({{
+                  <div class="text-xs md:text-sm" :class="stock.changeColor">+{{ stock.priceChange }} ({{
                       stock.priceChangePercent
                     }})
                   </div>
@@ -195,7 +195,6 @@
             </div>
           </div>
         </div>
-
         <!-- 热门债券 -->
         <div id="hot-bonds" class="mb-6 md:mb-8">
           <div class="flex justify-between items-center mb-4">
@@ -390,6 +389,7 @@ import request from '@/utils/request.js';
 import {getStockQuoteChartList} from "@/api/order.js";
 
 const userName = ref('')
+const tradingViewContainer = ref(null)
 
 const {currentDate} = useCurrentDate()
 
@@ -398,6 +398,39 @@ const {currentDate} = useCurrentDate()
 Chart.register(LineController, LineElement, PointElement, LinearScale, CategoryScale, Filler, Tooltip, Legend)
 
 const router = useRouter()
+
+// 加载TradingView小部件
+const loadTradingViewWidget = () => {
+  if (!tradingViewContainer.value) return
+  
+  // 检查是否已加载
+  if (document.querySelector('#tradingview-news-script')) return
+  
+  const script = document.createElement('script')
+  script.id = 'tradingview-news-script'
+  script.type = 'text/javascript'
+  script.src = 'https://s3.tradingview.com/external-embedding/embed-widget-financial-news.js'
+  script.async = true
+  script.textContent = JSON.stringify({
+    "colorTheme": "light",
+    "isTransparent": false,
+    "largeChartUrl": "",
+    "displayMode": "regular",
+    "width": "100%",
+    "height": "600",
+    "locale": "zh_CN"
+  })
+  
+  tradingViewContainer.value.appendChild(script)
+}
+
+// 在组件挂载后加载TradingView小部件
+onMounted(() => {
+  // 延迟加载确保DOM已完全渲染
+  setTimeout(() => {
+    loadTradingViewWidget()
+  }, 100)
+})
 
 // 市场状态数据
 const marketStatus = ref({
@@ -415,8 +448,8 @@ const stockData = ref([
     stockCode: 'BABA',
     initial: '阿',
     currentPrice: '0',
-    priceChangePercent: '0',
-    percent: '0%',
+    priceChange: '0',
+    priceChangePercent: '0%',
     isPositive: false,
     changeColor: 'text-gray-500',
     bgColor: 'bg-gray-100',
@@ -429,8 +462,8 @@ const stockData = ref([
     stockCode: '0700',
     initial: '腾',
     currentPrice: '0',
-    priceChangePercent: '0',
-    percent: '0%',
+    priceChange: '0',
+    priceChangePercent: '0%',
     isPositive: false,
     changeColor: 'text-gray-500',
     bgColor: 'bg-gray-100',

@@ -1,8 +1,13 @@
 import axios from 'axios'
-import { getToken } from '@/utils/auth'
-import cache from '@/plugins/cache'
-import {useToast} from "@/composables/UseToast.ts";
+import { getToken, removeToken, removeExpiresIn } from '@/utils/auth'
+import cache from '@/plugins/cache.js'
+import {useToast} from "@/composables/UseToast.ts"
+import { router } from '@/router'
+import tradeWebSocket from '@/plugins/websocket'
 const { successToast, errorToast } = useToast()
+
+// 防止401重复跳转标志
+let isRefreshing = false
 
 const service = axios.create({
   baseURL: import.meta.env.VITE_API_BASE_URL,
@@ -14,7 +19,6 @@ const service = axios.create({
 
 // 请求拦截器
 service.interceptors.request.use(config => {
-  console.log("请求拦截器")
 
   // Token 处理
   if (getToken() && config.headers.isToken !== false) {
@@ -53,6 +57,27 @@ service.interceptors.response.use(
     if (data.code && data.code !== 200) {
       errorToast(data.msg || '请求处理失败')
     }
+
+    // 对于成功响应中的401错误也进行处理
+    if (data.code && data.code === 401 && !isRefreshing) {
+      isRefreshing = true
+      // 显示错误提示
+      errorToast('登录状态已过期，请重新登录')
+      // 断开WebSocket连接
+      tradeWebSocket.close()
+      // 清除token、过期时间和所有缓存
+      removeToken()
+      removeExpiresIn()
+      cache.session.clear()
+      cache.local.clear()
+
+      // 跳转到登录页面
+      router.push({
+        path: '/login'
+      });
+      // 重置刷新状态
+      isRefreshing = false
+    }
     return data
   },
   error => {
@@ -65,6 +90,7 @@ service.interceptors.response.use(
     }
 
     error.message = messageMap[status] || error.message
+
     return Promise.reject(error)
   }
 )

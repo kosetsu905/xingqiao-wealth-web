@@ -5,7 +5,18 @@ import request from '@/utils/request'
 // 获取股票数据
 export function getStockData(symbol, interval) {
     return request({
-        url: `/coin/stock/data/${symbol}?interval=${interval}`,
+        url: `/order/stock/data/${symbol}?interval=${interval}`,
+        method: 'get'
+    })
+}
+
+/**
+     * 获取单个市场行情(指数)
+     * 例子： /market/data/I:DJI
+     */
+export function getMarketData(stockCode) {
+    return request({
+        url: `/order/market/data/${stockCode}`,
         method: 'get'
     })
 }
