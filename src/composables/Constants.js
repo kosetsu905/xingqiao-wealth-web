@@ -38,7 +38,7 @@ export const CONDITION_OPTIONS = [
 
 // TradingView Charts - 简化配置以避免JSON解析错误
 export const MARKET_OVERVIEW_WIDGET_CONFIG = {
-    colorTheme: 'dark',
+    colorTheme: 'black',
     dateRange: '12M',
     locale: 'en',
     largeChartUrl: '',
@@ -96,6 +96,7 @@ export const TOP_STORIES_WIDGET_CONFIG = {
 export const MARKET_DATA_WIDGET_CONFIG = {
     title: 'Stocks',
     width: '100%',
+    autosize: true,
     height: 400,
     locale: 'en',
     showSymbolLogo: true,
