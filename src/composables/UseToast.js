@@ -1,15 +1,11 @@
 import { createApp, h, ref } from 'vue'
 import Toast from '@/components/common/Toast.vue'
 
-const toasts
-    = ref<Array<{ id: number; component: any }>>([])
+const toasts = ref([])
 let toastId = 0
 
 export function useToast() {
-    const showToast = (message: string,
-                       type: 'success' | 'info' |
-                           'warning' | 'error' = 'info',
-                       duration = 3000) => {
+    const showToast = (message, type, duration = 3000) => {
         const id = toastId++
         const toastContainer = document.createElement('div')
         document.body.appendChild(toastContainer)
@@ -37,9 +33,9 @@ export function useToast() {
 
     return {
         showToast,
-        successToast: (message: string, duration?: number) => showToast(message, 'success', duration),
-        infoToast: (message: string, duration?: number) => showToast(message, 'info', duration),
-        warningToast: (message: string, duration?: number) => showToast(message, 'warning', duration),
-        errorToast: (message: string, duration?: number) => showToast(message, 'error', duration)
+        successToast: (message, duration) => showToast(message, 'success', duration),
+        infoToast: (message, duration) => showToast(message, 'info', duration),
+        warningToast: (message, duration) => showToast(message, 'warning', duration),
+        errorToast: (message, duration) => showToast(message, 'error', duration)
     }
 }

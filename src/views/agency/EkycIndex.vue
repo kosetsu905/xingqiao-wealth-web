@@ -774,7 +774,7 @@
 import {computed, onMounted, reactive, ref, watch} from 'vue';
 import Header from "@/components/agency/Header.vue";
 import {useRouter} from 'vue-router'
-import {useToast} from "@/composables/UseToast.ts";
+import {useToast} from "@/composables/UseToast.js";
 import {uploadFile} from "@/api/file.js";
 import {ekycAuthStore} from '@/store/Index.js';
 import cache from "@/plugins/Cache.js";

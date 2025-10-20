@@ -1,13 +1,19 @@
 <template>
-  <div class="heatmap-container">
+  <!-- Header -->
+  <Header/>
+  <div class="main bg-white shadow-sm border-b border-gray-200">
     <div class="tradingview-widget-container">
       <div id="tradingview-heatmap"></div>
     </div>
   </div>
+<!--  <div class="heatmap-container">-->
+
+<!--  </div>-->
 </template>
 
 <script>
 import { onMounted } from 'vue';
+import Header from '@/components/client/Header.vue'
 
 export default {
   name: 'StockHeatmap',
@@ -17,7 +23,7 @@ export default {
       script.src = 'https://s3.tradingview.com/external-embedding/embed-widget-mini-symbol-overview.js';
       script.async = true;
       script.innerHTML = JSON.stringify({
-        "symbol": "NASDAQ:AAPL",
+        "symbol": "SPREADEX:DJI",
         "chartOnly": false,
         "dateRange": "12M",
         "noTimeScale": false,
@@ -25,7 +31,7 @@ export default {
         "isTransparent": false,
         "locale": "en",
         "width": "100%",
-        "autosize": true,
+        "autosize": false,
         "height": "100%"
       });
 

@@ -134,7 +134,7 @@
 <script setup>
 import { ref, onMounted } from 'vue'
 import Header from "@/components/agency/Header.vue"
-import { useToast } from "@/composables/UseToast.ts"
+import { useToast } from "@/composables/UseToast.js"
 import {getEmployeeInfo, uploadAvatar} from "@/api/employee.js"
 import {uploadFile} from "@/api/file.js";
 import cache from "@/plugins/Cache.js";

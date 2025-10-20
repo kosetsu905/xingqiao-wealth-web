@@ -399,38 +399,6 @@ Chart.register(LineController, LineElement, PointElement, LinearScale, CategoryS
 
 const router = useRouter()
 
-// 加载TradingView小部件
-const loadTradingViewWidget = () => {
-  if (!tradingViewContainer.value) return
-  
-  // 检查是否已加载
-  if (document.querySelector('#tradingview-news-script')) return
-  
-  const script = document.createElement('script')
-  script.id = 'tradingview-news-script'
-  script.type = 'text/javascript'
-  script.src = 'https://s3.tradingview.com/external-embedding/embed-widget-financial-news.js'
-  script.async = true
-  script.textContent = JSON.stringify({
-    "colorTheme": "light",
-    "isTransparent": false,
-    "largeChartUrl": "",
-    "displayMode": "regular",
-    "width": "100%",
-    "height": "600",
-    "locale": "zh_CN"
-  })
-  
-  tradingViewContainer.value.appendChild(script)
-}
-
-// 在组件挂载后加载TradingView小部件
-onMounted(() => {
-  // 延迟加载确保DOM已完全渲染
-  setTimeout(() => {
-    loadTradingViewWidget()
-  }, 100)
-})
 
 // 市场状态数据
 const marketStatus = ref({

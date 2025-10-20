@@ -1,7 +1,7 @@
 import axios from 'axios'
 import { getToken, removeToken, removeExpiresIn } from '@/utils/auth'
 import cache from '@/plugins/cache.js'
-import {useToast} from "@/composables/UseToast.ts"
+import {useToast} from "@/composables/UseToast.js"
 import { router } from '@/router'
 import tradeWebSocket from '@/plugins/websocket'
 const { successToast, errorToast } = useToast()
