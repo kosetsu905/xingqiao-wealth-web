@@ -336,7 +336,7 @@ function restartAssessment() {
 // 返回首页
 function toIndex() {
   router.push({
-    path: '/client/index'
+    path: '/client/dashboard'
   })
 }
 
@@ -346,17 +346,17 @@ function downloadReport() {
   const reportContent = `
     投资者风险承受能力评估报告
     =============================
-    
+
     评估日期：${new Date().toLocaleDateString()}
     综合得分：${totalScore.value}/100
     风险等级：${riskLevel.value}
-    
+
     风险画像：
     ${riskDescription.value}
-    
+
     适配投资类型：
     ${recommendedProducts.value.join('\n    ')}
-    
+
     免责声明：
     本报告依据您填写的问卷生成，仅供参考使用。
     投资有风险，决策需谨慎。

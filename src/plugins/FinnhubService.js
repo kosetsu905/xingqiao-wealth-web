@@ -13,6 +13,8 @@ const api = axios.create({
 })
 
 export const finnhubService = {
+
+
     // 获取股票新闻
     async getNews(symbols) {
         try {
@@ -110,7 +112,7 @@ export const finnhubService = {
                     top.map(async (sym) => {
                         try {
                             const response = await api.get('/stock/profile2', {
-                                params: { symbol: sym }
+                                params: { symbol: sym ,token: FINNHUB_API_KEY }
                             })
                             return { sym, profile: response.data }
                         } catch (e) {
@@ -132,7 +134,7 @@ export const finnhubService = {
                     }))
             } else {
                 const response = await api.get('/search', {
-                    params: { q: trimmed }
+                    params: { q: trimmed,token: FINNHUB_API_KEY }
                 })
                 results = response.data?.result || []
             }

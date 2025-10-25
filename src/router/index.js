@@ -14,10 +14,10 @@ import Account from '../views/client/Account.vue'
 import Message from '../views/client/Message.vue'
 import Product from '../views/client/Product.vue'
 import Dashboard from '../views/client/Dashboard.vue'
-import StocksDetailPage from '../views/client/StocksDetailPage.vue'
 import InvestmentProductList from '../views/client/InvestmentProductList.vue'
 import InvestmentProduct from '../views/client/InvestmentProduct.vue'
 import Transaction from '../views/client/Transaction.vue'
+import StockDetailView from '../views/client/StockDetailView.vue'
 import one from '../views/common/401.vue'
 import two from '../views/common/404.vue'
 import agencyIndex from '../views/agency/Index.vue'
@@ -86,7 +86,7 @@ const routes = [
   { path: '/client/hangingDemo', component: HangqingDemo },
   { path: '/client/holdings', component: Holdings },
   { path: '/client/dashboard', component: Dashboard },
-  { path: '/client/stocksDetailPage', component: StocksDetailPage },
+  { path: '/client/stockDetailView', component: StockDetailView },
   { path: '/agency/index', component: agencyIndex },
   { path: '/agency/insurance', component: Insurance },
   { path: '/agency/globalinvestmentfund', component: Globalinvestmentfund },

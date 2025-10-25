@@ -474,17 +474,17 @@ const handleSubmit = async () => {
           // 设置WebSocket认证信息
           const authSuccess = tradeWebSocket.setAuthInfo(res.data.access_token, userId);
           console.log('WebSocket认证结果:', authSuccess);
-          
+
           if (authSuccess) {
             // 连接WebSocket
             tradeWebSocket.connect();
-          
+
             // 添加WebSocket事件监听
             tradeWebSocket.onOpen(() => {
               console.log('股票WebSocket连接成功，等待认证响应');
               // 这里可以添加连接成功后的初始化逻辑，如订阅默认行情
             });
-          
+
             tradeWebSocket.onMessage((data) => {
               // 处理认证响应
               if (data && data.type === 'auth_response') {
@@ -500,12 +500,12 @@ const handleSubmit = async () => {
                 console.log('收到WebSocket业务消息:', data);
               }
             });
-          
+
             tradeWebSocket.onError((error) => {
               console.error('股票WebSocket连接错误:', error);
               // 可以添加连接错误的用户提示
             });
-          
+
             tradeWebSocket.onClose((event) => {
               console.log('股票WebSocket连接已关闭，关闭代码:', event?.code);
               // 这里可以添加重连机制或用户提示
@@ -520,7 +520,7 @@ const handleSubmit = async () => {
       }
 
       if (props.loginObject.userType === '02') {
-        await router.push('/client/index')
+        await router.push('/client/dashboard')
       }
       if (props.loginObject.userType === '01') {
         await router.push('/agency/index')

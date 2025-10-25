@@ -1,5 +1,5 @@
 import { defineStore } from 'pinia';
-import { finnhubService } from '@/plugins/Finnhub.js';
+import { finnhubService } from '@/plugins/FinnhubService.js';
 
 export const ekycAuthStore = defineStore('ekycAuth', {
   state: () => ({

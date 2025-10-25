@@ -10,7 +10,7 @@
           <div class="w-8 h-8 bg-primary rounded-lg flex items-center justify-center">
             <i class="fa-solid fa-chart-line text-white text-sm"></i>
           </div>
-          <h1 class="ml-3 text-xl font-bold text-gray-800">OTC交易平台</h1>
+          <h1 class="ml-3 text-xl font-bold text-gray-800">QuantPro</h1>
         </div>
 
         <div class="hidden md:block">

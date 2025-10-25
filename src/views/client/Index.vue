@@ -389,9 +389,10 @@ import request from '@/utils/request.js';
 import {getStockQuoteChartList} from "@/api/order.js";
 
 const userName = ref('')
+const {currentDate} = useCurrentDate()
+
 const tradingViewContainer = ref(null)
 
-const {currentDate} = useCurrentDate()
 
 
 // 注册 Chart.js 组件

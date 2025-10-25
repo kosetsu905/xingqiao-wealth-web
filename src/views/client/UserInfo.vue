@@ -55,7 +55,8 @@
                 </div>
                 <div>
                   <label class="block text-sm font-medium text-gray-700 mb-1">电子邮箱</label>
-                  <p class="text-gray-900">{{ customerInfo.email || '' }}</p>
+<!--                  <p class="text-gray-900">{{ customerInfo.email || '759525964@qq.com' }}</p>-->
+                  <p class="text-gray-900">{{  '759525964@qq.com' }}</p>
                 </div>
                 <div>
                   <label class="block text-sm font-medium text-gray-700 mb-1">身份证号码</label>

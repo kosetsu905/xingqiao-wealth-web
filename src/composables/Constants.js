@@ -38,7 +38,7 @@ export const CONDITION_OPTIONS = [
 
 // TradingView Charts - 简化配置以避免JSON解析错误
 export const MARKET_OVERVIEW_WIDGET_CONFIG = {
-    colorTheme: 'black',
+    colorTheme: 'light',
     dateRange: '12M',
     locale: 'en',
     largeChartUrl: '',
@@ -77,7 +77,7 @@ export const HEATMAP_WIDGET_CONFIG = {
     grouping: 'sector',
     isTransparent: true,
     locale: 'en',
-    colorTheme: 'dark',
+    colorTheme: 'light',
     width: '100%',
     height: 400,
 };
@@ -85,7 +85,7 @@ export const HEATMAP_WIDGET_CONFIG = {
 export const TOP_STORIES_WIDGET_CONFIG = {
     displayMode: 'regular',
     feedMode: 'market',
-    colorTheme: 'dark',
+    colorTheme: 'light',
     isTransparent: true,
     locale: 'en',
     market: 'stock',
@@ -96,8 +96,7 @@ export const TOP_STORIES_WIDGET_CONFIG = {
 export const MARKET_DATA_WIDGET_CONFIG = {
     title: 'Stocks',
     width: '100%',
-    autosize: true,
-    height: 400,
+    height: 600,
     locale: 'en',
     showSymbolLogo: true,
     colorTheme: 'dark',
@@ -108,17 +107,32 @@ export const MARKET_DATA_WIDGET_CONFIG = {
             name: 'Financial',
             symbols: [
                 { name: 'NYSE:JPM', displayName: 'JPMorgan Chase' },
-                { name: 'NYSE:BAC', displayName: 'Bank of America' },
-                { name: 'NYSE:C', displayName: 'Citigroup' },
+                { name: 'NYSE:WFC', displayName: 'Wells Fargo Co New' },
+                { name: 'NYSE:BAC', displayName: 'Bank Amer Corp' },
+                { name: 'NYSE:HSBC', displayName: 'Hsbc Hldgs Plc' },
+                { name: 'NYSE:C', displayName: 'Citigroup Inc' },
+                { name: 'NYSE:MA', displayName: 'Mastercard Incorporated' },
             ],
         },
         {
             name: 'Technology',
             symbols: [
                 { name: 'NASDAQ:AAPL', displayName: 'Apple' },
-                { name: 'NASDAQ:MSFT', displayName: 'Microsoft' },
                 { name: 'NASDAQ:GOOGL', displayName: 'Alphabet' },
-                { name: 'NASDAQ:META', displayName: 'Meta' },
+                { name: 'NASDAQ:MSFT', displayName: 'Microsoft' },
+                { name: 'NASDAQ:FB', displayName: 'Meta Platforms' },
+                { name: 'NYSE:ORCL', displayName: 'Oracle Corp' },
+                { name: 'NASDAQ:INTC', displayName: 'Intel Corp' },
+            ],
+        },
+        {
+            name: 'Services',
+            symbols: [
+                { name: 'NASDAQ:AMZN', displayName: 'Amazon' },
+                { name: 'NYSE:BABA', displayName: 'Alibaba Group Hldg Ltd' },
+                { name: 'NYSE:T', displayName: 'At&t Inc' },
+                { name: 'NYSE:WMT', displayName: 'Walmart' },
+                { name: 'NYSE:V', displayName: 'Visa' },
             ],
         },
     ],
@@ -126,7 +140,7 @@ export const MARKET_DATA_WIDGET_CONFIG = {
 
 export const SYMBOL_INFO_WIDGET_CONFIG = (symbol) => ({
     symbol: symbol.toUpperCase(),
-    colorTheme: 'dark',
+    colorTheme: 'light',
     isTransparent: true,
     locale: 'en',
     width: '100%',
@@ -187,7 +201,7 @@ export const BASELINE_WIDGET_CONFIG = (symbol) => ({
 
 export const TECHNICAL_ANALYSIS_WIDGET_CONFIG = (symbol) => ({
     symbol: symbol.toUpperCase(),
-    colorTheme: 'dark',
+    colorTheme: 'light',
     isTransparent: 'true',
     locale: 'en',
     width: '100%',
@@ -198,7 +212,7 @@ export const TECHNICAL_ANALYSIS_WIDGET_CONFIG = (symbol) => ({
 
 export const COMPANY_PROFILE_WIDGET_CONFIG = (symbol) => ({
     symbol: symbol.toUpperCase(),
-    colorTheme: 'dark',
+    colorTheme: 'light',
     isTransparent: 'true',
     locale: 'en',
     width: '100%',
@@ -207,11 +221,11 @@ export const COMPANY_PROFILE_WIDGET_CONFIG = (symbol) => ({
 
 export const COMPANY_FINANCIALS_WIDGET_CONFIG = (symbol) => ({
     symbol: symbol.toUpperCase(),
-    colorTheme: 'dark',
+    colorTheme: 'light',
     isTransparent: 'true',
     locale: 'en',
     width: '100%',
-    height: 464,
+    height: 800,
     displayMode: 'regular',
     largeChartUrl: '',
 });

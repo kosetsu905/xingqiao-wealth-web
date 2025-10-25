@@ -2,7 +2,7 @@
 <template>
   <!-- Header -->
   <div id="header" class="bg-white shadow-sm border-b border-gray-200">
-    <div class="ml-0 md:ml-16 p-4 md:p-6 bg-white border-b border-gray-200">
+    <div class="ml-0  p-4 md:p-6 bg-white border-b border-gray-200">
       <div class="flex justify-between items-center h-16">
         <div
             @click.prevent="goToIndex()"
@@ -10,7 +10,7 @@
           <div class="w-8 h-8 bg-primary rounded-lg flex items-center justify-center">
             <i class="fa-solid fa-chart-line text-white text-sm"></i>
           </div>
-          <h1 class="ml-3 text-xl font-bold text-gray-800">OTC交易平台</h1>
+          <h1 class="ml-3 text-xl font-bold text-gray-800">QuantPro</h1>
         </div>
         <div class="hidden md:block">
           <!-- 修改后的导航结构 -->
@@ -105,15 +105,15 @@ const props = defineProps({
 
 // 在脚本部分添加导航配置
 const navItems = ref([
-  { label: '首页', activeIndex: 0, path: '/client/index' },
+  { label: '首页', activeIndex: 0, path: '/client/dashboard' },
   { label: '个人中心', activeIndex: 1, path: '/client/userInfo'},
   { label: 'KYC认证', activeIndex: 2, path: '/client/ekycClientIndex'},
   { label: '交易中心', activeIndex: 3, path: "/client/transaction" },
   { label: '持仓', activeIndex: 4, path: "/client/holdings" },
-  { label: '资金管理', activeIndex: 5, path: "/client/transaction3" },
-  { label: '行情', activeIndex: 6, path: "/client/hangingDemo" },
-  { label: '仪表盘', activeIndex: 7, path: "/client/dashboard" },
-  { label: '退出', activeIndex: 8, path: '/logout' }
+  // { label: '资金管理', activeIndex: 5, path: "/client/transaction3" },
+  // { label: '行情', activeIndex: 6, path: "/client/hangingDemo" },
+  // { label: '仪表盘', activeIndex: 7, path: "/client/dashboard" },
+  { label: '退出', activeIndex: 5, path: '/logout' }
 ]);
 
 
@@ -162,7 +162,7 @@ function goToIndex () {
   console.log('首页')
   currentTabActive.value =0;
   router.push({
-    path: '/client/index'
+    path: '/client/dashboard'
   })
 }
 

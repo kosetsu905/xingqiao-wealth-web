@@ -15,7 +15,7 @@ import LoginFormSection from '../../components/login/LoginFormSection.vue'
 import { ref } from 'vue';
 
 const brandData = ref({
-  name: 'OTC交易平台',
+  name: 'QuantPro',
   value: '为您的未来提供安全可靠的财务规划和投资解决方案',
   image: '/images/1e58e4c6eb-272e2ec5c6e717c81391.png'
 });
