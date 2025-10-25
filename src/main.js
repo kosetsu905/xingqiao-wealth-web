@@ -7,6 +7,7 @@ import { library } from '@fortawesome/fontawesome-svg-core';
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
 import BackToTop from '@/components/common/BackToTop.vue';
 
+// 图标导入保持不变
 import {
     faUsers,
     faDollarSign,
@@ -29,6 +30,7 @@ import {
     faXmark
 } from '@fortawesome/free-solid-svg-icons'
 
+// 添加图标到库
 library.add(
     faUsers,
     faDollarSign,
@@ -52,21 +54,20 @@ library.add(
 )
 
 import { createPinia } from 'pinia'
-//路由配置
-import { router } from './router'
+// 路由配置
+import { router } from './router' // 确保 './router' 指向正确的 JavaScript 文件
 
+// 注册 Chart.js 组件
 Chart.register(...registerables);
 import '@klinecharts/pro/dist/klinecharts-pro.css'
 
-
-// 在Vue实例中全局挂载
+// 创建并配置 Vue 应用实例
 const app = createApp(App);
 app.component('FontAwesomeIcon', FontAwesomeIcon);
-app.config.globalProperties.$Chart = Chart;
-// 注册路由
-app.use(router)
-app.use(createPinia())
+app.config.globalProperties.$Chart = Chart; // 全局挂载 Chart.js 实例
+app.use(router) // 注册路由
+app.use(createPinia()) // 注册状态管理库 Pinia
 app.component('BackToTop', BackToTop);
 
-// 挂载Vue3实例到 #app 容器
+// 将应用挂载到 DOM
 app.mount('#app');
