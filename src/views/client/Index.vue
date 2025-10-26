@@ -3,8 +3,8 @@
   <Header/>
 
   <div class="main bg-white shadow-sm border-b border-gray-200">
-    <div class="ml-0 md:ml-16 md:mr-16 mt-4 md:px-6 pb-6 bg-white border-b border-gray-200">
-      <div class="flex flex-col pr-0 md:pr-6 px-4 md:flex-row md:items-center md:justify-between gap-4">
+    <div class="ml-0 md:ml-16 md:mr-16 mt-4 px-4 md:px-6 pb-6 bg-white border-b border-gray-200">
+      <div class="flex flex-col pr-0 md:pr-6 px-4 sm:flex-row md:items-center md:justify-between gap-4">
         <div>
           <h1 class="text-xl md:text-2xl font-semibold flex items-center">
             您好，{{ userName }}
@@ -22,14 +22,13 @@
             {{ currentDate }}
           </p>
         </div>
-        <div class="flex flex-col md:flex-row items-center gap-2 md:gap-4 w-full md:w-auto">
-          <StockSearch/>
+        <div class="flex flex-col sm:flex-row md:items-center gap-2 md:gap-4 w-full md:w-auto justify-center px-5">
+        <StockSearch/>
         </div>
       </div>
     </div>
-
     <!-- 主内容区 -->
-    <div id="main-content" class="ml-0 md:ml-16 md:mr-16  md:px-6 pb-6 bg-white text-black flex flex-col md:flex-row">
+    <div id="main-content" class="ml-0 md:ml-16 md:mr-16 px-4 md:px-6 pb-6 bg-white text-black flex flex-col md:flex-row">
       <!-- 左侧内容 -->
       <div id="left-content" class="w-full md:w-2/3 pr-0 md:pr-6">
         <!-- 市场状态卡片 -->
@@ -43,7 +42,7 @@
                      data-icon="arrow-trend-up" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512"
                      data-fa-i2svg="">
                   <path fill="currentColor"
-                        d="M384 160c-17.7 0-32-14.3-32-32s14.3-32 32-32H544c17.7 0 32 14.3 32 32V288c0 17.7-14.3 32-32 32s-32-14.3-32-32V205.3L342.6 374.6c-12.5 12.5-32.8 12.5-45.3 0L192 269.3 54.6 406.6c-12.5 12.5-32.8 12.5-45.3 0s-12.5-32.8 0-45.3l160-160c12.5-12.5 32.8-12.5 45.3 0L320 306.7 466.7 160H384z"></path>
+                        d="M384 160c-17.7 0-32-14.3-32-32s14.3-32 32-32H544c17.7 0 32 14.3 32 32V288c0 17.7-14.3 32-32 32s-32-14.3-32-32V205.3L342.6 374.6c-12.5 12.5-32.8 12.5-45.3 0L192 269.3 54.6 406.6c-12.5-12.5-32.8 12.5-45.3 0s-12.5-32.8 0-45.3l160-160c12.5-12.5 32.8-12.5 45.3 0L320 306.7 466.7 160H384z"></path>
                 </svg>
               </i>
             </div>
@@ -55,75 +54,101 @@
           </div>
         </div>
         <!-- 全球市场概览 -->
-        <div class="flex justify-between items-center mb-4">
-          <h3 id="global-markets" class="text-lg md:text-xl font-semibold mb-4">全球市场</h3>
-          <span class="text-blue-600 text-sm flex items-center cursor-pointer" @click="goToGlobalMarkets">
+        <div class="flex justify-between items-center mb-4 px-4 -mx-4">
+          <h3 id="global-markets" class="text-lg md:text-xl font-semibold">全球市场</h3>
+          <button
+            class="text-blue-600 hover:text-blue-700 text-sm flex items-center transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-blue-300 focus:rounded"
+            @click="goToGlobalMarkets"
+            aria-label="查看全部全球市场数据"
+          >
             查看全部
-            <i class="ml-1 text-xs" data-fa-i2svg="">
-              <svg class="svg-inline--fa fa-chevron-right w-3 h-3" aria-hidden="true" focusable="false"
-                   data-prefix="fas" data-icon="chevron-right" role="img" xmlns="http://www.w3.org/2000/svg"
-                   viewBox="0 0 320 512" data-fa-i2svg="">
-                <path fill="currentColor"
-                      d="M310.6 233.4c12.5 12.5 12.5 32.8 0 45.3l-192 192c-12.5 12.5-32.8 12.5-45.3 0s-12.5-32.8 0-45.3L242.7 256 73.4 86.6c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0l192 192z"></path>
-              </svg>
-            </i>
-          </span>
+            <svg
+              class="ml-1 w-3 h-3 transition-transform duration-200 hover:translate-x-0.5"
+              aria-hidden="true"
+              focusable="false"
+              xmlns="http://www.w3.org/2000/svg"
+              viewBox="0 0 320 512"
+            >
+              <path
+                fill="currentColor"
+                d="M310.6 233.4c12.5 12.5 12.5 32.8 0 45.3l-192 192c-12.5 12.5-32.8 12.5-45.3 0s-12.5-32.8 0-45.3L242.7 256 73.4 86.6c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0l192 192z"
+              ></path>
+            </svg>
+          </button>
         </div>
 
         <div class="bg-gray-50 rounded-lg overflow-hidden mb-6 md:mb-8">
-          <div class="grid grid-cols-5 text-xs md:text-sm">
-            <div class="p-3 md:p-4 font-medium">名称</div>
-            <div class="p-3 md:p-4 text-right">代码</div>
-            <div class="p-3 md:p-4 text-right">最新价</div>
-            <div class="p-3 md:p-4 text-right">涨跌额</div>
-            <div class="p-3 md:p-4 text-right">涨跌幅</div>
-          </div>
-          <div class="text-xs md:text-sm">
-            <template v-if="marketsLoading">
-              <div class="grid grid-cols-5 animate-pulse">
-                <div class="p-3 md:p-4 border-b border-gray-200 font-medium bg-gray-200 rounded"></div>
-                <div class="p-3 md:p-4 border-b border-gray-200 text-right text-gray-500 bg-gray-200 rounded"></div>
-                <div class="p-3 md:p-4 border-b border-gray-200 text-right bg-gray-200 rounded"></div>
-                <div class="p-3 md:p-4 border-b border-gray-200 text-right bg-gray-200 rounded"></div>
-                <div class="p-3 md:p-4 border-b border-gray-200 text-right bg-gray-200 rounded"></div>
-              </div>
-              <!-- 重复显示几行骨架屏 -->
-              <div class="grid grid-cols-5 animate-pulse">
-                <div class="p-3 md:p-4 border-b border-gray-200 font-medium bg-gray-200 rounded"></div>
-                <div class="p-3 md:p-4 border-b border-gray-200 text-right text-gray-500 bg-gray-200 rounded"></div>
-                <div class="p-3 md:p-4 border-b border-gray-200 text-right bg-gray-200 rounded"></div>
-                <div class="p-3 md:p-4 border-b border-gray-200 text-right bg-gray-200 rounded"></div>
-                <div class="p-3 md:p-4 border-b border-gray-200 text-right bg-gray-200 rounded"></div>
-              </div>
-              <div class="grid grid-cols-5 animate-pulse">
-                <div class="p-3 md:p-4 border-b border-gray-200 font-medium bg-gray-200 rounded"></div>
-                <div class="p-3 md:p-4 border-b border-gray-200 text-right text-gray-500 bg-gray-200 rounded"></div>
-                <div class="p-3 md:p-4 border-b border-gray-200 text-right bg-gray-200 rounded"></div>
-                <div class="p-3 md:p-4 border-b border-gray-200 text-right bg-gray-200 rounded"></div>
-                <div class="p-3 md:p-4 border-b border-gray-200 text-right bg-gray-200 rounded"></div>
-              </div>
-            </template>
-            <template v-else>
-              <template v-for="(market, index) in globalMarkets" :key="index">
-                <div class="grid grid-cols-5 cursor-pointer hover:bg-gray-100 transition-colors duration-200"
-                     @click="goToInvestmentProduct(market.stockCode)">
-                  <div class="p-3 md:p-4 border-b border-gray-200 font-medium">{{ market.stockName }}</div>
-                  <div class="p-3 md:p-4 border-b border-gray-200 text-right text-gray-500">{{ market.stockCode }}</div>
-                  <div class="p-3 md:p-4 border-b border-gray-200 text-right">{{ market.currentPrice }}</div>
-                  <div class="p-3 md:p-4 border-b border-gray-200 text-right" :class="market.changeClass">
+          <!-- 添加横向滚动支持 -->
+          <div class="overflow-x-auto">
+            <table class="min-w-[600px] text-xs md:text-sm">
+              <!-- 表头 -->
+              <thead>
+                <tr class="border-b border-gray-200">
+                  <th class="p-2 md:p-3 text-left font-medium w-[180px]">名称</th>
+                  <th class="p-2 md:p-3 text-right font-medium w-[100px]">代码</th>
+                  <th class="p-2 md:p-3 text-right font-medium w-[100px]">最新价</th>
+                  <th class="p-2 md:p-3 text-right font-medium w-[100px]">涨跌额</th>
+                  <th class="p-2 md:p-3 text-right font-medium w-[100px]">涨跌幅</th>
+                </tr>
+              </thead>
+
+              <!-- 加载状态 -->
+              <tbody v-if="marketsLoading">
+                <tr class="animate-pulse">
+                  <td class="p-2 md:p-3 border-b border-gray-200 font-medium bg-gray-200 rounded w-[180px]"></td>
+                  <td class="p-2 md:p-3 border-b border-gray-200 text-right text-gray-500 bg-gray-200 rounded w-[100px]"></td>
+                  <td class="p-2 md:p-3 border-b border-gray-200 text-right bg-gray-200 rounded w-[100px]"></td>
+                  <td class="p-2 md:p-3 border-b border-gray-200 text-right bg-gray-200 rounded w-[100px]"></td>
+                  <td class="p-2 md:p-3 border-b border-gray-200 text-right bg-gray-200 rounded w-[100px]"></td>
+                </tr>
+                <!-- 重复显示几行骨架屏 -->
+                <tr class="animate-pulse">
+                  <td class="p-2 md:p-3 border-b border-gray-200 font-medium bg-gray-200 rounded w-[180px]"></td>
+                  <td class="p-2 md:p-3 border-b border-gray-200 text-right text-gray-500 bg-gray-200 rounded w-[100px]"></td>
+                  <td class="p-2 md:p-3 border-b border-gray-200 text-right bg-gray-200 rounded w-[100px]"></td>
+                  <td class="p-2 md:p-3 border-b border-gray-200 text-right bg-gray-200 rounded w-[100px]"></td>
+                  <td class="p-2 md:p-3 border-b border-gray-200 text-right bg-gray-200 rounded w-[100px]"></td>
+                </tr>
+                <tr class="animate-pulse">
+                  <td class="p-2 md:p-3 border-b border-gray-200 font-medium bg-gray-200 rounded w-[180px]"></td>
+                  <td class="p-2 md:p-3 border-b border-gray-200 text-right text-gray-500 bg-gray-200 rounded w-[100px]"></td>
+                  <td class="p-2 md:p-3 border-b border-gray-200 text-right bg-gray-200 rounded w-[100px]"></td>
+                  <td class="p-2 md:p-3 border-b border-gray-200 text-right bg-gray-200 rounded w-[100px]"></td>
+                  <td class="p-2 md:p-3 border-b border-gray-200 text-right bg-gray-200 rounded w-[100px]"></td>
+                </tr>
+              </tbody>
+
+              <!-- 数据显示 -->
+              <tbody v-else>
+                <tr
+                  v-for="(market, index) in globalMarkets"
+                  :key="index"
+                  class="cursor-pointer hover:bg-gray-100 transition-colors duration-200"
+                  @click="goToInvestmentProduct(market.stockCode)"
+                >
+                  <td class="p-2 md:p-3 border-b border-gray-200 font-medium truncate w-[180px]">
+                    {{ market.stockName }}
+                  </td>
+                  <td class="p-2 md:p-3 border-b border-gray-200 text-right text-gray-500 w-[100px]">
+                    {{ market.stockCode }}
+                  </td>
+                  <td class="p-2 md:p-3 border-b border-gray-200 text-right w-[100px]">
+                    {{ market.currentPrice }}
+                  </td>
+                  <td class="p-2 md:p-3 border-b border-gray-200 text-right w-[100px]" :class="market.changeClass">
                     {{ market.priceChange }}
-                  </div>
-                  <div class="p-3 md:p-4 border-b border-gray-200 text-right" :class="market.bgClass">
+                  </td>
+                  <td class="p-2 md:p-3 border-b border-gray-200 text-right w-[100px]" :class="market.bgClass">
                     {{ market.priceChangePercent }}
-                  </div>
-                </div>
-              </template>
-              <template v-if="globalMarkets.length === 0">
-                <div class="p-6 text-center text-gray-500">
-                  暂无市场数据
-                </div>
-              </template>
-            </template>
+                  </td>
+                </tr>
+                <tr v-if="globalMarkets.length === 0">
+                  <td colspan="5" class="p-6 text-center text-gray-500">
+                    暂无市场数据
+                  </td>
+                </tr>
+              </tbody>
+            </table>
           </div>
         </div>
 
@@ -1133,7 +1158,7 @@ html {
   #trade-entry {
     margin-bottom: 1.5rem;
   }
-  
+
   /* 调整表格列的显示 */
   .grid-cols-5 > div:not(.text-right:last-child) {
     display: none;

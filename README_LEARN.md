@@ -12,8 +12,8 @@ npm cache verify
 
 
 #打包
-npm run build   # 或 yarn build
 
+npm run build:test
 
 #环境依赖
 node 版本
