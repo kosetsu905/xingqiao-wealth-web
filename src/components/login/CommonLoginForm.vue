@@ -520,7 +520,7 @@ const handleSubmit = async () => {
       }
 
       if (props.loginObject.userType === '02') {
-        await router.push('/client/dashboard')
+        await router.push('/client/index')
       }
       if (props.loginObject.userType === '01') {
         await router.push('/agency/index')

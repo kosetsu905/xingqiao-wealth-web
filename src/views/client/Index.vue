@@ -3,9 +3,8 @@
   <Header/>
 
   <div class="main bg-white shadow-sm border-b border-gray-200">
-
-    <div class="ml-0 md:ml-16 p-4 md:p-6 bg-white border-b border-gray-200">
-      <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+    <div class="ml-0 md:ml-16 md:mr-16 mt-4 md:px-6 pb-6 bg-white border-b border-gray-200">
+      <div class="flex flex-col pr-0 md:pr-6 px-4 md:flex-row md:items-center md:justify-between gap-4">
         <div>
           <h1 class="text-xl md:text-2xl font-semibold flex items-center">
             您好，{{ userName }}
@@ -24,41 +23,17 @@
           </p>
         </div>
         <div class="flex flex-col md:flex-row items-center gap-2 md:gap-4 w-full md:w-auto">
-          <div class="relative w-full md:w-64">
-            <input type="text" placeholder="搜索股票、债券、基金..."
-                   class="bg-gray-100 border border-gray-300 rounded-lg px-4 py-2 pl-10 w-full focus:outline-none focus:ring-2 focus:ring-blue-500">
-            <i class="absolute left-3 top-3 text-gray-500" data-fa-i2svg="">
-              <svg class="svg-inline--fa fa-magnifying-glass w-4 h-4" aria-hidden="true" focusable="false"
-                   data-prefix="fas"
-                   data-icon="magnifying-glass" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"
-                   data-fa-i2svg="">
-                <path fill="currentColor"
-                      d="M416 208c0 45.9-14.9 88.3-40 122.7L502.6 457.4c12.5 12.5 12.5 32.8 0 45.3s-32.8 12.5-45.3 0L330.7 376c-34.4 25.2-76.8 40-122.7 40C93.1 416 0 322.9 0 208S93.1 0 208 0S416 93.1 416 208zM208 352a144 144 0 1 0 0-288 144 144 0 1 0 0 288z"></path>
-              </svg>
-            </i>
-          </div>
-          <button
-              class="bg-blue-600 hover:bg-blue-700 rounded-lg px-4 py-2 flex items-center w-full md:w-auto justify-center">
-            <i class="mr-2" data-fa-i2svg="">
-              <svg class="svg-inline--fa fa-plus w-4 h-4" aria-hidden="true" focusable="false" data-prefix="fas"
-                   data-icon="plus" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"
-                   data-fa-i2svg="">
-                <path fill="currentColor"
-                      d="M256 80c0-17.7-14.3-32-32-32s-32 14.3-32 32V224H48c-17.7 0-32 14.3-32 32s14.3 32 32 32H192V432c0 17.7 14.3 32 32 32s32-14.3 32-32V288H400c17.7 0 32-14.3 32-32s-14.3-32-32-32H256V80z"></path>
-              </svg>
-            </i>
-            <span class="">搜索</span>
-          </button>
+          <StockSearch/>
         </div>
       </div>
     </div>
 
     <!-- 主内容区 -->
-    <div id="main-content" class="ml-0 md:ml-16 px-4 md:px-6 pb-6 bg-white text-black flex flex-col md:flex-row">
+    <div id="main-content" class="ml-0 md:ml-16 md:mr-16  md:px-6 pb-6 bg-white text-black flex flex-col md:flex-row">
       <!-- 左侧内容 -->
       <div id="left-content" class="w-full md:w-2/3 pr-0 md:pr-6">
         <!-- 市场状态卡片 -->
-        <div id="market-status" class="bg-gray-50 rounded-lg p-4 md:p-6 mb-6 md:mb-8 mt-4 md:mt-6">
+        <div id="market-status" class="bg-gray-50 rounded-lg md:p-6 mb-6 md:mb-8 mt-4 md:mt-6">
           <div class="flex flex-wrap mb-3 md:mb-4">
             <div class="bg-green-100 text-green-800 rounded-full px-3 py-1 md:px-4 md:py-1 flex items-center text-sm">
               <span class="">今日市场走势看涨</span>
@@ -347,7 +322,7 @@
               <span class="">卖出</span>
             </button>
             <button
-                class="w-full bg-gray-200 hover:bg-gray-300 rounded-lg py-2 md:py-3 flex items-center justify-center">
+                class="w-full bg-gray-200 hover:bg-gray-300 rounded-xl py-2 md:py-3 flex items-center justify-center shadow-sm hover:shadow-md transition-all duration-300 transform hover:-translate-y-0.5">
               <i class="mr-2" data-fa-i2svg="">
                 <svg class="svg-inline--fa fa-clock-rotate-left w-4 h-4" aria-hidden="true" focusable="false"
                      data-prefix="fas"
@@ -387,6 +362,7 @@ import {useCurrentDate} from '@/composables/Composable.js'
 import tradeWebSocket from "@/plugins/websocket.js"
 import request from '@/utils/request.js';
 import {getStockQuoteChartList} from "@/api/order.js";
+import StockSearch from "@/views/client/StockSearch.vue";
 
 const userName = ref('')
 const {currentDate} = useCurrentDate()
@@ -1116,8 +1092,89 @@ const goToTrade = () => {
 
 <style scoped>
 
-
 .main {
   font-family: 'Inter', sans-serif !important;
+  min-height: calc(100vh - 60px);
+}
+
+/* 平滑滚动效果 */
+html {
+  scroll-behavior: smooth;
+}
+
+/* 自定义滚动条 */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #c1c1c1;
+  border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #a8a8a8;
+}
+
+/* 响应式调整 */
+@media (max-width: 640px) {
+  #market-status,
+  #hot-stocks,
+  #hot-bonds,
+  #sector-performance,
+  #hot-etfs,
+  #hot-funds,
+  #trade-entry {
+    margin-bottom: 1.5rem;
+  }
+  
+  /* 调整表格列的显示 */
+  .grid-cols-5 > div:not(.text-right:last-child) {
+    display: none;
+  }
+}
+
+/* 加载动画优化 */
+.animate-pulse {
+  animation: pulse 1.5s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+@keyframes pulse {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.5;
+  }
+}
+
+/* 卡片悬停效果增强 */
+.bg-gray-50:hover {
+  transform: translateY(-2px);
+}
+
+/* 文本截断处理 */
+.truncate {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.line-clamp-2 {
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+/* 按钮交互反馈 */
+button:active {
+  transform: scale(0.98);
 }
 </style>

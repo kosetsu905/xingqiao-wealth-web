@@ -336,7 +336,7 @@ function restartAssessment() {
 // 返回首页
 function toIndex() {
   router.push({
-    path: '/client/dashboard'
+    path: '/client/index'
   })
 }
 

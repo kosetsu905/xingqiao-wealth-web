@@ -105,15 +105,15 @@ const props = defineProps({
 
 // 在脚本部分添加导航配置
 const navItems = ref([
-  { label: '首页', activeIndex: 0, path: '/client/dashboard' },
+  { label: '首页', activeIndex: 0, path: '/client/index' },
   { label: '个人中心', activeIndex: 1, path: '/client/userInfo'},
   { label: 'KYC认证', activeIndex: 2, path: '/client/ekycClientIndex'},
   { label: '交易中心', activeIndex: 3, path: "/client/transaction" },
   { label: '持仓', activeIndex: 4, path: "/client/holdings" },
-  // { label: '资金管理', activeIndex: 5, path: "/client/transaction3" },
-  // { label: '行情', activeIndex: 6, path: "/client/hangingDemo" },
-  // { label: '仪表盘', activeIndex: 7, path: "/client/dashboard" },
-  { label: '退出', activeIndex: 5, path: '/logout' }
+  { label: '资金管理', activeIndex: 5, path: "/client/financialManage" },
+  { label: '行情', activeIndex: 6, path: "/client/hangingDemo" },
+  { label: '仪表盘', activeIndex: 7, path: "/client/dashboard" },
+  { label: '退出', activeIndex: 8, path: '/logout' }
 ]);
 
 
@@ -162,7 +162,7 @@ function goToIndex () {
   console.log('首页')
   currentTabActive.value =0;
   router.push({
-    path: '/client/dashboard'
+    path: '/client/index'
   })
 }
 

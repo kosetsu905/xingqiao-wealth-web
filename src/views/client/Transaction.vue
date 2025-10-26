@@ -329,9 +329,9 @@
             </div>
             <div class="flex justify-between items-center">
               <span class="text-muted text-sm md:text-base">今日盈亏</span>
-              <span class="font-medium text-base md:text-lg" 
-                :class="todayProfit >= 0 ? 'text-green-600' : 'text-red-600'">
-                {{ 
+              <span class="font-medium text-base md:text-lg"
+                    :class="todayProfit >= 0 ? 'text-green-600' : 'text-red-600'">
+                {{
                   todayProfit >= 0 ? '+' : '-'
                 }}¥{{ Math.abs(todayProfit).toLocaleString('zh-CN', {minimumFractionDigits: 2}) }}</span>
             </div>
@@ -341,10 +341,8 @@
         <!-- 股票图表 -->
         <div id="stock-chart" class="card-white rounded-lg p-4 md:p-6 mb-6 md:mb-8" v-if="selectedStock">
           <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-3 md:mb-4">
-            <h3 class="text-base md:text-lg font-semibold text-gray-800 mb-1 md:mb-0">{{ selectedStock.name }}
-              ({{ selectedStock.code }})</h3>
+            <h3 class="text-base md:text-lg font-semibold text-gray-800 mb-1 md:mb-0">{{ selectedStock.name }}</h3>
             <div class="text-xs md:text-sm text-muted">
-              <i class="fa-solid fa-clock mr-1"></i>
               美东时间
             </div>
           </div>
@@ -353,8 +351,12 @@
 
           <div class="flex flex-wrap justify-center mt-3 md:mt-4 text-xs md:text-sm">
             <button v-for="period in chartPeriods" :key="period"
-                    :class="{'bg-blue-500 text-white': selectedPeriod === period, 'bg-gray-100 text-gray-700 hover:bg-gray-200': selectedPeriod !== period}"
-                    class="px-2 py-1 md:px-3 md:py-1 rounded-md transition-colors m-1 md:m-0.5"
+                    :class="[
+                      'px-2 py-1 md:px-3 md:py-1 mx-1 md:mx-2 rounded-md',
+                      selectedPeriod === period
+                        ? 'bg-blue-500 text-white'
+                        : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                    ]"
                     @click="handlePeriodChange(period)">
               {{ period }}
             </button>
@@ -364,35 +366,30 @@
         <!-- 交易提示 -->
         <div id="trading-tips" class="card-white rounded-lg p-4 md:p-6 mb-6 md:mb-8">
           <h3 class="text-base md:text-lg font-semibold mb-3 md:mb-4 text-gray-800">交易提示</h3>
-          <div class="space-y-3 md:space-y-4 text-xs md:text-sm">
-            <div v-for="tip in tradingTips" :key="tip.id" class="flex items-start">
-              <i class="fa-solid fa-circle-info text-blue-500 mt-0.5 mr-1 md:mr-2 text-xs md:text-base"></i>
-              <p class="text-muted">{{ tip.content }}</p>
-            </div>
+          <div v-for="tip in tradingTips" :key="tip.id" class="flex items-start mb-2 last:mb-0">
+            <i class="fa-solid fa-circle-info text-blue-500 mt-0.5 mr-1 md:mr-2 text-xs md:text-base"></i>
+            <p class="text-muted text-sm md:text-base">{{ tip.content }}</p>
           </div>
         </div>
 
         <!-- 相关推荐 -->
         <div id="recommendations" class="card-white rounded-lg p-4 md:p-6">
           <h3 class="text-base md:text-lg font-semibold mb-3 md:mb-4 text-gray-800">相关推荐</h3>
-          <div class="space-y-2 md:space-y-3">
-            <div v-for="rec in recommendedStocks" :key="rec.code"
-                 class="flex justify-between items-center p-2 md:p-3 bg-gray-50 rounded-lg hover:bg-gray-100 cursor-pointer transition-colors"
-                 @click="selectStock(rec)">
-              <div class="flex items-center">
-                <div :class="rec.bgColor"
-                     class="w-6 h-6 md:w-8 md:h-8 rounded-full flex items-center justify-center mr-1 md:mr-2">
-                  <span class="text-xs font-bold text-white">{{ rec.text }}</span>
-                </div>
-                <div>
-                  <div class="font-medium text-gray-800 text-sm md:text-base">{{ rec.name }}</div>
-                  <div class="text-xs text-muted">{{ rec.code }}</div>
-                </div>
+          <div v-for="rec in recommendedStocks" :key="rec.code"
+               class="flex justify-between items-center p-2 md:p-3 bg-gray-50 rounded-lg hover:bg-gray-100 cursor-pointer transition-colors mb-2 last:mb-0">
+            <div class="flex items-center">
+              <div :class="rec.bgColor"
+                   class="w-6 h-6 md:w-8 md:h-8 rounded-full flex items-center justify-center mr-1 md:mr-2">
+                <span class="text-xs font-bold text-white">{{ rec.text }}</span>
               </div>
-              <div class="text-right">
-                <div class="text-gray-800 text-sm">{{ rec.price }}</div>
-                <div class="text-green-600 text-xs md:text-sm">+{{ rec.change }}%</div>
+              <div>
+                <div class="font-medium text-gray-800 text-sm md:text-base">{{ rec.name }}</div>
+                <div class="text-xs text-muted">{{ rec.code }}</div>
               </div>
+            </div>
+            <div class="text-right">
+              <div class="text-gray-800 text-sm">{{ rec.price }}</div>
+              <div class="text-green-600 text-xs md:text-sm">+{{ rec.change }}%</div>
             </div>
           </div>
         </div>

@@ -840,7 +840,7 @@ const authStatusInfo = computed(() => {
 // 组件挂载后执行认证检查
 onMounted(async () => {
   try {
-    ekycAuth.init();
+    // ekycAuth.init();
     // 先尝试从后端获取用户数据
     const response = await getEkycData();
 
@@ -1400,7 +1400,7 @@ const submitAuth = async () => {
       currentSection.value = 'authIng';
 
       //审核中
-      ekycAuth.setAuthenticated(1);
+      ekycAuth.setEkycAuthenticated(1);
 
       // 清除缓存的数据
       cache.local.remove('ekycFormData');

@@ -64,6 +64,7 @@ const stockInfo = ref({
 
 // 获取股票数据
 import { getStockData } from "@/api/order";
+import Header from "@/components/client/Header.vue";
 
 // -------------------- 指标计算函数 --------------------
 function calcVWAP(data) {
@@ -527,6 +528,9 @@ watch(activeTab, async () => {
 </script>
 
 <template>
+  <!-- 引入Header组件 -->
+  <Header/>
+
   <div style="display: flex; flex-direction: column; height: 100vh">
     <!-- 控制栏 -->
     <div id="controls" style="padding: 10px; background: #f5f5f5">

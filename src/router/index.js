@@ -17,6 +17,7 @@ import Dashboard from '../views/client/Dashboard.vue'
 import InvestmentProductList from '../views/client/InvestmentProductList.vue'
 import InvestmentProduct from '../views/client/InvestmentProduct.vue'
 import Transaction from '../views/client/Transaction.vue'
+import FinancialManage from '../views/client/FinancialManage.vue'
 import StockDetailView from '../views/client/StockDetailView.vue'
 import one from '../views/common/401.vue'
 import two from '../views/common/404.vue'
@@ -83,6 +84,7 @@ const routes = [
   { path: '/client/investmentProductList', component: InvestmentProductList },
   { path: '/client/investmentProduct', component: InvestmentProduct },
   { path: '/client/transaction', component: Transaction },
+  { path: '/client/financialManage', component: FinancialManage },
   { path: '/client/hangingDemo', component: HangqingDemo },
   { path: '/client/holdings', component: Holdings },
   { path: '/client/dashboard', component: Dashboard },

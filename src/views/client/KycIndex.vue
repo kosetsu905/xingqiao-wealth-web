@@ -413,7 +413,7 @@
               查看账户状态
             </button>
             <button
-                @click="router.push('/client/dashboard')"
+                @click="router.push('/client/index')"
                 class="px-6 py-3 bg-white text-neutral-700 border border-neutral-300 rounded-lg font-medium hover:bg-neutral-50 transition-colors">
               返回首页
             </button>

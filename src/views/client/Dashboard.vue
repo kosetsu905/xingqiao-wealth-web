@@ -3,8 +3,8 @@
     <!-- 引入Header组件 -->
     <Header/>
 
-    <div class="ml-0  p-4 md:p-6 bg-gray-200 border-b border-gray-200">
-      <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+    <div class="ml-0 md:ml-16 md:mr-16 mt-4 px-4 md:px-6 pb-6 bg-gray-100 border-b border-gray-200">
+      <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4 py-4">
         <div>
           <h1 class="text-xl md:text-2xl font-semibold flex items-center">
             您好，{{ userName }}
@@ -18,7 +18,7 @@
               </svg>
             </i>
           </h1>
-          <p class="text-gray-600 text-sm">
+          <p class="text-gray-600 text-sm mt-1">
             {{ currentDate }}
           </p>
         </div>
@@ -27,38 +27,47 @@
         </div>
       </div>
     </div>
-    <div class="flex min-h-screen home-wrapper">
-      <section class="grid w-full gap-8 home-section">
-        <div class="md:col-span-2 xl:col-span-3 p-4">
+
+    <div class="ml-0 md:ml-16 md:mr-16 px-4 md:px-6 pb-6 bg-white min-h-screen">
+      <section class="grid grid-cols-1 gap-6 py-6">
+        <div class="p-4 bg-white rounded-lg shadow">
           <TradingViewWidget
               title="市场概况"
               :script-url="`${scriptUrl}market-overview.js`"
               :config="MARKET_OVERVIEW_WIDGET_CONFIG"
               class="custom-chart"
+              :height="500"
           />
         </div>
       </section>
-      <section class="grid w-full gap-4 home-section">
-        <div class="md:col-span-2 xl:col-span-3 p-4">
+
+      <section class="grid grid-cols-1 gap-6 mb-6">
+        <div class="p-4 bg-white rounded-lg shadow">
           <TradingViewWidget
               title="股票热图"
               :script-url="`${scriptUrl}stock-heatmap.js`"
               :config="HEATMAP_WIDGET_CONFIG"
+              :height="400"
           />
         </div>
       </section>
-      <section class="grid grid-cols-1 md:grid-cols-3 xl:grid-cols-3 gap-8 home-section">
-        <div class="md:col-span-2 xl:col-span-1 p-4">
+
+      <section class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
+        <div class="p-4 bg-white rounded-lg shadow">
           <TradingViewWidget
               title="全球市场"
               :script-url="`${scriptUrl}market-quotes.js`"
               :config="MARKET_DATA_WIDGET_CONFIG"
+              :height="400"
           />
         </div>
-        <div class="md:col-span-1 xl:col-span-2 p-4">
+
+        <div class="p-4 bg-white rounded-lg shadow">
           <TradingViewWidget
+              title="市场新闻"
               :script-url="`${scriptUrl}timeline.js`"
               :config="TOP_STORIES_WIDGET_CONFIG"
+              :height="400"
           />
         </div>
       </section>
@@ -75,23 +84,24 @@ import {
   MARKET_DATA_WIDGET_CONFIG,
   TOP_STORIES_WIDGET_CONFIG,
 } from '@/composables/Constants'
-import {onMounted, ref, watch} from "vue";
-import {useCurrentDate} from "@/composables/Composable.js";
-import {useRouter} from "vue-router";
-import StockSearch from "@/views/client/StockSearch.vue";
+import {onMounted, ref} from "vue"
+import {useCurrentDate} from "@/composables/Composable.js"
+import StockSearch from "@/views/client/StockSearch.vue"
 
 const scriptUrl = 'https://s3.tradingview.com/external-embedding/embed-widget-'
 const userName = ref('')
 const {currentDate} = useCurrentDate()
-const router = useRouter()
 
 onMounted(async () => {
   // 设置账号名
-  userName.value = localStorage.getItem('userName') || '用户';
-});
+  userName.value = localStorage.getItem('userName') || '用户'
+})
 </script>
 
 <style scoped>
+.dashboard {
+  font-family: 'Inter', sans-serif;
+}
 
 @keyframes shimmer {
   0% {

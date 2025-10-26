@@ -1,8 +1,6 @@
 
 <template>
 
-
-
     <!-- Header -->
     <Header />
     <!-- Main Dashboard -->
@@ -357,7 +355,7 @@ const gotoCommissionHistory = () => {
 
 // 组件挂载后执行认证检查
 onMounted(() => {
-  ekycAuth.init();
+  // ekycAuth.init();
   checkAuthentication();
 });
 </script>
