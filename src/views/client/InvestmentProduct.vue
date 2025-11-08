@@ -89,98 +89,7 @@
       <div id="chart-trading-section" class="grid grid-cols-1 lg:grid-cols-4 gap-4 md:gap-6 mt-4 md:mt-6">
         <!-- 价格图表区域 -->
         <div id="price-chart-area" class="lg:col-span-3 bg-gray-50 rounded-lg p-4 md:p-6">
-          <!-- 图表控制器 -->
-          <div class="flex flex-wrap justify-between items-center gap-2 mb-4 md:mb-6">
-            <div class="flex flex-wrap gap-1 md:gap-2">
-              <button
-                  v-for="period in chartPeriods"
-                  :key="period.label"
-                  :class="[
-                  'px-2 py-1 md:px-3 md:py-1 rounded text-xs md:text-sm',
-                  period.active
-                    ? 'bg-blue-600 text-white'
-                    : 'bg-gray-200 hover:bg-gray-300'
-                ]"
-                  @click="changeChartPeriod(period)"
-              >
-                {{ period.label }}
-              </button>
-            </div>
-            <div class="flex gap-1 md:gap-2">
-              <button
-                  class="p-1.5 md:p-2 bg-gray-200 hover:bg-gray-300 rounded text-sm"
-                  :class="{ 'bg-blue-100': chartType === 'line' }"
-                  @click="switchChartType('line')"
-              >
-                <i data-fa-i2svg="">
-                  <svg class="svg-inline--fa fa-chart-line w-4 h-4" aria-hidden="true" focusable="false" data-prefix="fas" data-icon="chart-line" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" data-fa-i2svg="">
-                    <path fill="currentColor" d="M64 64c0-17.7-14.3-32-32-32S0 46.3 0 64V400c0 44.2 35.8 80 80 80H480c17.7 0 32-14.3 32-32s-14.3-32-32-32H80c-8.8 0-16-7.2-16-16V64zm406.6 86.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L320 210.7l-57.4-57.4c-12.5-12.5-32.8-12.5-45.3 0l-112 112c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0L240 221.3l57.4 57.4c12.5 12.5 32.8 12.5 45.3 0l128-128z"></path>
-                  </svg>
-                </i>
-              </button>
-              <button
-                  class="p-1.5 md:p-2 bg-gray-200 hover:bg-gray-300 rounded text-sm"
-                  :class="{ 'bg-blue-100': chartType === 'candlestick' }"
-                  @click="switchChartType('candlestick')"
-              >
-                <i data-fa-i2svg="">
-                  <svg class="svg-inline--fa fa-chart-bar w-4 h-4" aria-hidden="true" focusable="false" data-prefix="fas" data-icon="chart-bar" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" data-fa-i2svg="">
-                    <path fill="currentColor" d="M32 32c17.7 0 32 14.3 32 32V400c0 8.8 7.2 16 16 16H480c17.7 0 32 14.3 32 32s-14.3 32-32 32H80c-44.2 0-80-35.8-80-80V64C0 46.3 14.3 32 32 32zm96 96c0-17.7 14.3-32 32-32l192 0c17.7 0 32 14.3 32 32s-14.3 32-32 32l-192 0c-17.7 0-32-14.3-32-32zm32 64H288c17.7 0 32 14.3 32 32s-14.3 32-32 32H160c-17.7 0-32-14.3-32-32s14.3-32 32-32zm0 96H416c17.7 0 32 14.3 32 32s-14.3 32-32 32H160c-17.7 0-32-14.3-32-32s14.3-32 32-32z"></path>
-                  </svg>
-                </i>
-              </button>
-              <button
-                  class="p-1.5 md:p-2 bg-gray-200 hover:bg-gray-300 rounded text-sm"
-                  @click="zoomIn"
-                  title="放大"
-              >
-                <i data-fa-i2svg="">
-                  <svg class="svg-inline--fa fa-magnifying-glass-plus w-4 h-4" aria-hidden="true" focusable="false" data-prefix="fas" data-icon="magnifying-glass-plus" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" data-fa-i2svg="">
-                    <path fill="currentColor" d="M448 32c35.3 0 64 28.7 64 64V320c0 35.3-28.7 64-64 64H352l-32 32-32 32H192l-32-32-32-32H64c-35.3 0-64-28.7-64-64V96c0-35.3 28.7-64 64-64H448zM240 160c-17.7 0-32 14.3-32 32s14.3 32 32 32h16v16c0 17.7 14.3 32 32 32s32-14.3 32-32V224h16c17.7 0 32-14.3 32-32s-14.3-32-32-32H272V144c0-17.7-14.3-32-32-32s-32 14.3-32 32v16H240z"></path>
-                  </svg>
-                </i>
-              </button>
-              <button
-                  class="p-1.5 md:p-2 bg-gray-200 hover:bg-gray-300 rounded text-sm"
-                  @click="zoomOut"
-                  title="缩小"
-              >
-                <i data-fa-i2svg="">
-                  <svg class="svg-inline--fa fa-magnifying-glass-minus w-4 h-4" aria-hidden="true" focusable="false" data-prefix="fas" data-icon="magnifying-glass-minus" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" data-fa-i2svg="">
-                    <path fill="currentColor" d="M448 32c35.3 0 64 28.7 64 64V320c0 35.3-28.7 64-64 64H352l-32 32-32 32H192l-32-32-32-32H64c-35.3 0-64-28.7-64-64V96c0-35.3 28.7-64 64-64H448zM144 224c-17.7 0-32 14.3-32 32s14.3 32 32 32H304c17.7 0 32-14.3 32-32s-14.3-32-32-32H144z"></path>
-                  </svg>
-                </i>
-              </button>
-              <button
-                  class="p-1.5 md:p-2 bg-gray-200 hover:bg-gray-300 rounded text-sm"
-                  @click="scrollLeft"
-                  title="向左滚动"
-              >
-                <i data-fa-i2svg="">
-                  <svg class="svg-inline--fa fa-arrow-left w-4 h-4" aria-hidden="true" focusable="false" data-prefix="fas" data-icon="arrow-left" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" data-fa-i2svg="">
-                    <path fill="currentColor" d="M512 256c0 17.7-14.3 32-32 32H192l41 41c9.4 9.4 9.4 24.6 0 33.9s-24.6 9.4-33.9 0L103 265c-9.4-9.4-9.4-24.6 0-33.9L199 135c9.4-9.4 24.6-9.4 33.9 0s9.4 24.6 0 33.9l-41 41H480c17.7 0 32 14.3 32 32z"></path>
-                  </svg>
-                </i>
-              </button>
-              <button
-                  class="p-1.5 md:p-2 bg-gray-200 hover:bg-gray-300 rounded text-sm"
-                  @click="scrollRight"
-                  title="向右滚动"
-              >
-                <i data-fa-i2svg="">
-                  <svg class="svg-inline--fa fa-arrow-right w-4 h-4" aria-hidden="true" focusable="false" data-prefix="fas" data-icon="arrow-right" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" data-fa-i2svg="">
-                    <path fill="currentColor" d="M0 256c0-17.7 14.3-32 32-32H320l-41-41c-9.4-9.4-9.4-24.6 0-33.9s24.6-9.4 33.9 0L409 247c9.4 9.4 9.4 24.6 0 33.9L313 379c-9.4 9.4-24.6 9.4-33.9 0s-9.4-24.6 0-33.9l41-41H32c-17.7 0-32-14.3-32-32z"></path>
-                  </svg>
-                </i>
-              </button>
-            </div>
-          </div>
-
-          <!-- 主要价格图表 -->
-          <div id="main-price-chart" class="h-[300px] md:h-[400px]" ref="priceChartContainer"></div>
-
-          <!-- 交易量图表 -->
-          <div id="volume-chart" class="h-[80px] md:h-[100px] mt-4" ref="volumeChartContainer"></div>
+          <HangqingDemo />
         </div>
 
         <!-- 交易区域 -->
@@ -489,6 +398,8 @@ import * as Highcharts from 'highcharts'
 import HighchartsMore from 'highcharts/highcharts-more'
 import HighchartsStock from 'highcharts/modules/stock'
 import Header from "@/components/client/Header.vue";
+
+import HangqingDemo from "@/components/client/HangqingDemo.vue";
 
 // 初始化 Highcharts 模块
 if (HighchartsMore && typeof HighchartsMore === 'function') {
