@@ -81,7 +81,7 @@
           <!-- 搜索和地区筛选 -->
           <div class="flex flex-col sm:flex-row gap-3 mb-4 md:mb-6">
             <div class="relative flex-1">
-              <input type="text" placeholder="搜索股票代码或名称..." v-model="searchQuery" class="w-full bg-white border border-gray-300 rounded-lg px-3 py-2 md:px-4 md:py-3 pl-10 md:pl-12 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-sm md:text-base">
+              <input type="text" placeholder="搜索股票代码或名称..." v-model="searchQuery" class="w-full bg-white border border-gray-300 rounded-lg px-3 py-2 md:px-4 md:py-3 pl-10 md:pl-12 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 focus:border-blue-500 text-sm md:text-base">
               <i class="fa-solid fa-search absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 text-sm md:text-base"></i>
             </div>
             <div class="relative w-full sm:w-48">
@@ -296,15 +296,12 @@
           </div>
         </div>
 
-        <!-- 交易确认按钮 -->
+        <!-- 交易提交按钮 -->
         <div class="flex justify-end space-x-3 md:space-x-4" v-if="selectedStock">
           <button
-              class="px-4 py-2 md:px-6 md:py-3 bg-gray-100 hover:bg-gray-200 rounded-lg font-medium text-gray-700 transition-colors text-sm md:text-base">
-            取消
-          </button>
-          <button
-              class="px-4 py-2 md:px-6 md:py-3 bg-blue-500 hover:bg-blue-600 rounded-lg font-medium text-white transition-colors text-sm md:text-base">
-            确认交易
+              class="px-4 py-2 md:px-6 md:py-3 bg-blue-500 hover:bg-blue-600 rounded-lg font-medium text-white transition-colors text-sm md:text-base"
+              @click="submitOrder">
+            提交订单
           </button>
         </div>
       </div>
@@ -315,6 +312,10 @@
         <div id="account-info" class="card-white rounded-lg p-4 md:p-6 mb-6 md:mb-8">
           <h3 class="text-base md:text-lg font-semibold mb-3 md:mb-4 text-gray-800">账户信息</h3>
           <div class="space-y-3 md:space-y-4">
+            <div class="flex justify-between items-center pb-2 md:pb-3 border-b border-gray-100">
+              <span class="text-muted text-sm md:text-base">交易账户ID</span>
+              <span class="font-medium text-base md:text-lg text-gray-800">{{ accountId || '1000001' }}</span>
+            </div>
             <div class="flex justify-between items-center pb-2 md:pb-3 border-b border-gray-100">
               <span class="text-muted text-sm md:text-base">可用资金</span>
               <span class="font-medium text-base md:text-lg text-gray-800">¥{{
@@ -329,10 +330,10 @@
             </div>
             <div class="flex justify-between items-center">
               <span class="text-muted text-sm md:text-base">今日盈亏</span>
-              <span class="font-medium text-base md:text-lg"
+              <span class="font-medium text-base md:text-lg" 
                     :class="todayProfit >= 0 ? 'text-green-600' : 'text-red-600'">
                 {{
-                  todayProfit >= 0 ? '+' : '-'
+                  todayProfit >= 0 ? '+' : '-' 
                 }}¥{{ Math.abs(todayProfit).toLocaleString('zh-CN', {minimumFractionDigits: 2}) }}</span>
             </div>
           </div>
@@ -396,6 +397,33 @@
       </div>
     </div>
   </div>
+    
+    <!-- 对话框组件 -->
+    <div v-if="showDialog" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+        <div class="bg-white rounded-lg shadow-xl w-full max-w-md">
+          <div class="p-5 border-b border-gray-200">
+            <h3 class="text-lg font-semibold text-gray-800">{{ dialogTitle }}</h3>
+          </div>
+          <div class="p-5">
+            <p class="text-gray-600">{{ dialogMessage }}</p>
+          </div>
+          <div class="flex justify-end p-4 border-t border-gray-200 space-x-3">
+            <button 
+              @click="cancelOrder" 
+              class="px-4 py-2 bg-gray-100 hover:bg-gray-200 rounded-lg font-medium text-gray-700 transition-colors"
+            >
+              取消
+            </button>
+            <button 
+              @click="confirmOrder" 
+              class="px-4 py-2 bg-blue-500 hover:bg-blue-600 rounded-lg font-medium text-white transition-colors"
+            >
+              确认
+            </button>
+          </div>
+        </div>
+      </div>
+
 </template>
 
 <script setup>
@@ -405,7 +433,7 @@ import {goBack, useCurrentDate} from "@/composables/Composable.js";
 import {computed, onMounted, ref, watch} from 'vue';
 import Highcharts from 'highcharts';
 import {parseFloatFixed} from "@/composables/NumberUtils.js";
-import {getAvailableFunds, getTotalAssets, getTodayProfit} from "@/api/order.js";
+import {getAvailableFunds, getTotalAssets, getTodayProfit, getStockCurrentQuote, createTrade, getAccountInfo} from "@/api/order.js";
 
 const {currentDate} = useCurrentDate()
 // 状态管理
@@ -425,11 +453,17 @@ const tradingTips = ref([]);
 // 分页相关数据
 const currentPage = ref(1);
 const itemsPerPage = ref(5);
+// 对话框相关状态
+const showDialog = ref(false);
+const dialogMessage = ref('');
+const dialogTitle = ref('');
 
 // 账户信息 - 使用独立的响应式变量
 const availableFunds = ref(245689.25);
 const totalAssets = ref(1245689.25);
 const todayProfit = ref(-12458.63);
+// 交易账户ID
+const accountId = ref(1000001); // 默认交易账户ID，使用数字类型以匹配后端Long类型
 
 // 加载状态
 const loading = ref({
@@ -504,7 +538,7 @@ const stocks = ref([
   },
   {
     name: '腾讯控股',
-    code: '0700.HK',
+    code: '00700.HK',
     price: '¥342.60',
     change: 2.03,
     bgColor: 'bg-green-600',
@@ -528,7 +562,7 @@ const stocks = ref([
   },
   {
     name: '美团',
-    code: '3690.HK',
+    code: '03690.HK',
     price: '¥124.50',
     change: 2.14,
     bgColor: 'bg-purple-600',
@@ -816,18 +850,24 @@ const initChart = () => {
 // 生命周期
 onMounted(() => {
   // 默认选择第一个股票
-
   if (stocks.value.length > 0) {
     selectStock(stocks.value[0]);
   }
+  
   // 加载交易提示
   loadTradingTips();
+  
+  // 加载股票数据
+  loadStockData();
+  
   // 初始化图表
   setTimeout(() => {
     if (selectedStock.value) {
       initChart();
     }
   }, 100);
+  
+  // 加载账户信息
   loadAccountInfo();
 });
 
@@ -841,45 +881,325 @@ watch(selectedStock, () => {
   }, 100);
 });
 
+// 加载股票数据
+const loadStockData = async () => {
+  try {
+    loading.value.stocks = true;
+    
+    // 处理所有股票数据
+    for (let i = 0; i < stocks.value.length; i++) {
+      const stock = stocks.value[i];
+      // 从股票代码中提取市场代码和股票代码
+      const [code, market] = stock.code.split('.');
+      let marketCode;
+      
+      // 根据市场后缀设置市场代码
+      switch (market) {
+        case 'NYSE':
+          marketCode = 'US';
+          break;
+        case 'NASDAQ':
+          marketCode = 'US';
+          break;
+        case 'HK':
+          marketCode = 'HK';
+          break;
+        case 'SH':
+          marketCode = 'SH';
+          break;
+        case 'SZ':
+          marketCode = 'SZ';
+          break;
+        default:
+          marketCode = 'US';
+      }
+      
+      try {
+          // 构建请求参数
+          const requestData = {
+            productCode: "stock",
+            marketCode: marketCode,
+            stockCode: code,
+            type: "1D1M"
+          };
+          
+          // 调用API获取实时行情数据
+          const response = await getStockCurrentQuote(requestData);
+          console.log(`获取${stock.name}行情响应:`, response);
+        
+        // 如果API返回成功，更新股票数据
+        if (response && response.code === 200 && response.data) {
+          const qotData = response.data;
+          // 更新价格、涨跌幅等数据
+          if (qotData.currentPrice) {
+            const currency = market === 'HK' || market === 'SH' || market === 'SZ' ? '¥' : '$';
+            stocks.value[i].price = `${currency}${qotData.currentPrice.toFixed(2)}`;
+          }
+          
+          // 计算涨跌幅百分比
+          if (qotData.currentPrice !== undefined && qotData.prevClosePrice !== undefined && qotData.prevClosePrice > 0) {
+            const change = ((qotData.currentPrice - qotData.prevClosePrice) / qotData.prevClosePrice * 100).toFixed(2);
+            stocks.value[i].change = parseFloat(change);
+            // 根据涨跌幅更新背景色
+            if (stocks.value[i].change > 0) {
+              stocks.value[i].bgColor = 'bg-green-600';
+            } else if (stocks.value[i].change < 0) {
+              stocks.value[i].bgColor = 'bg-red-600';
+            } else {
+              stocks.value[i].bgColor = 'bg-gray-600';
+            }
+          }
+        }
+      } catch (stockError) {
+        console.error(`获取${stock.name}行情失败:`, stockError);
+        // 单个股票获取失败不影响其他股票，继续处理
+      }
+      
+      // 添加短暂延迟，避免请求过于密集
+      if (i < stocks.value.length - 1) {
+        await new Promise(resolve => setTimeout(resolve, 100));
+      }
+    }
+    
+    // 对推荐股票做同样处理
+    for (let i = 0; i < recommendedStocks.value.length; i++) {
+      const stock = recommendedStocks.value[i];
+      const [code, market] = stock.code.split('.');
+      let marketCode;
+      
+      switch (market) {
+        case 'NYSE':
+        case 'NASDAQ':
+          marketCode = 'US';
+          break;
+        case 'HK':
+          marketCode = 'HK';
+          break;
+        case 'SH':
+          marketCode = 'SH';
+          break;
+        case 'SZ':
+          marketCode = 'SZ';
+          break;
+        default:
+          marketCode = 'US';
+      }
+      
+      try {
+        // 构建请求参数
+        const requestData = {
+          productCode: "stock",
+          marketCode: marketCode,
+          stockCode: code,
+          type: "1D1M"
+        };
+        
+        const response = await getStockCurrentQuote(requestData);
+        console.log(`获取推荐股票${stock.name}行情响应:`, response);
+        
+        if (response && response.code === 200 && response.data) {
+          const qotData = response.data;
+          if (qotData.currentPrice) {
+            const currency = market === 'HK' || market === 'SH' || market === 'SZ' ? '¥' : '$';
+            recommendedStocks.value[i].price = `${currency}${qotData.currentPrice.toFixed(2)}`;
+          }
+          
+          // 计算涨跌幅百分比
+          if (qotData.currentPrice !== undefined && qotData.prevClosePrice !== undefined && qotData.prevClosePrice > 0) {
+            const change = ((qotData.currentPrice - qotData.prevClosePrice) / qotData.prevClosePrice * 100).toFixed(2);
+            recommendedStocks.value[i].change = parseFloat(change);
+            if (recommendedStocks.value[i].change > 0) {
+              recommendedStocks.value[i].bgColor = 'bg-green-600';
+            } else if (recommendedStocks.value[i].change < 0) {
+              recommendedStocks.value[i].bgColor = 'bg-red-600';
+            } else {
+              recommendedStocks.value[i].bgColor = 'bg-gray-600';
+            }
+          }
+        }
+      } catch (stockError) {
+        console.error(`获取推荐股票${stock.name}行情失败:`, stockError);
+      }
+      
+      if (i < recommendedStocks.value.length - 1) {
+        await new Promise(resolve => setTimeout(resolve, 100));
+      }
+    }
+  } catch (error) {
+    console.error('加载股票数据失败:', error);
+  } finally {
+    loading.value.stocks = false;
+  }
+};
+
+// 提交订单处理
+const submitOrder = () => {
+  // 显示确认对话框
+  showDialog.value = true;
+  dialogTitle.value = '确认订单';
+  dialogMessage.value = `确定要${orderType.value === 'buy' ? '买入' : '卖出'} ${quantity.value} 股 ${selectedStock.value.name} 吗？`;
+};
+
+// 确认订单
+const confirmOrder = async () => {
+  try {
+    // 调用order.js中的createTrade接口
+    // 按照最新的后端TradeRequest类的结构准备数据，包含正确的默认值
+    const orderData = {
+      accountId: accountId.value, // 使用从账户信息中获取的交易账户ID
+      securityId: selectedStock.value ? Number(selectedStock.value.code) : 0, // 证券ID，转换为数字类型以匹配后端Long类型
+      orderType: orderMode.value === 'limit' ? 1 : orderMode.value === 'market' ? 2 : 1, // 订单类型: 1-限价单(默认), 2-市价单, 3-条件单
+      direction: orderType.value === 'buy' ? 1 : 2, // 买卖方向: 1-买入, 2-卖出
+      // 价格和数量设置默认值0，当有实际值时使用实际值
+      price: limitPrice.value ? parseFloat(limitPrice.value) : 0, // 委托价格，默认值0
+      quantity: quantity.value ? parseFloat(quantity.value) : 0, // 委托数量，默认值0
+      // 订单过期时间设置为当前时间加一天，与Java类默认值保持一致
+      expireTime: new Date(Date.now() + 24 * 60 * 60 * 1000), 
+      conditionType: null, // 条件单类型（非条件单时为null）
+      // 条件值设置默认值0，与Java类默认值保持一致
+      conditionValue: 0, // 条件值，默认值0
+      // 备注信息设置为空字符串作为默认值，当有实际值时使用实际值
+      remark: selectedStock.value ? `交易${orderType.value === 'buy' ? '买入' : '卖出'} ${selectedStock.value.name}` : '' // 备注信息，默认值空字符串
+    };
+    
+    const result = await createTrade(orderData);
+    console.log('订单提交结果:', result);
+    
+    // 关闭对话框
+    showDialog.value = false;
+    
+    // 显示成功提示（这里使用alert，实际应使用项目中的提示组件）
+    alert('订单提交成功！');
+    
+    // 重新加载账户信息以获取最新的可用资金
+    await loadAccountInfo();
+    
+  } catch (error) {
+    console.error('下单失败:', error);
+    // 关闭对话框
+    showDialog.value = false;
+    
+    // 显示错误提示（市场状态和资金情况会由后端通过websocket返回并显示）
+    alert('订单提交失败，请稍后重试。');
+  }
+};
+
+// 取消订单（直接关闭对话框）
+const cancelOrder = () => {
+  showDialog.value = false;
+};
+
 // 加载账户信息
 const loadAccountInfo = async () => {
   try {
     loading.value.account = true;
-    // 调用API获取可用资金数据
-    const fundsResponse = await getAvailableFunds()
-    console.log('可用资金响应:', fundsResponse);
-    // 假设API返回的格式为 { data: 数值 }
-    if (fundsResponse && fundsResponse.code === 200 && fundsResponse.data) {
-      availableFunds.value = fundsResponse.data || availableFunds.value;
-      console.log('可用资金数据:', fundsResponse.data);
-      console.log('可用资金值:', availableFunds.value);
+    console.log('开始加载账户信息，初始accountId.value:', accountId.value, '类型:', typeof accountId.value);
+    
+    // 调用API获取账户信息（包含accountId）
+    try {
+      const accountInfoResponse = await getAccountInfo();
+      console.log('账户信息响应完整对象:', accountInfoResponse);
+      console.log('响应data字段:', accountInfoResponse?.data);
+      
+      // 检查响应格式和状态码
+      if (accountInfoResponse && accountInfoResponse.code === 200 && accountInfoResponse.data) {
+        // 尝试多种可能的字段路径
+        let newAccountId = null;
+        
+        // 尝试从account.id获取
+        if (accountInfoResponse.data.account && accountInfoResponse.data.account.id) {
+          newAccountId = accountInfoResponse.data.account.id;
+          console.log('从account.id获取账户ID:', newAccountId, '类型:', typeof newAccountId);
+        }
+        // 尝试直接从data获取
+        else if (accountInfoResponse.data.accountId) {
+          newAccountId = accountInfoResponse.data.accountId;
+          console.log('从data.accountId获取账户ID:', newAccountId, '类型:', typeof newAccountId);
+        }
+        // 尝试从id字段获取
+        else if (accountInfoResponse.data.id) {
+          newAccountId = accountInfoResponse.data.id;
+          console.log('从data.id获取账户ID:', newAccountId, '类型:', typeof newAccountId);
+        }
+        
+        // 优化处理逻辑：无论获取到什么类型，先转为字符串再处理
+        if (newAccountId !== null && newAccountId !== undefined && newAccountId !== '') {
+          const accountIdStr = String(newAccountId).trim();
+          if (accountIdStr) {
+            // 尝试保持数字类型，但如果转换失败则使用字符串类型
+            const numId = Number(accountIdStr);
+            accountId.value = isNaN(numId) ? accountIdStr : numId;
+            console.log('账户ID更新成功:', accountId.value, '类型:', typeof accountId.value);
+          }
+        } else {
+          console.warn('无法从响应中提取有效的账户ID，保持当前值:', accountId.value);
+          // 强制设置一个可见的默认值，确保UI上有显示
+          if (!accountId.value) {
+            accountId.value = 1000001; // 确保有默认值显示
+            console.log('已设置默认账户ID:', accountId.value, '类型:', typeof accountId.value);
+          }
+        }
+      } else {
+        console.warn('获取账户信息失败或格式不正确，响应码:', accountInfoResponse?.code, '，保持默认账户ID');
+        // 强制设置一个可见的默认值，确保UI上有显示
+        if (!accountId.value) {
+          accountId.value = 1000001;
+          console.log('已设置默认账户ID:', accountId.value);
+        }
+      }
+    } catch (accountError) {
+      console.error('获取账户信息时发生错误:', accountError);
+      // 出错时保持默认值，不影响界面显示
+      if (!accountId.value) {
+        accountId.value = 1000001;
+        console.log('API调用失败，已设置默认账户ID:', accountId.value);
+      }
     }
-
-    // 调用API获取总资产数据
-    const assetsResponse = await getTotalAssets()
-    console.log('总资产响应:', assetsResponse);
-    // 假设API返回的格式为 { data: 数值 }
-    if (assetsResponse && assetsResponse.code === 200 && assetsResponse.data) {
-      totalAssets.value = assetsResponse.data || totalAssets.value;
-      console.log('总资产数据:', assetsResponse.data);
-      console.log('总资产值:', totalAssets.value);
+    
+    // 单独处理每个API调用，确保一个失败不影响其他调用
+    try {
+      const fundsResponse = await getAvailableFunds();
+      if (fundsResponse && fundsResponse.code === 200 && fundsResponse.data !== undefined && fundsResponse.data !== null) {
+        availableFunds.value = fundsResponse.data;
+      } else {
+        console.warn('获取可用资金失败或数据无效');
+      }
+    } catch (fundsError) {
+      console.error('获取可用资金时发生错误:', fundsError);
     }
-
-    // 调用API获取今日盈亏数据
-    const profitResponse = await getTodayProfit()
-    console.log('今日盈亏响应:', profitResponse);
-    // 假设API返回的格式为 { data: 数值 }
-    if (profitResponse && profitResponse.code === 200 && profitResponse.data) {
-      todayProfit.value = profitResponse.data || todayProfit.value;
-      console.log('今日盈亏数据:', profitResponse.data);
-      console.log('今日盈亏值:', todayProfit.value);
+    
+    try {
+      const assetsResponse = await getTotalAssets();
+      if (assetsResponse && assetsResponse.code === 200 && assetsResponse.data !== undefined && assetsResponse.data !== null) {
+        totalAssets.value = assetsResponse.data;
+      } else {
+        console.warn('获取总资产失败或数据无效');
+      }
+    } catch (assetsError) {
+      console.error('获取总资产时发生错误:', assetsError);
     }
-  } catch (error) {
-    console.error('加载账户信息失败:', error);
+    
+    try {
+      const profitResponse = await getTodayProfit();
+      if (profitResponse && profitResponse.code === 200 && profitResponse.data !== undefined && profitResponse.data !== null) {
+        todayProfit.value = profitResponse.data;
+      } else {
+        console.warn('获取今日盈亏失败或数据无效');
+      }
+    } catch (profitError) {
+      console.error('获取今日盈亏时发生错误:', profitError);
+    }
   } finally {
     loading.value.account = false;
+    // 确保在任何情况下账户ID都有值显示
+    if (!accountId.value) {
+      accountId.value = 1000001;
+      console.log('finally块中确保账户ID有值:', accountId.value);
+    }
+    console.log('账户信息加载完成，最终accountId.value:', accountId.value);
   }
-};
+}
+;
 
 </script>
 
