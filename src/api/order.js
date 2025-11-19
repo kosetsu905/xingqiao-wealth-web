@@ -10,6 +10,22 @@ export function getStockData(symbol, interval) {
     })
 }
 
+// 获取公司OverView
+export function getCompanyOverview(symbol) {
+    return request({
+        url: `/order/stock/overview/${symbol}`,
+        method: 'get'
+    })
+}
+
+// 获取news
+export function getNews(symbol) {
+    return request({
+        url: `/order/stock/news/${symbol}`,
+        method: 'get'
+    })
+}
+
 /**
      * 获取单个市场行情(指数)
      * 例子： /market/data/I:DJI

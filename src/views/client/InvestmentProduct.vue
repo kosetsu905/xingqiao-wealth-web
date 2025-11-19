@@ -400,6 +400,7 @@ import HighchartsStock from 'highcharts/modules/stock'
 import Header from "@/components/client/Header.vue";
 
 import HangqingDemo from "@/components/client/HangqingDemo.vue";
+import { getCompanyOverview } from "@/api/order";
 
 // 初始化 Highcharts 模块
 if (HighchartsMore && typeof HighchartsMore === 'function') {
@@ -545,16 +546,30 @@ const switchTab = (index) => {
 
 // 公司概览
 const companyOverview = ref({
-  description: '腾讯控股有限公司是中国领先的互联网增值服务提供商，主要在中国经营三项核心业务：增值服务、网络广告、金融科技及企业服务。成立于1998年，总部位于中国深圳。腾讯的使命是"通过互联网服务提升人类生活品质"。腾讯的社交平台微信和QQ连接超过10亿中国用户，并通过投资建立了一个开放生态系统，将最佳伙伴带入中国市场。腾讯于2004年在香港联交所主板上市（股票代号：00700）。',
-  details: [
-    { label: '行业', value: '互联网服务' },
-    { label: '成立时间', value: '1998年11月' },
-    { label: '上市时间', value: '2004年6月16日' },
-    { label: '员工数量', value: '约112,771人' },
-    { label: '总部', value: '中国深圳' },
-    { label: '官方网站', value: 'www.tencent.com', type: 'link' }
-  ]
+  description: '',
+  details: []
 })
+
+const fetchCompanyOverview = async (symbol) => {
+      try {
+        const response = await getCompanyOverview(symbol);
+        const data = response.data;
+
+        if (!data) {
+          console.warn('公司概览数据为空');
+          return;
+        }
+
+        companyOverview.value.description = data.Description || '';
+        companyOverview.value.details = [
+          { label: '行业', value: data.Industry || '' },
+          { label: '总部', value: data.Address || '' },
+          { label: '官方网站', value: data.OfficialSite || '', type: 'link' }
+        ];
+      } catch (error) {
+        console.error('获取公司概览失败:', error);
+      }
+    };
 
 const openLink = (url) => {
   window.open('https://' + url, '_blank')
@@ -837,8 +852,9 @@ const initCharts = () => {
   }
 }
 
-onMounted(() => {
+onMounted(async () => {
   initCharts()
+  await fetchCompanyOverview('AAPL');
 })
 </script>
 
