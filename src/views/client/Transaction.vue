@@ -1040,6 +1040,8 @@ const submitOrder = () => {
   dialogMessage.value = `确定要${orderType.value === 'buy' ? '买入' : '卖出'} ${quantity.value} 股 ${selectedStock.value.name} 吗？`;
 };
 
+
+
 // 确认订单
 const confirmOrder = async () => {
   try {
@@ -1047,7 +1049,7 @@ const confirmOrder = async () => {
     // 按照最新的后端TradeRequest类的结构准备数据，包含正确的默认值
     const orderData = {
       accountId: accountId.value, // 使用从账户信息中获取的交易账户ID
-      securityId: selectedStock.value ? Number(selectedStock.value.code) : 0, // 证券ID，转换为数字类型以匹配后端Long类型
+      securityCode: selectedStock.value.code, // 证券ID
       orderType: orderMode.value === 'limit' ? 1 : orderMode.value === 'market' ? 2 : 1, // 订单类型: 1-限价单(默认), 2-市价单, 3-条件单
       direction: orderType.value === 'buy' ? 1 : 2, // 买卖方向: 1-买入, 2-卖出
       // 价格和数量设置默认值0，当有实际值时使用实际值
@@ -1061,6 +1063,10 @@ const confirmOrder = async () => {
       // 备注信息设置为空字符串作为默认值，当有实际值时使用实际值
       remark: selectedStock.value ? `交易${orderType.value === 'buy' ? '买入' : '卖出'} ${selectedStock.value.name}` : '' // 备注信息，默认值空字符串
     };
+
+    console.log('selectedStock:', selectedStock.value.code);
+
+    console.log('orderData:', orderData);
     
     const result = await createTrade(orderData);
     console.log('订单提交结果:', result);
