@@ -1,0 +1,123 @@
+<template>
+  <div id="login-form-container" class="login-form-container">
+    <div id="login-header" class="mb-8 text-center">
+      <h2 class="text-2xl font-bold text-gray-800">欢迎注册</h2>
+      <p class="text-gray-500 mt-2">请选择您的账户类型进行注册</p>
+    </div>
+    <!-- Tab Switching -->
+    <div id="login-tabs" class="login-tabs">
+      <button
+          id="client-tab"
+          @click="switchTab('02')"
+          class="client-tab"
+          :class="{
+          'border-primary text-primary': userType === '02',
+          'border-transparent text-gray-500 hover:text-gray-700': userType  !== '02'
+        }"
+      >
+        <i class="fa-solid fa-user mr-2"></i>
+        客户注册
+      </button>
+      <button
+          id="broker-tab"
+          @click="switchTab('01')"
+          class="client-tab"
+          :class="{
+          'border-primary text-primary': userType === '01',
+          'border-transparent text-gray-500 hover:text-gray-700': userType !== '01'
+        }"
+      >
+        <i class="fa-solid fa-briefcase mr-2"></i>
+        经纪人注册
+      </button>
+    </div>
+    <CommonRegisterForm
+        @show-register-code="updateFormData"
+        :login-object="currentPwdObject"
+    />
+  </div>
+</template>
+
+<script setup>
+  import CommonRegisterForm from './CommonRegisterForm.vue'
+  import {ref, computed, defineEmits, watch} from 'vue';
+  import { useRoute } from 'vue-router'
+  const route = useRoute()
+  const userType = ref(route.query.userType || "02") // 接收路由参数
+
+  // 定义事件发射器
+  const emit = defineEmits(['show-register-code', 'user-type-changed'])
+  const { phoneNumber, countryCode, email } = defineProps({ phoneNumber: String, countryCode: String, email: String });
+
+  // 监听 userType 变化
+  watch(userType, (newValue, oldValue) => {
+    emit('user-type-changed', newValue)
+  })
+
+
+  // 注册对象
+  const currentObject = ref({
+    userType: userType.value,
+    phoneNumber: phoneNumber,
+    countryCode: countryCode,
+    email: email
+  })
+
+  // 新增计算属性获取当前登录对象
+  const currentPwdObject = computed(() => ({
+    ...(currentObject.value),
+    userType: userType.value
+  }))
+
+
+  // 监听props变化，更新表单数据
+  watch(() => phoneNumber, (newValue) => {
+    console.log('phoneNumber >>>>'+newValue)
+    if (newValue && currentObject.value.phoneNumber !== newValue) {
+      currentObject.value.phoneNumber = newValue;
+    }
+  });
+
+  watch(() => countryCode, (newValue) => {
+    if (newValue && currentObject.value.countryCode !== newValue) {
+      console.log('countryCode'+newValue)
+      currentObject.value.countryCode = newValue;
+    }
+  });
+
+
+  watch(() => email, (newValue) => {
+    if (newValue && currentObject.value.email !== newValue) {
+      console.log('email'+newValue)
+      currentObject.value.email = newValue;
+    }
+  });
+
+
+  const updateFormData = (data) => {
+    console.log('接收CommonRegisterForm r 组件的数据更新', data)
+    emit('show-register-code', data)
+  }
+
+  // 切换登录类型的方法
+  function switchTab(tab) {
+    console.log(`切换到 ${tab} 注册`)
+    userType.value = tab
+  }
+
+</script>
+
+
+<style scoped>
+  .login-form-container {
+    @apply w-full md:w-7/12 p-8;
+  }
+  .client-tab{
+    @apply flex-1 py-3 font-medium text-center border-b-2;
+  }
+  .login-tabs {
+    @apply flex border-b border-gray-200 mb-6;
+  }
+
+
+</style>

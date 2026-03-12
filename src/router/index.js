@@ -1,96 +1,164 @@
-import Vue from 'vue'
-import Router from 'vue-router'
+// src/router/index.js
+import { createRouter, createWebHistory } from 'vue-router'
+import LoginPage from '../views/login/LoginPage.vue'
+import RegisterPage from '../views/login/RegisterPage.vue'
+import SuccessRegister from '../views/login/SuccessRegister.vue'
+import SuccessEditPwd from '../views/login/SuccessEditPwd.vue'
+import ForgetPwdPage from '../views/login/ForgetPwdPage.vue'
+import RiskTest from '../views/client/RiskTest.vue'
+import Risk from '../views/client/Risk.vue'
+import Analysis from '../views/client/Analysis.vue'
+import Index from '../views/client/Index.vue'
+import UserInfo from '@/views/client/UserInfo.vue'
+import Account from '../views/client/Account.vue'
+import Message from '../views/client/Message.vue'
+import Product from '../views/client/Product.vue'
+import Dashboard from '../views/client/Dashboard.vue'
+import InvestmentProductList from '../views/client/InvestmentProductList.vue'
+import InvestmentProduct from '../views/client/InvestmentProduct.vue'
+import Transaction from '../views/client/Transaction.vue'
+import FinancialManage from '../views/client/FinancialManage.vue'
+import StockDetailView from '../views/client/StockDetailView.vue'
+import one from '../views/common/401.vue'
+import two from '../views/common/404.vue'
+import agencyIndex from '../views/agency/Index.vue'
+import Insurance from '../views/agency/Insurance.vue'
+import Globalinvestmentfund from '../views/agency/Globalinvestmentfund.vue'
+import Digitalcurrency from '../views/agency/Digitalcurrency.vue'
+import EkycIndex from '../views/agency/EkycIndex.vue'
+import EkycClientIndex from '../views/client/KycIndex.vue'
+import HangqingDemo from '../views/client/HangqingDemo.vue'
+import AgencyUserInfo from '../views/agency/UserInfo.vue'
+import CustomerInfo from '../views/agency/CustomerInfo.vue'
+import CustomerList from '../views/agency/CustomerList.vue'
+import CustomerDetail from '../views/agency/CustomerDetail.vue'
+import AgencyMessage from '../views/agency/Message.vue'
+import AccountInfo from '../views/agency/AccountInfo.vue'
+import Calculation from '../views/agency/Calculation.vue'
+import PerformanceReport from '../views/agency/PerformanceReport.vue'
+import CommissionHistory from '../views/agency/CommissionHistory.vue'
+import SalesOpportunity from '../views/agency/SalesOpportunity.vue'
+import SalesOpportunityList from '../views/agency/SalesOpportunityList.vue'
+import SalesOpportunityDetail from '../views/agency/SalesOpportunityDetail.vue'
+import StableCoinMainPage from "@/views/agency/StableCoinMainPage.vue"
+import StableCoinPortfolio from "@/views/agency/StableCoinPortfolio.vue"
+import StableCoinPurchase from "@/views/agency/StableCoinPurchase.vue"
+import CbdcView from "@/views/agency/CbdcView.vue"
+import News from "@/views/agency/News.vue"
+import Academy from "@/views/agency/Academy.vue"
+import Etf from '../views/agency/Etf.vue'
+import FaceRecognitionSuccess from '../views/common/FaceRecognitionSuccess.vue'
+import Holdings from "@/views/client/Holdings.vue"
 
-Vue.use(Router)
-
-/* Layout */
-import Layout from '@/layout'
-
-/**
- * Note: 路由配置项
- *
- * hidden: true                     // 当设置 true 的时候该路由不会再侧边栏出现 如401，login等页面，或者如一些编辑页面/edit/1
- * alwaysShow: true                 // 当你一个路由下面的 children 声明的路由大于1个时，自动会变成嵌套的模式--如组件页面
- *                                  // 只有一个时，会将那个子路由当做根路由显示在侧边栏--如引导页面
- *                                  // 若你想不管路由下面的 children 声明的个数都显示你的根路由
- *                                  // 你可以设置 alwaysShow: true，这样它就会忽略之前定义的规则，一直显示根路由
- * redirect: noRedirect             // 当设置 noRedirect 的时候该路由在面包屑导航中不可被点击
- * name:'router-name'               // 设定路由的名字，一定要填写不然使用<keep-alive>时会出现各种问题
- * query: '{"id": 1, "name": "ry"}' // 访问路由的默认传递参数
- * roles: ['admin', 'common']       // 访问路由的角色权限
- * permissions: ['a:a:a', 'b:b:b']  // 访问路由的菜单权限
- * meta : {
-    noCache: true                   // 如果设置为true，则不会被 <keep-alive> 缓存(默认 false)
-    title: 'title'                  // 设置该路由在侧边栏和面包屑中展示的名字
-    icon: 'svg-name'                // 设置该路由的图标，对应路径src/assets/icons/svg
-    breadcrumb: false               // 如果设置为false，则不会在breadcrumb面包屑中显示
-    activeMenu: '/system/user'      // 当路由设置了该属性，则会高亮相对应的侧边栏。
-  }
- */
-
-// 公共路由
-export const constantRoutes = [
-  {
-    path: '/redirect',
-    component: Layout,
-    hidden: true,
-    children: [
-      {
-        path: '/redirect/:path(.*)',
-        component: () => import('@/views/redirect')
-      }
-    ]
-  },
-  {
-    path: '/login',
-    component: () => import('@/views/login'),
-    hidden: true
-  },
-  {
-    path: '/register',
-    component: () => import('@/views/register'),
-    hidden: true
-  },
-  {
-    path: '/404',
-    component: () => import('@/views/error/404'),
-    hidden: true
-  },
-  {
-    path: '/401',
-    component: () => import('@/views/error/401'),
-    hidden: true
-  },
-  {
-    path: '',
-    component: Layout,
-    redirect: 'index',
-    children: [
-      {
-        path: 'index',
-        component: () => import('@/views/index'),
-        name: 'Index',
-        meta: { title: '首页', icon: 'dashboard', affix: true }
-      }
-    ]
-  }
+const WHITE_LIST = [
+  '/client/auth/login',
+  '/client/auth/register',
+  '/message/sendCode',
+  '/login',
+  '/register',
+  '/successRegister',
+  '/successEditPwd',
+  '/forgetPwdPage',
+  '/faceRecognitionSuccess',
+  '/401',
+  '/404',
 ]
 
+// 定义路由配置
+const routes = [
+  { path: '/', component: LoginPage },
+  { path: '/login', component: LoginPage },
+  { path: '/register', component: RegisterPage },
+  { path: '/successRegister', component: SuccessRegister },
+  { path: '/successEditPwd', component: SuccessEditPwd },
+  { path: '/forgetPwdPage', component: ForgetPwdPage },
+  { path: '/client/index', component: Index },
+  { path: '/client/riskTest', component: RiskTest },
+  { path: '/client/risk', component: Risk },
+  { path: '/client/userInfo', component: UserInfo },
+  { path: '/client/account', component: Account },
+  { path: '/client/message', component: Message },
+  { path: '/client/product', component: Product },
+  { path: '/client/analysis', component: Analysis },
+  { path: '/client/ekycClientIndex', component: EkycClientIndex },
+  { path: '/client/investmentProductList', component: InvestmentProductList },
+  { path: '/client/investmentProduct', component: InvestmentProduct },
+  { path: '/client/transaction', component: Transaction },
+  { path: '/client/financialManage', component: FinancialManage },
+  { path: '/client/hangingDemo', component: HangqingDemo },
+  { path: '/client/holdings', component: Holdings },
+  { path: '/client/dashboard', component: Dashboard },
+  { path: '/client/stockDetailView', component: StockDetailView },
+  { path: '/agency/index', component: agencyIndex },
+  { path: '/agency/insurance', component: Insurance },
+  { path: '/agency/globalinvestmentfund', component: Globalinvestmentfund },
+  { path: '/agency/digitalcurrency', component: Digitalcurrency },
+  { path: '/agency/ekycIndex', component: EkycIndex },
+  { path: '/agency/etf', component: Etf },
+  { path: '/agency/userInfo', component: AgencyUserInfo },
+  { path: '/agency/customerInfo', component: CustomerInfo },
+  { path: '/agency/customerList', component: CustomerList },
+  { path: '/agency/customerDetail', component: CustomerDetail },
+  { path: '/agency/message', component: AgencyMessage },
+  { path: '/agency/accountInfo', component: AccountInfo },
+  { path: '/agency/calculation', component: Calculation },
+  { path: '/agency/performanceReport', component: PerformanceReport },
+  { path: '/agency/commissionHistory', component: CommissionHistory },
+  { path: '/agency/salesOpportunity', component: SalesOpportunity },
+  { path: '/agency/salesOpportunityList', component: SalesOpportunityList },
+  { path: '/agency/salesOpportunityDetail', component: SalesOpportunityDetail },
+  { path: '/agency/stableCoinMainPage', component: StableCoinMainPage },
+  { path: '/agency/stableCoinPortfolio', component: StableCoinPortfolio },
+  { path: '/agency/stableCoinPurchase', component: StableCoinPurchase },
+  { path: '/agency/cbdc', component: CbdcView },
+  { path: '/agency/news', component: News },
+  { path: '/agency/academy', component: Academy },
+  { path: '/401', component: one, meta: { requiresAuth: false } },
+  { path: '/404', component: two, meta: { requiresAuth: false } },
+  { path: '/faceRecognitionSuccess', component: FaceRecognitionSuccess, meta: { requiresAuth: false } },
+]
 
-// 防止连续点击多次路由报错
-let routerPush = Router.prototype.push
-let routerReplace = Router.prototype.replace
-// push
-Router.prototype.push = function push(location) {
-  return routerPush.call(this, location).catch(err => err)
-}
-// replace
-Router.prototype.replace = function push(location) {
-  return routerReplace.call(this, location).catch(err => err)
-}
+// 为路由批量添加 meta 信息
+routes.forEach(route => {
+  // 如果路径在白名单中，则设置 requiresAuth 为 false，否则设置为 true
+  if (WHITE_LIST.includes(route.path)) {
+    route.meta = { requiresAuth: false }
+  } else {
+    route.meta = { requiresAuth: true }
+  }
+})
 
-export default new Router({
-  mode: 'history', // 去掉url中的#
-  scrollBehavior: () => ({ y: 0 }),
-  routes: constantRoutes
+export const router = createRouter({
+  history: createWebHistory(),
+  routes
+})
+
+// 注册全局前置守卫
+router.beforeEach(async (to, _from, next) => {
+  console.log('路由守卫触发:', to.path)
+
+  const accessToken = localStorage.getItem('access_token')
+  console.log("accessToken:" + accessToken)
+
+  // 判断是否需要登录权限的路由
+  const requiresAuth = to.matched.some(record => record.meta?.requiresAuth)
+  console.log("requiresAuth:" + requiresAuth)
+
+  // 校验 token 合法性
+  if (requiresAuth) {
+    if (to.path.startsWith('/agency') && !accessToken) {
+      console.log("校验agency token")
+      // token 不存在，跳转到登录页
+      next({ path: '/login' })
+    } else if (to.path.startsWith('/client') && !accessToken) {
+      console.log("校验client token")
+      // token 不存在，跳转到登录页
+      next({ path: '/login' })
+    } else {
+      next()
+    }
+  } else {
+    // 不需要权限的路由直接进入
+    next()
+  }
 })

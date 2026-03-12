@@ -1,0 +1,142 @@
+/* src/assets/styles.css */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+
+@layer utilities {
+  .content-auto {
+    content-visibility: auto;
+  }
+  .text-shadow {
+    text-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  }
+  .card-hover {
+    transition: all 0.3s ease;
+  }
+  .card-hover:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+  }
+  .card-shadow {
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+  }
+  .hover-lift {
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+  }
+  .hover-lift:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+  }
+  .sidebar-link {
+    @apply flex items-center px-4 py-3 text-gray-600 hover:bg-primary/5 hover:text-primary rounded-lg transition-all duration-200;
+  }
+  .sidebar-link.active {
+    @apply bg-primary/10 text-primary font-medium;
+  }
+  .form-input-focus {
+    @apply focus:ring-2 focus:ring-primary/50 focus:border-primary transition-colors;
+  }
+  .account-card {
+    @apply border border-gray-200 rounded-xl p-4 hover:border-primary/50 transition-colors;
+  }
+  .payment-card {
+    @apply border border-gray-200 rounded-xl p-4 hover:border-primary/50 transition-colors flex items-center;
+  }
+  .payment-card.active {
+    @apply border-primary bg-primary/5;
+  }
+  .tab-active {
+    @apply text-primary font-medium border-b-2 border-primary;
+  }
+  .step-content {
+    @apply transition-all duration-300 ease-in-out;
+  }
+  .faq-answer {
+    @apply max-h-0 overflow-hidden transition-all duration-300 ease-in-out;
+  }
+  .faq-item.active .faq-answer {
+    @apply max-h-96 p-4;
+  }
+  .faq-item.active .faq-icon {
+    @apply transform rotate-45;
+  }
+  .message-unread {
+    @apply bg-primary/5 border-l-4 border-primary;
+  }
+  .message-read {
+    @apply bg-white border-l-4 border-transparent hover:border-primary/20 transition-colors;
+  }
+  .badge-pulse {
+    animation: pulse 2s infinite;
+  }
+  .progress-step {
+    @apply flex flex-col items-center;
+  }
+  .progress-circle {
+    @apply w-10 h-10 rounded-full flex items-center justify-center font-medium mb-2;
+  }
+  .progress-line {
+    @apply h-1 flex-1 my-5;
+  }
+  .transition-custom {
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+  .container {
+    @apply mx-auto max-w-screen-2xl px-4 md:px-6 lg:px-8;
+  }
+  .home-wrapper {
+    @apply text-gray-400 flex-col gap-4 md:gap-10 items-center sm:items-start bg-gray-200;
+  }
+  .home-section {
+    @apply w-full gap-8 grid-cols-1 md:grid-cols-2 xl:grid-cols-3;
+  }
+  @keyframes pulse {
+    0% {
+      transform: scale(0.95);
+      box-shadow: 0 0 0 0 rgba(248, 114, 114, 0.7);
+    }
+
+    70% {
+      transform: scale(1);
+      box-shadow: 0 0 0 6px rgba(248, 114, 114, 0);
+    }
+
+    100% {
+      transform: scale(0.95);
+      box-shadow: 0 0 0 0 rgba(248, 114, 114, 0);
+    }
+  }
+}
+
+body {
+  font-family: 'Inter', sans-serif !important;
+}
+
+/* Preserve Font Awesome icons */
+.fa, .fas, .far, .fal, .fab {
+  font-family: "Font Awesome 6 Free", "Font Awesome 6 Brands" !important;
+}
+
+.highlighted-section {
+  outline: 2px solid #3F20FB;
+  background-color: rgba(63, 32, 251, 0.1);
+}
+
+.edit-button {
+  position: absolute;
+  z-index: 1000;
+}
+
+::-webkit-scrollbar {
+  display: none;
+}
+
+html, body {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;

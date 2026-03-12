@@ -1,74 +1,73 @@
-import Vue from 'vue'
+import { createApp } from 'vue'
+import './style.css'
+import App from './App.vue'
+import { Chart, registerables } from 'chart.js';
+import '@fortawesome/fontawesome-free/css/all.min.css';
+import { library } from '@fortawesome/fontawesome-svg-core';
+import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
+import BackToTop from '@/components/common/BackToTop.vue';
 
-import Cookies from 'js-cookie'
+// 图标导入保持不变
+import {
+    faUsers,
+    faDollarSign,
+    faChartPie,
+    faChartBar,
+    faGlobe,
+    faChartLine,
+    faPiggyBank,
+    faHeart,
+    faBuilding,
+    faUserPlus,
+    faMagnifyingGlass,
+    faBullseye,
+    faList,
+    faCircleUser,
+    faCalculator,
+    faChartArea,
+    faFileInvoice,
+    faChevronRight,
+    faXmark
+} from '@fortawesome/free-solid-svg-icons'
 
-import Element from 'element-ui'
-import './assets/styles/element-variables.scss'
+// 添加图标到库
+library.add(
+    faUsers,
+    faDollarSign,
+    faChartPie,
+    faChartBar,
+    faGlobe,
+    faChartLine,
+    faPiggyBank,
+    faHeart,
+    faBuilding,
+    faUserPlus,
+    faMagnifyingGlass,
+    faBullseye,
+    faList,
+    faCircleUser,
+    faCalculator,
+    faChartArea,
+    faFileInvoice,
+    faChevronRight,
+    faXmark
+)
 
-import '@/assets/styles/index.scss' // global css
-import '@/assets/styles/ruoyi.scss' // ruoyi css
-import App from './App'
-import store from './store'
-import router from './router'
-import directive from './directive' // directive
-import plugins from './plugins' // plugins
-import { download } from '@/utils/request'
+import { createPinia } from 'pinia'
+// 路由配置
+import { router } from './router' // 确保 './router' 指向正确的 JavaScript 文件
 
-import './assets/icons' // icon
-import './permission' // permission control
+// 注册 Chart.js 组件
+Chart.register(...registerables);
+import '@klinecharts/pro/dist/klinecharts-pro.css'
 
-import { parseTime, resetForm, addDateRange, selectDictLabel, selectDictLabels, handleTree } from "@/utils/ruoyi"
-// 分页组件
-import Pagination from "@/components/Pagination"
-// 自定义表格工具组件
-import RightToolbar from "@/components/RightToolbar"
-// 富文本组件
-import Editor from "@/components/Editor"
-// 文件上传组件
-import FileUpload from "@/components/FileUpload"
-// 图片上传组件
-import ImageUpload from "@/components/ImageUpload"
-// 图片预览组件
-import ImagePreview from "@/components/ImagePreview"
+// 创建并配置 Vue 应用实例
+const app = createApp(App);
+app.component('FontAwesomeIcon', FontAwesomeIcon);
+app.config.globalProperties.$Chart = Chart; // 全局挂载 Chart.js 实例
+app.use(router) // 注册路由
+app.use(createPinia()) // 注册状态管理库 Pinia
+app.component('BackToTop', BackToTop);
 
-// 全局方法挂载
-Vue.prototype.parseTime = parseTime
-Vue.prototype.resetForm = resetForm
-Vue.prototype.addDateRange = addDateRange
-Vue.prototype.selectDictLabel = selectDictLabel
-Vue.prototype.selectDictLabels = selectDictLabels
-Vue.prototype.download = download
-Vue.prototype.handleTree = handleTree
-
-// 全局组件挂载
-Vue.component('Pagination', Pagination)
-Vue.component('RightToolbar', RightToolbar)
-Vue.component('Editor', Editor)
-Vue.component('FileUpload', FileUpload)
-Vue.component('ImageUpload', ImageUpload)
-Vue.component('ImagePreview', ImagePreview)
-
-Vue.use(directive)
-Vue.use(plugins)
-
-/**
- * If you don't want to use mock-server
- * you want to use MockJs for mock api
- * you can execute: mockXHR()
- *
- * Currently MockJs will be used in the production environment,
- * please remove it before going online! ! !
- */
-
-Vue.use(Element, {
-  size: Cookies.get('size') || 'medium' // set element-ui default size
-})
-
-Vue.config.productionTip = false
-
-new Vue({
-  el: '#app',
-  router,
-  store,
-  render: h => h(App)
-})
+// 将应用挂载到 DOM
+app.mount('#app');

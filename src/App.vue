@@ -1,20 +1,9 @@
 <template>
-  <div id="app">
-    <router-view />
-    <theme-picker />
-  </div>
+  <router-view></router-view>
 </template>
 
 <script>
-import ThemePicker from "@/components/ThemePicker"
-
 export default {
-  name: "App",
-  components: { ThemePicker }
+  name: 'App'
 }
 </script>
-<style scoped>
-#app .theme-picker {
-  display: none;
-}
-</style>
